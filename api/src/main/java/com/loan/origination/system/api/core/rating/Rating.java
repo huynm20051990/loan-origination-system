@@ -17,8 +17,8 @@ public class Rating {
     this.serviceAddress = null;
   }
 
-  public Rating(int productId, int ratingId, String author,
-                int rate, String content, String serviceAddress) {
+  public Rating(
+      int productId, int ratingId, String author, int rate, String content, String serviceAddress) {
     this.productId = productId;
     this.ratingId = ratingId;
     this.author = author;

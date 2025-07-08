@@ -1,9 +1,8 @@
 package com.loan.origination.system.api.core.review;
 
+import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 public interface ReviewAPI {
 
@@ -14,6 +13,5 @@ public interface ReviewAPI {
    * @return the reviews of the product
    */
   @GetMapping(value = "/review", produces = "application/json")
-  List<Review> getReviews(@RequestParam(value = "productId", required = true)
-                          int productId);
+  List<Review> getReviews(@RequestParam(value = "productId", required = true) int productId);
 }
