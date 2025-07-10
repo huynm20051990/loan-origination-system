@@ -17,6 +17,10 @@ repositories {
     mavenCentral()
 }
 
+tasks.named<Jar>("jar") {
+    enabled = false
+}
+
 dependencies {
     implementation(project(":api"))
     implementation(project(":util"))
