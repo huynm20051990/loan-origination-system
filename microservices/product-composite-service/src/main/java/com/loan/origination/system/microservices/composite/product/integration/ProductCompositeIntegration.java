@@ -15,13 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+@Component
 public class ProductCompositeIntegration implements ProductAPI, RatingAPI, ReviewAPI {
   private static final Logger LOG = LoggerFactory.getLogger(ProductCompositeIntegration.class);
   private final RestTemplate restTemplate;
@@ -30,6 +33,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   private final String ratingServiceUrl;
   private final String reviewServiceUrl;
 
+  @Autowired
   public ProductCompositeIntegration(
       RestTemplate restTemplate,
       ObjectMapper mapper,
