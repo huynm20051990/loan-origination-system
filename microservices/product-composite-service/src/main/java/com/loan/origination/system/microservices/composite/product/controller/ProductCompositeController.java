@@ -10,7 +10,9 @@ import com.loan.origination.system.util.http.ServiceUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 public class ProductCompositeController implements ProductCompositeAPI {
 
   private final ServiceUtil serviceUtil;
