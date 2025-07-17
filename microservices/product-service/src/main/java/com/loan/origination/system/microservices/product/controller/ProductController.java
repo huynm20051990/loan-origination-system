@@ -28,7 +28,7 @@ public class ProductController implements ProductAPI {
     if (productId < 1) {
       throw new InvalidInputException("Invalid productId: " + productId);
     }
-    if (productId > 13) {
+    if (productId == 13) {
       throw new NotFoundException("No product found for productId: " + productId);
     }
     return new Product(

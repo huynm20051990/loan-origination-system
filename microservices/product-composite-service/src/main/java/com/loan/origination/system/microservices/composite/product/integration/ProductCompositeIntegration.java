@@ -37,20 +37,20 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   public ProductCompositeIntegration(
       RestTemplate restTemplate,
       ObjectMapper mapper,
-      @Value("{app.product-service.host}") String productServiceHost,
-      @Value("{app.product-service.port}") int productServicePort,
-      @Value("{app.rating-service.host}") String ratingServiceHost,
-      @Value("{app.rating-service.port}") int ratingServicePort,
-      @Value("{app.review-service.host}") String reviewServiceHost,
-      @Value("{app.review-service.port}") int reviewServicePort) {
+      @Value("${app.product-service.host}") String productServiceHost,
+      @Value("${app.product-service.port}") int productServicePort,
+      @Value("${app.rating-service.host}") String ratingServiceHost,
+      @Value("${app.rating-service.port}") int ratingServicePort,
+      @Value("${app.review-service.host}") String reviewServiceHost,
+      @Value("${app.review-service.port}") int reviewServicePort) {
     this.restTemplate = restTemplate;
     this.mapper = mapper;
     this.productServiceUrl =
         "http://" + productServiceHost + ":" + productServicePort + "/product/";
     this.ratingServiceUrl =
-        "http://" + ratingServiceHost + ":" + ratingServiceHost + "/rating?productId=";
+        "http://" + ratingServiceHost + ":" + ratingServicePort + "/rating?productId=";
     this.reviewServiceUrl =
-        "http://" + reviewServiceHost + ":" + reviewServiceHost + "/review?productId=";
+        "http://" + reviewServiceHost + ":" + reviewServicePort + "/review?productId=";
   }
 
   @Override

@@ -27,7 +27,7 @@ public class ReviewController implements ReviewAPI {
     if (productId < 1) {
       throw new InvalidInputException("Invalid productId: " + productId);
     }
-    if (productId == 123) {
+    if (productId == 213) {
       LOG.debug("No review found for productId: {}", productId);
       return new ArrayList<>();
     }

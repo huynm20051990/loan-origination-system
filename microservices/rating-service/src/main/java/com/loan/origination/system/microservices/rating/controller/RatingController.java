@@ -29,7 +29,7 @@ public class RatingController implements RatingAPI {
       throw new InvalidInputException("Invalid productId: " + productId);
     }
 
-    if (productId > 113) {
+    if (productId == 113) {
       LOG.debug("No rating found for productId: " + productId);
       return new ArrayList<>();
     }
