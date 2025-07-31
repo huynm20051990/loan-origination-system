@@ -74,6 +74,14 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
     }
   }
 
+  @Override
+  public Product createProduct(Product product) {
+    return null;
+  }
+
+  @Override
+  public void deleteProduct(int productId) {}
+
   private String getErrorMessage(HttpClientErrorException ex) {
     try {
       return mapper.readValue(ex.getResponseBodyAsString(), HttpErrorInfo.class).getMessage();
