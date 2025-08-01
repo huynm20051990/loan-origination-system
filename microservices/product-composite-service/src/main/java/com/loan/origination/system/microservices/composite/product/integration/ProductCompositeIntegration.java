@@ -136,4 +136,12 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
       return new ArrayList<>();
     }
   }
+
+  @Override
+  public Review createReview(Review review) {
+    return null;
+  }
+
+  @Override
+  public void deleteReviews(int productId) {}
 }

@@ -6,7 +6,7 @@ public class Review {
   private final String author;
   private final String subject;
   private final String content;
-  private final String serviceAddress;
+  private String serviceAddress;
 
   public Review() {
     this.productId = 0;
@@ -54,5 +54,9 @@ public class Review {
 
   public String getServiceAddress() {
     return serviceAddress;
+  }
+
+  public void setServiceAddress(String serviceAddress) {
+    this.serviceAddress = serviceAddress;
   }
 }
