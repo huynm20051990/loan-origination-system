@@ -6,7 +6,7 @@ public class Rating {
   private final String author;
   private final int rate;
   private final String content;
-  private final String serviceAddress;
+  private String serviceAddress;
 
   public Rating() {
     this.productId = 0;
@@ -49,5 +49,9 @@ public class Rating {
 
   public String getServiceAddress() {
     return serviceAddress;
+  }
+
+  public void setServiceAddress(String serviceAddress) {
+    this.serviceAddress = serviceAddress;
   }
 }

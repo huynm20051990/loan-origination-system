@@ -111,6 +111,14 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
+  public Rating createRating(Rating rating) {
+    return null;
+  }
+
+  @Override
+  public void deleteRatings(int productId) {}
+
+  @Override
   public List<Review> getReviews(int productId) {
     try {
       String url = reviewServiceUrl + productId;
