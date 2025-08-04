@@ -8,22 +8,29 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "products")
 public class ProductEntity {
 
-  @Id
-  private String id;
-  @Version
-  private Integer version;//used to implement optimistic locking
+  @Id private String id;
+  @Version private Integer version; // used to implement optimistic locking
+
   @Indexed(unique = true)
   private int productId;
+
   private String name;
   private String description;
 
-  public ProductEntity() {
-  }
+  public ProductEntity() {}
 
   public ProductEntity(int productId, String name, String description) {
     this.productId = productId;
     this.name = name;
     this.description = description;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public Integer getVersion() {
+    return version;
   }
 
   public int getProductId() {
