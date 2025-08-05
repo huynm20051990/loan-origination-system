@@ -15,7 +15,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
 @DataMongoTest
-public class PersistenceTests {
+public class PersistenceTests extends MongoDbTestBase {
 
   @Autowired private RatingRepository repository;
 

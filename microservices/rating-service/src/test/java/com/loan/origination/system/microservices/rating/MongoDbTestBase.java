@@ -4,7 +4,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
 
-public class MongoDbTests {
+public class MongoDbTestBase {
 
   private static MongoDBContainer database = new MongoDBContainer("mongo:7.0.9");
 
