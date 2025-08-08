@@ -19,11 +19,11 @@ public interface ProductAPI {
    * <p>curl -X POST $HOST:$PORT/product \ -H "Content-Type: application/json" --data \
    * '{"productId":123,"name":"product 123","description":"product 123"}'
    *
-   * @param product A JSON representation of the new product
+   * @param body A JSON representation of the new product
    * @return A JSON representation of the newly created product
    */
   @PostMapping(value = "/product", consumes = "application/json", produces = "application/json")
-  Product createProduct(@RequestBody Product product);
+  Product createProduct(@RequestBody Product body);
 
   /**
    * Sample usage: "curl -X DELETE $HOST:$PORT/product/1".

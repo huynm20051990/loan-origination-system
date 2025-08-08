@@ -9,11 +9,15 @@ import com.loan.origination.system.microservices.composite.product.integration.P
 import com.loan.origination.system.util.http.ServiceUtil;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ProductCompositeController implements ProductCompositeAPI {
+
+  public static final Logger LOG = LoggerFactory.getLogger(ProductCompositeIntegration.class);
 
   private final ServiceUtil serviceUtil;
   private ProductCompositeIntegration integration;
@@ -36,6 +40,63 @@ public class ProductCompositeController implements ProductCompositeAPI {
     return createProductAggregate(product, ratings, reviews, serviceUtil.getServiceAddress());
   }
 
+  @Override
+  public void createProduct(ProductAggregate body) {
+    try {
+
+      LOG.debug(
+          "createCompositeProduct: creates a new composite entity for productId: {}",
+          body.getProductId());
+
+      Product product =
+          new Product(body.getProductId(), body.getName(), body.getDescription(), null);
+      integration.createProduct(product);
+
+      if (body.getRatings() != null) {
+        body.getRatings()
+            .forEach(
+                r -> {
+                  Rating rating =
+                      new Rating(
+                          body.getProductId(),
+                          r.getRatingId(),
+                          r.getAuthor(),
+                          r.getRate(),
+                          r.getContent(),
+                          null);
+                  integration.createRating(rating);
+                });
+      }
+
+      if (body.getReviews() != null) {
+        body.getReviews()
+            .forEach(
+                r -> {
+                  Review review =
+                      new Review(
+                          body.getProductId(),
+                          r.getReviewId(),
+                          r.getAuthor(),
+                          r.getSubject(),
+                          r.getContent(),
+                          null);
+                  integration.createReview(review);
+                });
+      }
+
+      LOG.debug(
+          "createCompositeProduct: composite entities created for productId: {}",
+          body.getProductId());
+
+    } catch (RuntimeException re) {
+      LOG.warn("createCompositeProduct failed", re);
+      throw re;
+    }
+  }
+
+  @Override
+  public void deleteProduct(int productId) {}
+
   private ProductAggregate createProductAggregate(
       Product product, List<Rating> ratings, List<Review> reviews, String serviceAddress) {
 
@@ -49,7 +110,10 @@ public class ProductCompositeController implements ProductCompositeAPI {
         (ratings == null)
             ? null
             : ratings.stream()
-                .map(r -> new RatingSummary(r.getRatingId(), r.getAuthor(), r.getRate()))
+                .map(
+                    r ->
+                        new RatingSummary(
+                            r.getRatingId(), r.getAuthor(), r.getRate(), r.getContent()))
                 .collect(Collectors.toList());
 
     // 3. Copy summary review info, if available
@@ -57,7 +121,10 @@ public class ProductCompositeController implements ProductCompositeAPI {
         (reviews == null)
             ? null
             : reviews.stream()
-                .map(r -> new ReviewSummary(r.getReviewId(), r.getAuthor(), r.getSubject()))
+                .map(
+                    r ->
+                        new ReviewSummary(
+                            r.getReviewId(), r.getAuthor(), r.getSubject(), r.getContent()))
                 .collect(Collectors.toList());
 
     // 4. Create info regarding the involved microservices addresses

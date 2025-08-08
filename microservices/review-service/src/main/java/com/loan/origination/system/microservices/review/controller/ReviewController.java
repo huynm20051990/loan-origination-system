@@ -26,8 +26,8 @@ public class ReviewController implements ReviewAPI {
   }
 
   @Override
-  public Review createReview(Review review) {
-    return reviewService.createReview(review);
+  public Review createReview(Review body) {
+    return reviewService.createReview(body);
   }
 
   @Override

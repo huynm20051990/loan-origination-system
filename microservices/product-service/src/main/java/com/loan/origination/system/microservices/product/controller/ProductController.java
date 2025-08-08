@@ -26,8 +26,8 @@ public class ProductController implements ProductAPI {
   }
 
   @Override
-  public Product createProduct(Product product) {
-    return productService.createProduct(product);
+  public Product createProduct(Product body) {
+    return productService.createProduct(body);
   }
 
   @Override

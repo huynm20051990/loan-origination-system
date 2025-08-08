@@ -25,11 +25,11 @@ public interface ReviewAPI {
    * '{"productId":123,"reviewId":456,"author":"me","subject":"yada, yada, yada","content":"yada,
    * yada, yada"}'
    *
-   * @param review A JSON representation of the new review
+   * @param body A JSON representation of the new review
    * @return A JSON representation of the newly created review
    */
   @PostMapping(value = "/review", consumes = "application/json", produces = "application/json")
-  Review createReview(@RequestBody Review review);
+  Review createReview(@RequestBody Review body);
 
   /**
    * Sample usage: "curl -X DELETE $HOST:$PORT/review?productId=1".

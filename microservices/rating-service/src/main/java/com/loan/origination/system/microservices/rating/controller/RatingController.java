@@ -27,8 +27,8 @@ public class RatingController implements RatingAPI {
   }
 
   @Override
-  public Rating createRating(Rating rating) {
-    return ratingService.createRating(rating);
+  public Rating createRating(Rating body) {
+    return ratingService.createRating(body);
   }
 
   @Override

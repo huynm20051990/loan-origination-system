@@ -75,18 +75,31 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public Product createProduct(Product product) {
-    return null;
+  public Product createProduct(Product body) {
+    try {
+      String url = productServiceUrl;
+      LOG.debug("Will post a new product to URL: {}", url);
+
+      Product product = restTemplate.postForObject(url, body, Product.class);
+      LOG.debug("Created a product with id: {}", product.getProductId());
+
+      return product;
+
+    } catch (HttpClientErrorException ex) {
+      throw handleHttpClientException(ex);
+    }
   }
 
   @Override
-  public void deleteProduct(int productId) {}
-
-  private String getErrorMessage(HttpClientErrorException ex) {
+  public void deleteProduct(int productId) {
     try {
-      return mapper.readValue(ex.getResponseBodyAsString(), HttpErrorInfo.class).getMessage();
-    } catch (IOException ioex) {
-      return ioex.getMessage();
+      String url = productServiceUrl + "/" + productId;
+      LOG.debug("Will call the deleteProduct API on URL: {}", url);
+
+      restTemplate.delete(url);
+
+    } catch (HttpClientErrorException ex) {
+      throw handleHttpClientException(ex);
     }
   }
 
@@ -111,12 +124,33 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public Rating createRating(Rating rating) {
-    return null;
+  public Rating createRating(Rating body) {
+    try {
+      String url = ratingServiceUrl;
+      LOG.debug("Will post a new rating to URL: {}", url);
+
+      Rating rating = restTemplate.postForObject(url, body, Rating.class);
+      LOG.debug("Created a rating with id: {}", rating.getProductId());
+
+      return rating;
+
+    } catch (HttpClientErrorException ex) {
+      throw handleHttpClientException(ex);
+    }
   }
 
   @Override
-  public void deleteRatings(int productId) {}
+  public void deleteRatings(int productId) {
+    try {
+      String url = ratingServiceUrl + "?productId=" + productId;
+      LOG.debug("Will call the deleteRatings API on URL: {}", url);
+
+      restTemplate.delete(url);
+
+    } catch (HttpClientErrorException ex) {
+      throw handleHttpClientException(ex);
+    }
+  }
 
   @Override
   public List<Review> getReviews(int productId) {
@@ -138,10 +172,54 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public Review createReview(Review review) {
-    return null;
+  public Review createReview(Review body) {
+    try {
+      String url = reviewServiceUrl;
+      LOG.debug("Will post a new review to URL: {}", url);
+
+      Review review = restTemplate.postForObject(url, body, Review.class);
+      LOG.debug("Created a review with id: {}", review.getProductId());
+
+      return review;
+
+    } catch (HttpClientErrorException ex) {
+      throw handleHttpClientException(ex);
+    }
   }
 
   @Override
-  public void deleteReviews(int productId) {}
+  public void deleteReviews(int productId) {
+    try {
+      String url = reviewServiceUrl + "?productId=" + productId;
+      LOG.debug("Will call the deleteReviews API on URL: {}", url);
+
+      restTemplate.delete(url);
+
+    } catch (HttpClientErrorException ex) {
+      throw handleHttpClientException(ex);
+    }
+  }
+
+  private RuntimeException handleHttpClientException(HttpClientErrorException ex) {
+    switch (HttpStatus.resolve(ex.getStatusCode().value())) {
+      case NOT_FOUND:
+        return new NotFoundException(getErrorMessage(ex));
+
+      case UNPROCESSABLE_ENTITY:
+        return new InvalidInputException(getErrorMessage(ex));
+
+      default:
+        LOG.warn("Got an unexpected HTTP error: {}, will rethrow it", ex.getStatusCode());
+        LOG.warn("Error body: {}", ex.getResponseBodyAsString());
+        return ex;
+    }
+  }
+
+  private String getErrorMessage(HttpClientErrorException ex) {
+    try {
+      return mapper.readValue(ex.getResponseBodyAsString(), HttpErrorInfo.class).getMessage();
+    } catch (IOException ioex) {
+      return ioex.getMessage();
+    }
+  }
 }

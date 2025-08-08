@@ -20,11 +20,11 @@ public interface RatingAPI {
    * <p>curl -X POST $HOST:$PORT/rating \ -H "Content-Type: application/json" --data \
    * '{"productId":123,"ratingId":456,"author":"me","rate":5,"content":"yada, yada, yada"}'
    *
-   * @param rating A JSON representation of the new rating
+   * @param body A JSON representation of the new rating
    * @return A JSON representation of the newly created rating
    */
   @PostMapping(value = "/rating", consumes = "application/json", produces = "application/json")
-  Rating createRating(@RequestBody Rating rating);
+  Rating createRating(@RequestBody Rating body);
 
   /**
    * Sample usage: "curl -X DELETE $HOST:$PORT/rating?productId=1".
