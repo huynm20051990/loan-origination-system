@@ -39,7 +39,7 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
         .isEqualTo(3)
         .jsonPath("$[2].productId")
         .isEqualTo(productId)
-        .jsonPath("$[2].recommendationId")
+        .jsonPath("$[2].ratingId")
         .isEqualTo(3);
   }
 
@@ -47,21 +47,21 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
   void duplicateError() {
 
     int productId = 1;
-    int recommendationId = 1;
+    int ratingId = 1;
 
-    postAndVerifyRating(productId, recommendationId, HttpStatus.OK)
+    postAndVerifyRating(productId, ratingId, HttpStatus.OK)
         .jsonPath("$.productId")
         .isEqualTo(productId)
-        .jsonPath("$.recommendationId")
-        .isEqualTo(recommendationId);
+        .jsonPath("$.ratingId")
+        .isEqualTo(ratingId);
 
     Assertions.assertEquals(1, repository.count());
 
-    postAndVerifyRating(productId, recommendationId, HttpStatus.UNPROCESSABLE_ENTITY)
+    postAndVerifyRating(productId, ratingId, HttpStatus.UNPROCESSABLE_ENTITY)
         .jsonPath("$.path")
-        .isEqualTo("/recommendation")
+        .isEqualTo("/rating")
         .jsonPath("$.message")
-        .isEqualTo("Duplicate key, Product Id: 1, Recommendation Id:1");
+        .isEqualTo("Duplicate key, Product Id: 1, Rating Id: 1");
 
     Assertions.assertEquals(1, repository.count());
   }
@@ -70,9 +70,9 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
   void deleteRatings() {
 
     int productId = 1;
-    int recommendationId = 1;
+    int ratingId = 1;
 
-    postAndVerifyRating(productId, recommendationId, HttpStatus.OK);
+    postAndVerifyRating(productId, ratingId, HttpStatus.OK);
     Assertions.assertEquals(1, repository.findByProductId(productId).size());
 
     deleteAndVerifyRatingsByProductId(productId, HttpStatus.OK);
@@ -137,19 +137,14 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
   }
 
   private WebTestClient.BodyContentSpec postAndVerifyRating(
-      int productId, int recommendationId, HttpStatus expectedStatus) {
-    Rating recommendation =
+      int productId, int ratingId, HttpStatus expectedStatus) {
+    Rating rating =
         new Rating(
-            productId,
-            recommendationId,
-            "Author " + recommendationId,
-            recommendationId,
-            "Content " + recommendationId,
-            "SA");
+            productId, ratingId, "Author " + ratingId, ratingId, "Content " + ratingId, "SA");
     return client
         .post()
         .uri("/rating")
-        .body(Mono.just(recommendation), Rating.class)
+        .body(Mono.just(rating), Rating.class)
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus()

@@ -1,11 +1,11 @@
 package com.loan.origination.system.api.core.rating;
 
 public class Rating {
-  private final int productId;
-  private final int ratingId;
-  private final String author;
-  private final int rate;
-  private final String content;
+  private int productId;
+  private int ratingId;
+  private String author;
+  private int rate;
+  private String content;
   private String serviceAddress;
 
   public Rating() {
@@ -49,6 +49,26 @@ public class Rating {
 
   public String getServiceAddress() {
     return serviceAddress;
+  }
+
+  public void setProductId(int productId) {
+    this.productId = productId;
+  }
+
+  public void setRatingId(int ratingId) {
+    this.ratingId = ratingId;
+  }
+
+  public void setAuthor(String author) {
+    this.author = author;
+  }
+
+  public void setRate(int rate) {
+    this.rate = rate;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
   }
 
   public void setServiceAddress(String serviceAddress) {

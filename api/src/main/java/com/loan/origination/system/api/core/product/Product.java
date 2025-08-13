@@ -1,9 +1,9 @@
 package com.loan.origination.system.api.core.product;
 
 public class Product {
-  private final int productId;
-  private final String name;
-  private final String description;
+  private int productId;
+  private String name;
+  private String description;
   private String serviceAddress;
 
   public Product() {
@@ -34,6 +34,18 @@ public class Product {
 
   public String getServiceAddress() {
     return serviceAddress;
+  }
+
+  public void setProductId(int productId) {
+    this.productId = productId;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public void setServiceAddress(String serviceAddress) {

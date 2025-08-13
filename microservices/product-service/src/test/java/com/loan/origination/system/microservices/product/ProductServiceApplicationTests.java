@@ -58,7 +58,7 @@ class ProductServiceApplicationTests extends MongoDBTestBase {
     Assertions.assertTrue(repository.findByProductId(productId).isPresent());
 
     deleteAndVerifyProduct(productId, HttpStatus.OK);
-    Assertions.assertTrue(repository.findByProductId(productId).isPresent());
+    Assertions.assertFalse(repository.findByProductId(productId).isPresent());
 
     deleteAndVerifyProduct(productId, HttpStatus.OK);
   }

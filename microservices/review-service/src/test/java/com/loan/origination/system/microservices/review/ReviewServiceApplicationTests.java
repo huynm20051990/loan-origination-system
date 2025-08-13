@@ -5,6 +5,8 @@ import com.loan.origination.system.microservices.review.repository.ReviewReposit
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,8 @@ import reactor.core.publisher.Mono;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReviewServiceApplicationTests extends MySqlTestBase {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ReviewServiceApplication.class);
 
   @Autowired private WebTestClient client;
 
@@ -66,7 +70,7 @@ class ReviewServiceApplicationTests extends MySqlTestBase {
         .jsonPath("$.path")
         .isEqualTo("/review")
         .jsonPath("$.message")
-        .isEqualTo("Duplicate key, Product Id: 1, Review Id:1");
+        .isEqualTo("Duplicate key, Product Id: 1, Review Id: 1");
 
     Assertions.assertEquals(1, repository.count());
   }
@@ -157,16 +161,16 @@ class ReviewServiceApplicationTests extends MySqlTestBase {
             "Content " + reviewId,
             "SA");
     return client
-        .post()
-        .uri("/review")
-        .body(Mono.just(review), Review.class)
-        .accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus()
-        .isEqualTo(expectedStatus)
-        .expectHeader()
-        .contentType(MediaType.APPLICATION_JSON)
-        .expectBody();
+            .post()
+            .uri("/review")
+            .body(Mono.just(review), Review.class)
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus()
+            .isEqualTo(expectedStatus)
+            .expectHeader()
+            .contentType(MediaType.APPLICATION_JSON)
+            .expectBody();
   }
 
   private WebTestClient.BodyContentSpec deleteAndVerifyReviewsByProductId(

@@ -33,6 +33,7 @@ public class ReviewService {
     try {
       ReviewEntity reviewEntity = reviewMapper.apiToEntity(review);
       ReviewEntity newReviewEntity = reviewRepository.save(reviewEntity);
+      LOG.debug(review.toString());
       LOG.debug(
           "createReview: created a review entity: {}/{}",
           review.getProductId(),
