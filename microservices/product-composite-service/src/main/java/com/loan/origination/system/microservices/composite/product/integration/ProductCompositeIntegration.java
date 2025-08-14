@@ -45,8 +45,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
       @Value("${app.review-service.port}") int reviewServicePort) {
     this.restTemplate = restTemplate;
     this.mapper = mapper;
-    this.productServiceUrl =
-        "http://" + productServiceHost + ":" + productServicePort + "/product/";
+    this.productServiceUrl = "http://" + productServiceHost + ":" + productServicePort + "/product";
     this.ratingServiceUrl =
         "http://" + ratingServiceHost + ":" + ratingServicePort + "/rating?productId=";
     this.reviewServiceUrl =
@@ -56,7 +55,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   @Override
   public Product getProduct(int productId) {
     try {
-      String url = productServiceUrl + productId;
+      String url = productServiceUrl + "/" + productId;
       LOG.debug("Will call getProduct API on URL: {}", url);
       Product product = restTemplate.getForObject(url, Product.class);
       LOG.debug("Found a product with id: {}", product != null ? product.getProductId() : 0);
