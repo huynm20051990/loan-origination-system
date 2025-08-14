@@ -46,10 +46,8 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
     this.restTemplate = restTemplate;
     this.mapper = mapper;
     this.productServiceUrl = "http://" + productServiceHost + ":" + productServicePort + "/product";
-    this.ratingServiceUrl =
-        "http://" + ratingServiceHost + ":" + ratingServicePort + "/rating?productId=";
-    this.reviewServiceUrl =
-        "http://" + reviewServiceHost + ":" + reviewServicePort + "/review?productId=";
+    this.ratingServiceUrl = "http://" + ratingServiceHost + ":" + ratingServicePort + "/rating";
+    this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review";
   }
 
   @Override
