@@ -25,13 +25,14 @@ public class PersistenceTests extends MongoDbTestBase {
   void setupDb() {
     repository.deleteAll();
     RatingEntity entity = new RatingEntity(1, 2, "a", 3, "c");
-    savedEntity = repository.save(entity);
+    savedEntity = repository.save(entity).block();
     assertEqualsRating(entity, savedEntity);
   }
 
   @Test
   void getByProductId() {
-    List<RatingEntity> entityList = repository.findByProductId(savedEntity.getProductId());
+    List<RatingEntity> entityList =
+        repository.findByProductId(savedEntity.getProductId()).collectList().block();
     assertThat(entityList, hasSize(1));
     assertEqualsRating(savedEntity, entityList.get(0));
   }
@@ -40,7 +41,7 @@ public class PersistenceTests extends MongoDbTestBase {
   void create() {
     RatingEntity newEntity = new RatingEntity(1, 3, "a", 3, "c");
     repository.save(newEntity);
-    RatingEntity foundEntity = repository.findById(newEntity.getId()).get();
+    RatingEntity foundEntity = repository.findById(newEntity.getId()).block();
     assertEqualsRating(newEntity, foundEntity);
     assertEquals(2, repository.count());
   }
@@ -49,7 +50,7 @@ public class PersistenceTests extends MongoDbTestBase {
   void update() {
     savedEntity.setAuthor("a2");
     repository.save(savedEntity);
-    RatingEntity foundEntity = repository.findById(savedEntity.getId()).get();
+    RatingEntity foundEntity = repository.findById(savedEntity.getId()).block();
     assertEquals(1, (long) foundEntity.getVersion());
     assertEquals("a2", foundEntity.getAuthor());
   }
@@ -57,7 +58,7 @@ public class PersistenceTests extends MongoDbTestBase {
   @Test
   void delete() {
     repository.delete(savedEntity);
-    assertFalse(repository.existsById(savedEntity.getId()));
+    assertFalse(repository.existsById(savedEntity.getId()).block());
   }
 
   @Test
@@ -74,8 +75,8 @@ public class PersistenceTests extends MongoDbTestBase {
   void optimisticLockError() {
 
     // Store the saved entity in two separate entity objects
-    RatingEntity entity1 = repository.findById(savedEntity.getId()).get();
-    RatingEntity entity2 = repository.findById(savedEntity.getId()).get();
+    RatingEntity entity1 = repository.findById(savedEntity.getId()).block();
+    RatingEntity entity2 = repository.findById(savedEntity.getId()).block();
 
     // Update the entity using the first entity object
     entity1.setAuthor("a1");
@@ -92,7 +93,7 @@ public class PersistenceTests extends MongoDbTestBase {
         });
 
     // Get the updated entity from the database and verify its new sate
-    RatingEntity updatedEntity = repository.findById(savedEntity.getId()).get();
+    RatingEntity updatedEntity = repository.findById(savedEntity.getId()).block();
     assertEquals(1, (int) updatedEntity.getVersion());
     assertEquals("a1", updatedEntity.getAuthor());
   }

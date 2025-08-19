@@ -3,11 +3,12 @@ package com.loan.origination.system.microservices.review.controller;
 import com.loan.origination.system.api.core.review.Review;
 import com.loan.origination.system.api.core.review.ReviewAPI;
 import com.loan.origination.system.microservices.review.service.ReviewService;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 public class ReviewController implements ReviewAPI {
@@ -21,18 +22,18 @@ public class ReviewController implements ReviewAPI {
   }
 
   @Override
-  public List<Review> getReviews(int productId) {
+  public Flux<Review> getReviews(int productId) {
     return reviewService.getReviews(productId);
   }
 
   @Override
-  public Review createReview(Review body) {
+  public Mono<Review> createReview(Review body) {
     LOG.info("Review Controller: " + body);
     return reviewService.createReview(body);
   }
 
   @Override
-  public void deleteReviews(int productId) {
+  public Mono<Void> deleteReviews(int productId) {
     reviewService.deleteReviews(productId);
   }
 }

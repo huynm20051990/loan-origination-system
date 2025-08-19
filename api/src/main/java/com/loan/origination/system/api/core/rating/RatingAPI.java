@@ -1,7 +1,8 @@
 package com.loan.origination.system.api.core.rating;
 
-import java.util.List;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface RatingAPI {
 
@@ -12,7 +13,7 @@ public interface RatingAPI {
    * @return the rating of the product
    */
   @GetMapping(value = "/rating", produces = "application/json")
-  List<Rating> getRatings(@RequestParam(value = "productId", required = true) int productId);
+  Flux<Rating> getRatings(@RequestParam(value = "productId", required = true) int productId);
 
   /**
    * Sample usage, see below.
@@ -24,13 +25,14 @@ public interface RatingAPI {
    * @return A JSON representation of the newly created rating
    */
   @PostMapping(value = "/rating", consumes = "application/json", produces = "application/json")
-  Rating createRating(@RequestBody Rating body);
+  Mono<Rating> createRating(@RequestBody Rating body);
 
   /**
    * Sample usage: "curl -X DELETE $HOST:$PORT/rating?productId=1".
    *
    * @param productId Id of the product
+   * @return
    */
   @DeleteMapping(value = "/rating")
-  void deleteRatings(@RequestParam(value = "productId", required = true) int productId);
+  Mono<Void> deleteRatings(@RequestParam(value = "productId", required = true) int productId);
 }

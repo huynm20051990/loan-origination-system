@@ -1,16 +1,19 @@
 package com.loan.origination.system.microservices.rating;
 
 import com.loan.origination.system.api.core.rating.Rating;
+import com.loan.origination.system.api.event.Event;
+import com.loan.origination.system.api.exceptions.InvalidInputException;
 import com.loan.origination.system.microservices.rating.repository.RatingRepository;
+import java.util.function.Consumer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Mono;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RatingServiceApplicationTests extends MongoDbTestBase {
@@ -18,6 +21,10 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
   @Autowired private WebTestClient client;
 
   @Autowired private RatingRepository repository;
+
+  @Autowired
+  @Qualifier("messageProcessor")
+  private Consumer<Event<Integer, Rating>> messageProcessor;
 
   @BeforeEach
   void setupDb() {
@@ -28,18 +35,18 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
   void getRatingsByProductId() {
     int productId = 1;
 
-    postAndVerifyRating(productId, 1, HttpStatus.OK);
-    postAndVerifyRating(productId, 2, HttpStatus.OK);
-    postAndVerifyRating(productId, 3, HttpStatus.OK);
+    sendCreateRatingEvent(productId, 1);
+    sendCreateRatingEvent(productId, 2);
+    sendCreateRatingEvent(productId, 3);
 
-    Assertions.assertEquals(3, repository.findByProductId(productId).size());
+    Assertions.assertEquals(3, (long) repository.findByProductId(productId).count().block());
 
     getAndVerifyRatingsByProductId(productId, HttpStatus.OK)
         .jsonPath("$.length()")
         .isEqualTo(3)
         .jsonPath("$[2].productId")
         .isEqualTo(productId)
-        .jsonPath("$[2].ratingId")
+        .jsonPath("$[2].recommendationId")
         .isEqualTo(3);
   }
 
@@ -49,21 +56,18 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
     int productId = 1;
     int ratingId = 1;
 
-    postAndVerifyRating(productId, ratingId, HttpStatus.OK)
-        .jsonPath("$.productId")
-        .isEqualTo(productId)
-        .jsonPath("$.ratingId")
-        .isEqualTo(ratingId);
+    sendCreateRatingEvent(productId, ratingId);
 
-    Assertions.assertEquals(1, repository.count());
+    Assertions.assertEquals(1, (long) repository.count().block());
 
-    postAndVerifyRating(productId, ratingId, HttpStatus.UNPROCESSABLE_ENTITY)
-        .jsonPath("$.path")
-        .isEqualTo("/rating")
-        .jsonPath("$.message")
-        .isEqualTo("Duplicate key, Product Id: 1, Rating Id: 1");
+    InvalidInputException thrown =
+        Assertions.assertThrows(
+            InvalidInputException.class,
+            () -> sendCreateRatingEvent(productId, ratingId),
+            "Expected a InvalidInputException here!");
+    Assertions.assertEquals("Duplicate key, Product Id: 1, Rating Id:1", thrown.getMessage());
 
-    Assertions.assertEquals(1, repository.count());
+    Assertions.assertEquals(1, (long) repository.count().block());
   }
 
   @Test
@@ -72,13 +76,13 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
     int productId = 1;
     int ratingId = 1;
 
-    postAndVerifyRating(productId, ratingId, HttpStatus.OK);
-    Assertions.assertEquals(1, repository.findByProductId(productId).size());
+    sendCreateRatingEvent(productId, ratingId);
+    Assertions.assertEquals(1, repository.findByProductId(productId).count().block());
 
-    deleteAndVerifyRatingsByProductId(productId, HttpStatus.OK);
-    Assertions.assertEquals(0, repository.findByProductId(productId).size());
+    sendDeleteRatingEvent(productId);
+    Assertions.assertEquals(0, repository.findByProductId(productId).count().block());
 
-    deleteAndVerifyRatingsByProductId(productId, HttpStatus.OK);
+    sendDeleteRatingEvent(productId);
   }
 
   @Test
@@ -136,24 +140,6 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
         .expectBody();
   }
 
-  private WebTestClient.BodyContentSpec postAndVerifyRating(
-      int productId, int ratingId, HttpStatus expectedStatus) {
-    Rating rating =
-        new Rating(
-            productId, ratingId, "Author " + ratingId, ratingId, "Content " + ratingId, "SA");
-    return client
-        .post()
-        .uri("/rating")
-        .body(Mono.just(rating), Rating.class)
-        .accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus()
-        .isEqualTo(expectedStatus)
-        .expectHeader()
-        .contentType(MediaType.APPLICATION_JSON)
-        .expectBody();
-  }
-
   private WebTestClient.BodyContentSpec deleteAndVerifyRatingsByProductId(
       int productId, HttpStatus expectedStatus) {
     return client
@@ -164,5 +150,23 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
         .expectStatus()
         .isEqualTo(expectedStatus)
         .expectBody();
+  }
+
+  private void sendCreateRatingEvent(int productId, int recommendationId) {
+    Rating recommendation =
+        new Rating(
+            productId,
+            recommendationId,
+            "Author " + recommendationId,
+            recommendationId,
+            "Content " + recommendationId,
+            "SA");
+    Event<Integer, Rating> event = new Event(Event.Type.CREATE, productId, recommendation);
+    messageProcessor.accept(event);
+  }
+
+  private void sendDeleteRatingEvent(int productId) {
+    Event<Integer, Rating> event = new Event(Event.Type.DELETE, productId, null);
+    messageProcessor.accept(event);
   }
 }

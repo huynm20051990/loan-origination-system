@@ -23,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 public class ProductCompositeIntegration implements ProductAPI, RatingAPI, ReviewAPI {
@@ -51,7 +53,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public Product getProduct(int productId) {
+  public Mono<Product> getProduct(int productId) {
     try {
       String url = productServiceUrl + "/" + productId;
       LOG.debug("Will call getProduct API on URL: {}", url);
@@ -72,7 +74,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public Product createProduct(Product body) {
+  public Mono<Product> createProduct(Product body) {
     try {
       String url = productServiceUrl;
       LOG.debug("Will post a new product to URL: {}", url);
@@ -88,7 +90,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public void deleteProduct(int productId) {
+  public Mono<Void> deleteProduct(int productId) {
     try {
       String url = productServiceUrl + "/" + productId;
       LOG.debug("Will call the deleteProduct API on URL: {}", url);
@@ -101,7 +103,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public List<Rating> getRatings(int productId) {
+  public Flux<Rating> getRatings(int productId) {
 
     try {
       String url = ratingServiceUrl + productId;
@@ -121,7 +123,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public Rating createRating(Rating body) {
+  public Mono<Rating> createRating(Rating body) {
     try {
       String url = ratingServiceUrl;
       LOG.debug("Will post a new rating to URL: {}", url);
@@ -137,7 +139,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public void deleteRatings(int productId) {
+  public Mono<Void> deleteRatings(int productId) {
     try {
       String url = ratingServiceUrl + "?productId=" + productId;
       LOG.debug("Will call the deleteRatings API on URL: {}", url);
@@ -150,7 +152,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public List<Review> getReviews(int productId) {
+  public Flux<Review> getReviews(int productId) {
     try {
       String url = reviewServiceUrl + productId;
       LOG.debug("Will call getReviews API on URL: {}", url);
@@ -169,7 +171,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public Review createReview(Review body) {
+  public Mono<Review> createReview(Review body) {
     try {
       String url = reviewServiceUrl;
       LOG.debug("Will post a new review to URL: {}", url);
@@ -185,7 +187,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public void deleteReviews(int productId) {
+  public Mono<Void> deleteReviews(int productId) {
     try {
       String url = reviewServiceUrl + "?productId=" + productId;
       LOG.debug("Will call the deleteReviews API on URL: {}", url);

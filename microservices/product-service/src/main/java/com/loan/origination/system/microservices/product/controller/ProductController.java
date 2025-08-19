@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 public class ProductController implements ProductAPI {
@@ -21,17 +22,17 @@ public class ProductController implements ProductAPI {
   }
 
   @Override
-  public Product getProduct(int productId) {
+  public Mono<Product> getProduct(int productId) {
     return productService.getProduct(productId);
   }
 
   @Override
-  public Product createProduct(Product body) {
+  public Mono<Product> createProduct(Product body) {
     return productService.createProduct(body);
   }
 
   @Override
-  public void deleteProduct(int productId) {
-    productService.deleteProduct(productId);
+  public Mono<Void> deleteProduct(int productId) {
+    return productService.deleteProduct(productId);
   }
 }

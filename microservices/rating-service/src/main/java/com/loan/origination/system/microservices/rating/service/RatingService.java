@@ -6,12 +6,14 @@ import com.loan.origination.system.microservices.rating.entity.RatingEntity;
 import com.loan.origination.system.microservices.rating.mapper.RatingMapper;
 import com.loan.origination.system.microservices.rating.repository.RatingRepository;
 import com.loan.origination.system.util.http.ServiceUtil;
-import java.util.List;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class RatingService {
@@ -29,38 +31,52 @@ public class RatingService {
     this.ratingMapper = ratingMapper;
   }
 
-  public Rating createRating(Rating rating) {
-    try {
-      RatingEntity entity = ratingMapper.apiToEntity(rating);
-      RatingEntity newEntity = ratingRepository.save(entity);
-      Rating response = ratingMapper.entityToApi(newEntity);
-      LOG.debug(
-          "createRating: created a rating entity: {}/{}",
-          rating.getProductId(),
-          rating.getRatingId());
-      return response;
-    } catch (DuplicateKeyException dke) {
-      throw new InvalidInputException(
-          "Duplicate key, Product Id: "
-              + rating.getProductId()
-              + ", Rating Id: "
-              + rating.getRatingId());
+  public Mono<Rating> createRating(Rating rating) {
+    if (rating.getProductId() < 1) {
+      throw new InvalidInputException("Invalid productId: " + rating.getProductId());
     }
+
+    RatingEntity entity = ratingMapper.apiToEntity(rating);
+    Mono<Rating> newEntity =
+        ratingRepository
+            .save(entity)
+            .log(LOG.getName(), Level.FINE)
+            .onErrorMap(
+                DuplicateKeyException.class,
+                ex ->
+                    new InvalidInputException(
+                        "Duplicate key, Product Id: "
+                            + rating.getProductId()
+                            + ", Rating Id:"
+                            + rating.getRatingId()))
+            .map(e -> ratingMapper.entityToApi(e));
+    return newEntity;
   }
 
-  public List<Rating> getRatings(int productId) {
+  public Flux<Rating> getRatings(int productId) {
     if (productId < 1) {
       throw new InvalidInputException("Invalid productId: " + productId);
     }
-    List<RatingEntity> entityList = ratingRepository.findByProductId(productId);
-    List<Rating> list = ratingMapper.entityListToApiList(entityList);
-    list.forEach(e -> e.setServiceAddress(serviceUtil.getServiceAddress()));
-    LOG.debug("getRatings: response size: {}", list.size());
-    return list;
+    LOG.info("Will get ratings for product with id={}", productId);
+
+    return ratingRepository
+        .findByProductId(productId)
+        .log(LOG.getName(), Level.FINE)
+        .map(e -> ratingMapper.entityToApi(e))
+        .map(e -> setServiceAddress(e));
   }
 
-  public void deleteRatings(int productId) {
+  public Mono<Void> deleteRatings(int productId) {
+    if (productId < 1) {
+      throw new InvalidInputException("Invalid productId: " + productId);
+    }
+
     LOG.debug("deleteRatings: tries to delete ratings for productId: {}", productId);
-    ratingRepository.deleteAll(ratingRepository.findByProductId(productId));
+    return ratingRepository.deleteAll(ratingRepository.findByProductId(productId));
+  }
+
+  private Rating setServiceAddress(Rating e) {
+    e.setServiceAddress(serviceUtil.getServiceAddress());
+    return e;
   }
 }

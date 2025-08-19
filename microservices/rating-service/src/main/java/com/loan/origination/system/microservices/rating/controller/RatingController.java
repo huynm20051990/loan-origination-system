@@ -3,11 +3,12 @@ package com.loan.origination.system.microservices.rating.controller;
 import com.loan.origination.system.api.core.rating.Rating;
 import com.loan.origination.system.api.core.rating.RatingAPI;
 import com.loan.origination.system.microservices.rating.service.RatingService;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 public class RatingController implements RatingAPI {
@@ -22,17 +23,17 @@ public class RatingController implements RatingAPI {
   }
 
   @Override
-  public List<Rating> getRatings(int productId) {
+  public Flux<Rating> getRatings(int productId) {
     return ratingService.getRatings(productId);
   }
 
   @Override
-  public Rating createRating(Rating body) {
+  public Mono<Rating> createRating(Rating body) {
     return ratingService.createRating(body);
   }
 
   @Override
-  public void deleteRatings(int productId) {
+  public Mono<Void> deleteRatings(int productId) {
     ratingService.deleteRatings(productId);
   }
 }
