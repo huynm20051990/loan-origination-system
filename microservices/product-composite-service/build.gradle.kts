@@ -17,6 +17,8 @@ repositories {
     mavenCentral()
 }
 
+extra["springCloudVersion"] = "2022.0.1"
+
 tasks.named<Jar>("jar") {
     enabled = false
 }
@@ -24,13 +26,23 @@ tasks.named<Jar>("jar") {
 dependencies {
     implementation(project(":api"))
     implementation(project(":util"))
+    implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
+    implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.9")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.cloud:spring-cloud-stream-test-binder")
     testImplementation("io.projectreactor:reactor-test")
 }
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }

@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,15 +36,18 @@ class ProductCompositeServiceApplicationTests {
   @BeforeEach
   void setup() {
     when(integration.getProduct(PRODUCT_ID_OK))
-        .thenReturn(new Product(PRODUCT_ID_OK, "name", "name-" + PRODUCT_ID_OK, "mock-address"));
+        .thenReturn(
+            Mono.just(new Product(PRODUCT_ID_OK, "name", "name-" + PRODUCT_ID_OK, "mock-address")));
     when(integration.getRatings(PRODUCT_ID_OK))
         .thenReturn(
-            Collections.singletonList(
-                new Rating(PRODUCT_ID_OK, 1, "author", 1, "content", "mock-address")));
+            Flux.fromIterable(
+                Collections.singletonList(
+                    new Rating(PRODUCT_ID_OK, 1, "author", 1, "content", "mock-address"))));
     when(integration.getReviews(PRODUCT_ID_OK))
         .thenReturn(
-            Collections.singletonList(
-                new Review(PRODUCT_ID_OK, 1, "author", "subject", "content", "mock-address")));
+            Flux.fromIterable(
+                Collections.singletonList(
+                    new Review(PRODUCT_ID_OK, 1, "author", "subject", "content", "mock-address"))));
 
     when(integration.getProduct(PRODUCT_ID_NOT_FOUND))
         .thenThrow(new NotFoundException("NOT FOUND: " + PRODUCT_ID_NOT_FOUND));
