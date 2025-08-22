@@ -14,6 +14,7 @@ java {
 }
 
 val mapstructVersion = "1.6.3"
+var springCloudVersion = "2022.0.1"
 
 repositories {
     mavenCentral()
@@ -30,6 +31,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
+    implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
     implementation("com.mysql:mysql-connector-j")
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
     compileOnly("org.mapstruct:mapstruct-processor:$mapstructVersion")
@@ -42,6 +45,12 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+    }
 }
 
 tasks.withType<Test> {

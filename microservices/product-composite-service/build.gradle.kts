@@ -17,7 +17,7 @@ repositories {
     mavenCentral()
 }
 
-extra["springCloudVersion"] = "2022.0.1"
+var springCloudVersion = "2022.0.1"
 
 tasks.named<Jar>("jar") {
     enabled = false
@@ -39,7 +39,7 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
     }
 }
 
