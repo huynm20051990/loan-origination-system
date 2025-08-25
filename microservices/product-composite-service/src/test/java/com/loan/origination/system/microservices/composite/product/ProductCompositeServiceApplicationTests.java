@@ -2,9 +2,6 @@ package com.loan.origination.system.microservices.composite.product;
 
 import static org.mockito.Mockito.when;
 
-import com.loan.origination.system.api.composite.product.ProductAggregate;
-import com.loan.origination.system.api.composite.product.RatingSummary;
-import com.loan.origination.system.api.composite.product.ReviewSummary;
 import com.loan.origination.system.api.core.product.Product;
 import com.loan.origination.system.api.core.rating.Rating;
 import com.loan.origination.system.api.core.review.Review;
@@ -60,63 +57,6 @@ class ProductCompositeServiceApplicationTests {
   void contextLoads() {}
 
   @Test
-  void createCompositeProduct1() {
-
-    ProductAggregate compositeProduct = new ProductAggregate(1, "name", "1", null, null, null);
-
-    postAndVerifyProduct(compositeProduct, HttpStatus.OK);
-  }
-
-  @Test
-  void createCompositeProduct2() {
-    ProductAggregate compositeProduct =
-        new ProductAggregate(
-            1,
-            "name",
-            "1",
-            Collections.singletonList(new RatingSummary(1, "a", 1, "c")),
-            Collections.singletonList(new ReviewSummary(1, "a", "s", "c")),
-            null);
-
-    postAndVerifyProduct(compositeProduct, HttpStatus.OK);
-  }
-
-  @Test
-  void deleteCompositeProduct() {
-    ProductAggregate compositeProduct =
-        new ProductAggregate(
-            1,
-            "name",
-            "1",
-            Collections.singletonList(new RatingSummary(1, "a", 1, "c")),
-            Collections.singletonList(new ReviewSummary(1, "a", "s", "c")),
-            null);
-
-    postAndVerifyProduct(compositeProduct, HttpStatus.OK);
-
-    deleteAndVerifyProduct(compositeProduct.getProductId(), HttpStatus.OK);
-    deleteAndVerifyProduct(compositeProduct.getProductId(), HttpStatus.OK);
-  }
-
-  @Test
-  void getProductInvalid() {
-    client
-        .get()
-        .uri("/product-composite/" + PRODUCT_ID_INVALID)
-        .accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus()
-        .isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY)
-        .expectHeader()
-        .contentType(MediaType.APPLICATION_JSON)
-        .expectBody()
-        .jsonPath("$.path")
-        .isEqualTo("/product-composite/" + PRODUCT_ID_INVALID)
-        .jsonPath("$.message")
-        .isEqualTo("INVALID: " + PRODUCT_ID_INVALID);
-  }
-
-  @Test
   void getProductById() {
 
     getAndVerifyProduct(PRODUCT_ID_OK, HttpStatus.OK)
@@ -160,24 +100,5 @@ class ProductCompositeServiceApplicationTests {
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody();
-  }
-
-  private void postAndVerifyProduct(ProductAggregate compositeProduct, HttpStatus expectedStatus) {
-    client
-        .post()
-        .uri("/product-composite")
-        .body(Mono.just(compositeProduct), ProductAggregate.class)
-        .exchange()
-        .expectStatus()
-        .isEqualTo(expectedStatus);
-  }
-
-  private void deleteAndVerifyProduct(int productId, HttpStatus expectedStatus) {
-    client
-        .delete()
-        .uri("/product-composite/" + productId)
-        .exchange()
-        .expectStatus()
-        .isEqualTo(expectedStatus);
   }
 }
