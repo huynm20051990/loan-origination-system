@@ -17,7 +17,7 @@ repositories {
     mavenCentral()
 }
 
-var springCloudVersion = "2022.0.1"
+var springCloudVersion = "2025.0.0"
 
 tasks.named<Jar>("jar") {
     enabled = false
