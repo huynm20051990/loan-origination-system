@@ -21,7 +21,7 @@ public class HealthCheckConfiguration {
     final Map<String, ReactiveHealthIndicator> registry = new LinkedHashMap<>();
 
     registry.put("product", () -> integration.getProductHealth());
-    registry.put("recommendation", () -> integration.getRecommendationHealth());
+    registry.put("rating", () -> integration.getRatingHealth());
     registry.put("review", () -> integration.getReviewHealth());
 
     return CompositeReactiveHealthContributor.fromMap(registry);

@@ -170,7 +170,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
     return getHealth(productServiceUrl);
   }
 
-  public Mono<Health> getRecommendationHealth() {
+  public Mono<Health> getRatingHealth() {
     return getHealth(ratingServiceUrl);
   }
 

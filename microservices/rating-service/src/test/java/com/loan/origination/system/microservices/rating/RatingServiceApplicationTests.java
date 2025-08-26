@@ -46,7 +46,7 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
         .isEqualTo(3)
         .jsonPath("$[2].productId")
         .isEqualTo(productId)
-        .jsonPath("$[2].recommendationId")
+        .jsonPath("$[2].ratingId")
         .isEqualTo(3);
   }
 
@@ -152,16 +152,11 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
         .expectBody();
   }
 
-  private void sendCreateRatingEvent(int productId, int recommendationId) {
-    Rating recommendation =
+  private void sendCreateRatingEvent(int productId, int ratingId) {
+    Rating rating =
         new Rating(
-            productId,
-            recommendationId,
-            "Author " + recommendationId,
-            recommendationId,
-            "Content " + recommendationId,
-            "SA");
-    Event<Integer, Rating> event = new Event(Event.Type.CREATE, productId, recommendation);
+            productId, ratingId, "Author " + ratingId, ratingId, "Content " + ratingId, "SA");
+    Event<Integer, Rating> event = new Event(Event.Type.CREATE, productId, rating);
     messageProcessor.accept(event);
   }
 
