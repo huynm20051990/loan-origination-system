@@ -29,7 +29,7 @@ class ProductServiceApplicationTests extends MongoDBTestBase {
 
   @BeforeEach
   void setupDb() {
-    repository.deleteAll();
+    repository.deleteAll().block();
   }
 
   @Test

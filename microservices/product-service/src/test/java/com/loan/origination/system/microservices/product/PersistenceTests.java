@@ -20,10 +20,16 @@ public class PersistenceTests extends MongoDBTestBase {
 
   @BeforeEach
   void setupDb() {
-    repository.deleteAll();
-    ProductEntity entity = new ProductEntity(1, "A", "PA1");
-    savedEntity = repository.save(entity).block();
-    areProductEqual(entity, savedEntity);
+    StepVerifier.create(repository.deleteAll()).verifyComplete();
+
+    ProductEntity entity = new ProductEntity(1, "n", "1");
+    StepVerifier.create(repository.save(entity))
+        .expectNextMatches(
+            createdEntity -> {
+              savedEntity = createdEntity;
+              return areProductEqual(entity, savedEntity);
+            })
+        .verifyComplete();
   }
 
   @Test
@@ -35,37 +41,45 @@ public class PersistenceTests extends MongoDBTestBase {
 
   @Test
   void duplicateError() {
-    assertThrows(
-        DuplicateKeyException.class,
-        () -> {
-          ProductEntity entity = new ProductEntity(savedEntity.getProductId(), "n", "PN");
-          repository.save(entity);
-        });
+    ProductEntity entity = new ProductEntity(savedEntity.getProductId(), "n", "1");
+    StepVerifier.create(repository.save(entity)).expectError(DuplicateKeyException.class).verify();
   }
 
   @Test
   void create() {
-    ProductEntity newEntity = new ProductEntity(2, "B", "PB");
-    repository.save(newEntity);
-    ProductEntity foundEntity = repository.findByProductId(newEntity.getProductId()).block();
-    areProductEqual(newEntity, foundEntity);
-    assertEquals(2, repository.count());
+    ProductEntity newEntity = new ProductEntity(2, "n", "2");
+
+    StepVerifier.create(repository.save(newEntity))
+        .expectNextMatches(
+            createdEntity -> newEntity.getProductId() == createdEntity.getProductId())
+        .verifyComplete();
+
+    StepVerifier.create(repository.findById(newEntity.getId()))
+        .expectNextMatches(foundEntity -> areProductEqual(newEntity, foundEntity))
+        .verifyComplete();
+
+    StepVerifier.create(repository.count()).expectNext(2L).verifyComplete();
   }
 
   @Test
   void update() {
-    savedEntity.setName("A1");
-    repository.save(savedEntity);
+    savedEntity.setName("n2");
+    StepVerifier.create(repository.save(savedEntity))
+        .expectNextMatches(updatedEntity -> updatedEntity.getName().equals("n2"))
+        .verifyComplete();
 
-    ProductEntity foundEntity = repository.findById(savedEntity.getId()).block();
-    assertEquals(1, (long) foundEntity.getVersion());
-    assertEquals("A1", foundEntity.getName());
+    StepVerifier.create(repository.findById(savedEntity.getId()))
+        .expectNextMatches(
+            foundEntity -> foundEntity.getVersion() == 1 && foundEntity.getName().equals("n2"))
+        .verifyComplete();
   }
 
   @Test
   void delete() {
-    repository.delete(savedEntity);
-    assertFalse(repository.existsById(savedEntity.getId()).block());
+    StepVerifier.create(repository.delete(savedEntity)).verifyComplete();
+    StepVerifier.create(repository.existsById(savedEntity.getId()))
+        .expectNext(false)
+        .verifyComplete();
   }
 
   @Test
@@ -77,22 +91,20 @@ public class PersistenceTests extends MongoDBTestBase {
 
     // Update the entity using the first entity object
     entity1.setName("n1");
-    repository.save(entity1);
+    repository.save(entity1).block();
 
-    // Update the entity using the second entity object.
-    // This should fail since the second entity now holds an old version number, i.e. an Optimistic
+    //  Update the entity using the second entity object.
+    // This should fail since the second entity now holds a old version number, i.e. a Optimistic
     // Lock Error
-    assertThrows(
-        OptimisticLockingFailureException.class,
-        () -> {
-          entity2.setName("n2");
-          repository.save(entity2);
-        });
+    StepVerifier.create(repository.save(entity2))
+        .expectError(OptimisticLockingFailureException.class)
+        .verify();
 
-    // Get the updated entity from the database and verify its new state
-    ProductEntity updatedEntity = repository.findById(savedEntity.getId()).block();
-    assertEquals(1, (int) updatedEntity.getVersion());
-    assertEquals("n1", updatedEntity.getName());
+    // Get the updated entity from the database and verify its new sate
+    StepVerifier.create(repository.findById(savedEntity.getId()))
+        .expectNextMatches(
+            foundEntity -> foundEntity.getVersion() == 1 && foundEntity.getName().equals("n1"))
+        .verifyComplete();
   }
 
   private boolean areProductEqual(ProductEntity expectedEntity, ProductEntity actualEntity) {

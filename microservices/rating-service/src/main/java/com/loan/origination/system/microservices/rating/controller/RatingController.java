@@ -34,6 +34,6 @@ public class RatingController implements RatingAPI {
 
   @Override
   public Mono<Void> deleteRatings(int productId) {
-    ratingService.deleteRatings(productId);
+    return ratingService.deleteRatings(productId);
   }
 }
