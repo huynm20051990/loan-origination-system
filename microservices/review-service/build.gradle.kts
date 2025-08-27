@@ -14,7 +14,7 @@ java {
 }
 
 val mapstructVersion = "1.6.3"
-var springCloudVersion = "2022.0.1"
+var springCloudVersion = "2025.0.0"
 
 repositories {
     mavenCentral()
