@@ -1,44 +1,32 @@
 # 🔍 Logical Components
 
-## 🏛 Core Services
+## Core Domain Services
 
-- **Loan Product Service**
-    - Manages loan product catalog (personal loan, mortgage, auto loan).
-    - Stores interest rates, terms, eligibility criteria.
-    - Provides search and detail APIs.
+### Loan Product Service
+- Maintains the **loan product catalog** (personal, mortgage, auto).
+- Stores product attributes: **interest rates, terms, eligibility criteria**.
+- Exposes APIs for product **search** and **detailed view**.
 
-- **Loan Application Service**
-    - Handles loan application lifecycle (submit, review, approve/reject).
-    - Integrates with external credit scoring service.
-    - Supports document upload & secure storage.
-    - Publishes application status events.
+### Loan Application Service
+- Orchestrates the **loan application lifecycle**: submission → review → approval/rejection.
+- Integrates with the **external credit scoring service**.
+- Supports **document upload** with secure storage.
+- Publishes **application status events** for other services.
 
-- **Rating & Review Service**
-    - Manages customer ratings and reviews of loan products.
-    - Provides aggregated product rating for display in product catalog.
-    - Enforces rule: only approved applicants can review.
+### Rating & Review Service
+- Allows customers to **submit ratings and reviews** for loan products.
+- Provides **aggregated ratings** and recent feedback for product details.
+- Enforces business rule: **only approved applicants can review**.
 
-## 🧩 Supporting Components
+---
 
-- **User Service**
-    - Manages authentication, authorization, and user profiles.
-    - Provides role-based access (customer, loan officer, admin).
+## Supporting Services
 
-- **Notification Service**
-    - Sends email/SMS notifications for status updates and approvals.
+### User Service
+- Manages **user authentication and authorization**.
+- Maintains **user profiles**.
+- Provides **role-based access** (customer, loan officer, admin).
 
-- **API Gateway**
-    - Single entry point for all clients.
-    - Enforces security, routing, throttling.
-
-## 🗄 Data Stores
-
-- Loan Product DB (SQL)
-- Loan Application DB (SQL/Document DB for uploaded files metadata)
-- Ratings DB (NoSQL for reviews, aggregations)
-- User DB (SQL with strong security & encryption)
-
-## 🔄 External Systems
-
-- **Credit Scoring Service**: Third-party system for automated credit checks.
-- **Email/SMS Provider**: External service for customer notifications.
+### Notification Service
+- Sends **email and SMS notifications** for application status and approvals.
+- Subscribes to **application events** to trigger customer updates.
