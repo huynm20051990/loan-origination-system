@@ -1,84 +1,44 @@
-# Loan Origination System – Recommended Microservice Split
+# 🔍 Logical Components
 
-This document suggests a microservice split aligned with **DDD subdomains and bounded contexts** for a Loan Origination System (LOS).
+## 🏛 Core Services
 
----
+- **Loan Product Service**
+    - Manages loan product catalog (personal loan, mortgage, auto loan).
+    - Stores interest rates, terms, eligibility criteria.
+    - Provides search and detail APIs.
 
-## 🔑 Core Microservices
+- **Loan Application Service**
+    - Handles loan application lifecycle (submit, review, approve/reject).
+    - Integrates with external credit scoring service.
+    - Supports document upload & secure storage.
+    - Publishes application status events.
 
-- **loan-application-service**
-  Handles borrower loan applications, workflow, and state transitions.
-  *Domain terms:* Loan Application, Applicant, Status, Workflow Step.
+- **Rating & Review Service**
+    - Manages customer ratings and reviews of loan products.
+    - Provides aggregated product rating for display in product catalog.
+    - Enforces rule: only approved applicants can review.
 
-- **credit-decisioning-service**
-  Integrates with credit bureaus, applies scoring models, calculates risk.
-  *Domain terms:* Credit Score, Risk Assessment, Decision Outcome.
+## 🧩 Supporting Components
 
-- **underwriting-service**
-  Applies lending policies and eligibility rules for approval/decline.
-  *Domain terms:* Underwriter, Eligibility Criteria, Policy Rule.
+- **User Service**
+    - Manages authentication, authorization, and user profiles.
+    - Provides role-based access (customer, loan officer, admin).
 
-- **loan-offer-service**
-  Generates personalized loan offers with terms, interest rates, and repayment schedules.
-  *Domain terms:* Loan Offer, Interest Rate, APR, Repayment Schedule.
+- **Notification Service**
+    - Sends email/SMS notifications for status updates and approvals.
 
----
+- **API Gateway**
+    - Single entry point for all clients.
+    - Enforces security, routing, throttling.
 
-## 🤝 Supporting Microservices
+## 🗄 Data Stores
 
-- **loan-product-service**
-  Manages product catalog and loan product exploration.
-  *Domain terms:* Loan Product, Rate Table, Eligibility Information.
+- Loan Product DB (SQL)
+- Loan Application DB (SQL/Document DB for uploaded files metadata)
+- Ratings DB (NoSQL for reviews, aggregations)
+- User DB (SQL with strong security & encryption)
 
-- **document-service**
-  Handles document upload, storage, and verification.
-  *Domain terms:* Document, Document Type, Verification, Fraud Check.
+## 🔄 External Systems
 
-- **kyc-service**
-  Manages AML/KYC checks and identity verification.
-  *Domain terms:* KYC, Identity Document, AML Check, Verification Result.
-
-- **compliance-service**
-  Provides audit trail, decision justification, and regulatory reporting.
-  *Domain terms:* Audit Trail, Retention Policy, Decision Justification.
-
-- **notification-service**
-  Sends email/SMS/push notifications to applicants.
-  *Domain terms:* Notification, Status Update, Reminder.
-
-- **funding-service**
-  Manages loan disbursement and payout confirmation.
-  *Domain terms:* Disbursement, Funding Instruction, Settlement Account.
-
----
-
-## ⚙️ Generic/Shared Infrastructure
-
-- **auth-service**
-  Authentication and authorization (SSO, OAuth2, Keycloak).
-  *Domain terms:* User, Role, Access Token.
-
-- **user-service**
-  User management and role assignments.
-  *Domain terms:* User Profile, Group, Account Status.
-
-- **logging-service**
-  Centralized logging and monitoring.
-  *Domain terms:* Log Entry, Metric, Alert.
-
-- **reporting-service**
-  Reporting, dashboards, and analytics.
-  *Domain terms:* Report, Dashboard, KPI, Data Export.
-
-- **integration-service**
-  Provides API gateway, messaging, and external system connectors.
-  *Domain terms:* API, Event, Message Queue, Connector.
-
----
-
-## ✅ Notes
-
-- Core microservices require **rich domain models** with aggregates, entities, and events.
-- Supporting microservices may use **simpler models** or external libraries.
-- Generic microservices should rely on **off-the-shelf solutions** when possible.
-- Cross-cutting concerns (auth, logging, reporting) should not duplicate business logic.
+- **Credit Scoring Service**: Third-party system for automated credit checks.
+- **Email/SMS Provider**: External service for customer notifications.
