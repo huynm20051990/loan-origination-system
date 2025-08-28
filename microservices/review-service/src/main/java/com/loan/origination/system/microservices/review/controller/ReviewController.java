@@ -34,6 +34,6 @@ public class ReviewController implements ReviewAPI {
 
   @Override
   public Mono<Void> deleteReviews(int productId) {
-    reviewService.deleteReviews(productId);
+    return reviewService.deleteReviews(productId);
   }
 }

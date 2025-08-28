@@ -28,7 +28,7 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
 
   @BeforeEach
   void setupDb() {
-    repository.deleteAll();
+    repository.deleteAll().block();
   }
 
   @Test
@@ -65,7 +65,7 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
             InvalidInputException.class,
             () -> sendCreateRatingEvent(productId, ratingId),
             "Expected a InvalidInputException here!");
-    Assertions.assertEquals("Duplicate key, Product Id: 1, Rating Id:1", thrown.getMessage());
+    Assertions.assertEquals("Duplicate key, Product Id: 1, Rating Id: 1", thrown.getMessage());
 
     Assertions.assertEquals(1, (long) repository.count().block());
   }
@@ -137,18 +137,6 @@ class RatingServiceApplicationTests extends MongoDbTestBase {
         .isEqualTo(expectedStatus)
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
-        .expectBody();
-  }
-
-  private WebTestClient.BodyContentSpec deleteAndVerifyRatingsByProductId(
-      int productId, HttpStatus expectedStatus) {
-    return client
-        .delete()
-        .uri("/rating?productId=" + productId)
-        .accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus()
-        .isEqualTo(expectedStatus)
         .expectBody();
   }
 

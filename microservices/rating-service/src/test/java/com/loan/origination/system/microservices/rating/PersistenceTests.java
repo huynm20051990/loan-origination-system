@@ -23,7 +23,7 @@ public class PersistenceTests extends MongoDbTestBase {
 
   @BeforeEach
   void setupDb() {
-    repository.deleteAll();
+    repository.deleteAll().block();
     RatingEntity entity = new RatingEntity(1, 2, "a", 3, "c");
     savedEntity = repository.save(entity).block();
     assertEqualsRating(entity, savedEntity);
@@ -40,16 +40,16 @@ public class PersistenceTests extends MongoDbTestBase {
   @Test
   void create() {
     RatingEntity newEntity = new RatingEntity(1, 3, "a", 3, "c");
-    repository.save(newEntity);
+    repository.save(newEntity).block();
     RatingEntity foundEntity = repository.findById(newEntity.getId()).block();
     assertEqualsRating(newEntity, foundEntity);
-    assertEquals(2, repository.count());
+    assertEquals(2, (long) repository.count().block());
   }
 
   @Test
   void update() {
     savedEntity.setAuthor("a2");
-    repository.save(savedEntity);
+    repository.save(savedEntity).block();
     RatingEntity foundEntity = repository.findById(savedEntity.getId()).block();
     assertEquals(1, (long) foundEntity.getVersion());
     assertEquals("a2", foundEntity.getAuthor());
@@ -57,7 +57,7 @@ public class PersistenceTests extends MongoDbTestBase {
 
   @Test
   void delete() {
-    repository.delete(savedEntity);
+    repository.delete(savedEntity).block();
     assertFalse(repository.existsById(savedEntity.getId()).block());
   }
 
@@ -67,7 +67,7 @@ public class PersistenceTests extends MongoDbTestBase {
         DuplicateKeyException.class,
         () -> {
           RatingEntity entity = new RatingEntity(1, 2, "a", 3, "c");
-          repository.save(entity);
+          repository.save(entity).block();
         });
   }
 
@@ -80,7 +80,7 @@ public class PersistenceTests extends MongoDbTestBase {
 
     // Update the entity using the first entity object
     entity1.setAuthor("a1");
-    repository.save(entity1);
+    repository.save(entity1).block();
 
     //  Update the entity using the second entity object.
     // This should fail since the second entity now holds an old version number, i.e. an Optimistic
@@ -89,7 +89,7 @@ public class PersistenceTests extends MongoDbTestBase {
         OptimisticLockingFailureException.class,
         () -> {
           entity2.setAuthor("a2");
-          repository.save(entity2);
+          repository.save(entity2).block();
         });
 
     // Get the updated entity from the database and verify its new sate

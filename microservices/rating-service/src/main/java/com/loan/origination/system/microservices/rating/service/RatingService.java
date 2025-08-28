@@ -47,7 +47,7 @@ public class RatingService {
                     new InvalidInputException(
                         "Duplicate key, Product Id: "
                             + rating.getProductId()
-                            + ", Rating Id:"
+                            + ", Rating Id: "
                             + rating.getRatingId()))
             .map(e -> ratingMapper.entityToApi(e));
     return newEntity;
