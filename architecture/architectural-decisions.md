@@ -123,4 +123,19 @@ Roles include Customer, Loan Officer, and Admin.
 **Status:** Accepted
 
 **Context:**  
-Loan applications require real-time credit checks. De
+Loan applications require real-time credit checks. Dependency on an external credit service introduces risk of downtime and latency.
+
+**Decision:**  
+Integrate via **synchronous REST API calls** with fallback patterns (circuit breaker, retries).
+
+**Consequences:**
+- ✅ Immediate credit decision during application submission.
+- ❌ External dependency introduces latency and failure risk.
+- ❌ Requires robust error handling and retries.
+
+**Governance:**
+- Circuit breakers and timeouts must be configured in all external integrations.
+- Regular SLA monitoring of external providers.
+
+**Notes:**  
+If the credit service is unavailable, applications may be queued for later processing.  
