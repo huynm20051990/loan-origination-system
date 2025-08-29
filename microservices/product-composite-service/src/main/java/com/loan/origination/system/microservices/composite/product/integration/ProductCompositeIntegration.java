@@ -58,9 +58,9 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
     this.webClient = webClient.build();
     this.mapper = mapper;
     this.streamBridge = streamBridge;
-    this.productServiceUrl = "http://" + productServiceHost + ":" + productServicePort + "/product";
-    this.ratingServiceUrl = "http://" + ratingServiceHost + ":" + ratingServicePort + "/rating";
-    this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review";
+    this.productServiceUrl = "http://" + productServiceHost + ":" + productServicePort;
+    this.ratingServiceUrl = "http://" + ratingServiceHost + ":" + ratingServicePort;
+    this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort;
   }
 
   @Override
