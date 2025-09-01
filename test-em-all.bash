@@ -78,18 +78,18 @@ function waitForService() {
 
 function testCompositeCreated() {
 
-    # Expect that the Product Composite for productId $PROD_ID_REVS_RECS has been created with three recommendations and three reviews
-    if ! assertCurl 200 "curl http://$HOST:$PORT/product-composite/$PROD_ID_REVS_RECS -s"
+    # Expect that the Product Composite for productId $PROD_ID_REVS_RECS has been created with three ratings and three reviews
+    if ! assertCurl 200 "curl http://$HOST:$PORT/product-composite/$PROD_ID_RATS_REVS -s"
     then
         echo -n "FAIL"
         return 1
     fi
 
     set +e
-    assertEqual "$PROD_ID_REVS_RECS" $(echo $RESPONSE | jq .productId)
+    assertEqual "$PROD_ID_RATS_REVS" $(echo $RESPONSE | jq .productId)
     if [ "$?" -eq "1" ] ; then return 1; fi
 
-    assertEqual 3 $(echo $RESPONSE | jq ".recommendations | length")
+    assertEqual 3 $(echo $RESPONSE | jq ".ratings | length")
     if [ "$?" -eq "1" ] ; then return 1; fi
 
     assertEqual 3 $(echo $RESPONSE | jq ".reviews | length")
@@ -124,7 +124,7 @@ function recreateComposite() {
   local productId=$1
   local composite=$2
 
-  assertCurl 200 "curl -X DELETE http://$HOST:$PORT/product-composite/${productId} -s"
+  assertCurl 202 "curl -X DELETE http://$HOST:$PORT/product-composite/${productId} -s"
   curl -X POST http://$HOST:$PORT/product-composite -H "Content-Type: application/json" --data "$composite"
 }
 
@@ -221,7 +221,7 @@ assertCurl 302 "curl -s  http://$HOST:$PORT/openapi/swagger-ui.html"
 assertCurl 200 "curl -sL http://$HOST:$PORT/openapi/swagger-ui.html"
 assertCurl 200 "curl -s  http://$HOST:$PORT/openapi/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config"
 assertCurl 200 "curl -s  http://$HOST:$PORT/openapi/v3/api-docs"
-assertEqual "3.0.1" "$(echo $RESPONSE | jq -r .openapi)"
+assertEqual "3.1.0" "$(echo $RESPONSE | jq -r .openapi)"
 assertEqual "http://$HOST:$PORT" "$(echo $RESPONSE | jq -r '.servers[0].url')"
 assertCurl 200 "curl -s  http://$HOST:$PORT/openapi/v3/api-docs.yaml"
 
