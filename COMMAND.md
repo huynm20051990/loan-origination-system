@@ -58,3 +58,15 @@ curl -s localhost:8080/product-composite/2 | jq
 curl -X DELETE localhost:8080/product-composite/1
 
 curl -X DELETE localhost:8080/product-composite/2
+
+export COMPOSE_FILE=docker-compose-kafka.yml
+docker-compose build && docker-compose up -d
+
+docker-compose exec kafka kafka-topics --bootstrap-server localhost:9092 --list
+
+docker-compose exec kafka kafka-topics --bootstrap-server localhost:9092 --describe --topic products
+
+docker-compose exec kafka kafka-console-consumer --bootstrap-server localhost:9092 --topic products --from-beginning --timeout-ms 1000 --partition 0
+docker-compose exec kafka kafka-console-consumer --bootstrap-server localhost:9092 --topic products --from-beginning --timeout-ms 1000 --partition 1
+
+unset COMPOSE_FILE
