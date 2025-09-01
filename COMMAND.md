@@ -70,3 +70,14 @@ docker-compose exec kafka kafka-console-consumer --bootstrap-server localhost:90
 docker-compose exec kafka kafka-console-consumer --bootstrap-server localhost:9092 --topic products --from-beginning --timeout-ms 1000 --partition 1
 
 unset COMPOSE_FILE
+
+unset COMPOSE_FILE
+./test-em-all.bash start stop
+
+export COMPOSE_FILE=docker-compose-partitions.yml
+./test-em-all.bash start stop
+unset COMPOSE_FILE
+
+export COMPOSE_FILE=docker-compose-kafka.yml
+./test-em-all.bash start stop
+unset COMPOSE_FILE
