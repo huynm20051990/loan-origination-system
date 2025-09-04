@@ -35,9 +35,9 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   private static final Logger LOG = LoggerFactory.getLogger(ProductCompositeIntegration.class);
   private final WebClient webClient;
   private final ObjectMapper mapper;
-  private final String productServiceUrl;
-  private final String ratingServiceUrl;
-  private final String reviewServiceUrl;
+  private static final String PRODUCT_SERVICE_URL = "http://product";
+  private static final String RATING_SERVICE_URL = "http://rating";
+  private static final String REVIEW_SERVICE_URL = "http://review";
 
   private final StreamBridge streamBridge;
   private final Scheduler publishEventScheduler;
@@ -58,14 +58,11 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
     this.webClient = webClient.build();
     this.mapper = mapper;
     this.streamBridge = streamBridge;
-    this.productServiceUrl = "http://" + productServiceHost + ":" + productServicePort;
-    this.ratingServiceUrl = "http://" + ratingServiceHost + ":" + ratingServicePort;
-    this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort;
   }
 
   @Override
   public Mono<Product> getProduct(int productId) {
-    String url = productServiceUrl + "/product/" + productId;
+    String url = PRODUCT_SERVICE_URL + "/product/" + productId;
     LOG.debug("Will call the getProduct API on URL: {}", url);
 
     return webClient
@@ -98,7 +95,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
 
   @Override
   public Flux<Rating> getRatings(int productId) {
-    String url = ratingServiceUrl + "/rating?productId=" + productId;
+    String url = RATING_SERVICE_URL + "/rating?productId=" + productId;
 
     LOG.debug("Will call the getRatings API on URL: {}", url);
 
@@ -133,7 +130,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
 
   @Override
   public Flux<Review> getReviews(int productId) {
-    String url = reviewServiceUrl + "/review?productId=" + productId;
+    String url = REVIEW_SERVICE_URL + "/review?productId=" + productId;
 
     LOG.debug("Will call the getReviews API on URL: {}", url);
 
@@ -167,15 +164,15 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   public Mono<Health> getProductHealth() {
-    return getHealth(productServiceUrl);
+    return getHealth(PRODUCT_SERVICE_URL);
   }
 
   public Mono<Health> getRatingHealth() {
-    return getHealth(ratingServiceUrl);
+    return getHealth(RATING_SERVICE_URL);
   }
 
   public Mono<Health> getReviewHealth() {
-    return getHealth(reviewServiceUrl);
+    return getHealth(REVIEW_SERVICE_URL);
   }
 
   private Mono<Health> getHealth(String url) {
