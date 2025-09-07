@@ -1,4 +1,4 @@
-# 📌 Mortgage System - Ubiquitous Language (Updated)
+# 📌 Ubiquitous Language
 
 In Domain-Driven Design (DDD), a **Ubiquitous Language** is a shared vocabulary used consistently by developers, domain experts, and stakeholders. The terms are aligned with **Core, Supporting, and Generic Subdomains**.
 

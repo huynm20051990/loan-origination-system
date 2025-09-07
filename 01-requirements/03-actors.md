@@ -1,4 +1,4 @@
-# 📌 Mortgage Process Actors and Roles
+# 📌 Actors and Roles
 
 
 # 📌 Summary

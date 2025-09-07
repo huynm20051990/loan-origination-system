@@ -1,4 +1,4 @@
-# 📌 Mortgage System - Bounded Contexts by Subdomain (Updated)
+# 📌 Bounded Contexts by Subdomain
 
 In Domain-Driven Design (DDD), a **Bounded Context** defines the boundaries within which a particular domain model is consistent and has its own language, rules, and logic.
 

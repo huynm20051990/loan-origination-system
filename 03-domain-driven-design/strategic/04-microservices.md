@@ -1,4 +1,4 @@
-# 📌 Mortgage System - Microservices Identification (Updated)
+# 📌 Microservices Identification
 
 Based on DDD subdomains and bounded contexts, the following microservices are defined:
 

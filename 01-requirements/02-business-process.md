@@ -1,4 +1,4 @@
-# 📌 Mortgage Business Process Overview
+# 📌 Business Process Overview
 
 ## 1. Loan Origination
 This is where the mortgage process starts, with customer application and initial processing.

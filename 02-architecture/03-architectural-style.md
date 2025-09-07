@@ -1,4 +1,4 @@
-# 📌 Architectural Style Analysis - Mortgage Loan Origination System
+# 📌 Architectural Style Analysis
 
 ## **Monolith Architecture Analysis**
 

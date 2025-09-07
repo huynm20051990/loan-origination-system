@@ -1,4 +1,4 @@
-# 📌 Mortgage System - Subdomains (Updated)
+# 📌 Subdomains
 
 Based on DDD principles, the mortgage system subdomains are classified as **Core**, **Supporting**, and **Generic**.
 
