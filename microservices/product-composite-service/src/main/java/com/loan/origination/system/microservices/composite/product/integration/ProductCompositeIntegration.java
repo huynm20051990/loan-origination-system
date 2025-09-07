@@ -47,13 +47,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
       @Qualifier("publishEventScheduler") Scheduler publishEventScheduler,
       WebClient.Builder webClient,
       ObjectMapper mapper,
-      StreamBridge streamBridge,
-      @Value("${app.product-service.host}") String productServiceHost,
-      @Value("${app.product-service.port}") int productServicePort,
-      @Value("${app.rating-service.host}") String ratingServiceHost,
-      @Value("${app.rating-service.port}") int ratingServicePort,
-      @Value("${app.review-service.host}") String reviewServiceHost,
-      @Value("${app.review-service.port}") int reviewServicePort) {
+      StreamBridge streamBridge) {
     this.publishEventScheduler = publishEventScheduler;
     this.webClient = webClient.build();
     this.mapper = mapper;

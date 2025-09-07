@@ -81,3 +81,8 @@ unset COMPOSE_FILE
 export COMPOSE_FILE=docker-compose-kafka.yml
 ./test-em-all.bash start stop
 unset COMPOSE_FILE
+
+docker-compose up -d --scale review=3
+docker-compose logs review | grep Started
+curl -H "accept:application/json" localhost:8761/eureka/apps -s | jq -r .applications.application[].instance[].instanceId
+curl localhost:8080/product-composite/1 -s | jq -r .serviceAddresses.rev
