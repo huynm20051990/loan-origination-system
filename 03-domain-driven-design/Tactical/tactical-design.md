@@ -1,7 +1,7 @@
-# 📌 Mortgage Loan Origination System - Tactical Design Document (DDD + Layered Architecture)
+# 📌 Loan Origination System - Tactical Design Document (DDD + Layered Architecture)
 
 ## **1. Overview**
-This document defines the **tactical design** of the Mortgage Loan Origination System, applying **Domain-Driven Design (DDD)** principles. It focuses on **aggregates, entities, value objects, repositories, services, and domain events** within each bounded context.
+This document defines the **tactical design** of the Loan Origination System, applying **Domain-Driven Design (DDD)** principles. It focuses on **aggregates, entities, value objects, repositories, services, and domain events** within each bounded context.
 
 ---
 
@@ -150,7 +150,7 @@ The Loan Product services allow users to **browse, review, and rate loan product
 
 | Bounded Context | Aggregate | Description |
 |-----------------|-----------|-------------|
-| Loan Product Context | LoanProduct | Represents a loan product (e.g., mortgage, personal loan) with terms, interest rates, eligibility. |
+| Loan Product Context | LoanProduct | Represents a loan product (e.g., personal, auto) with terms, interest rates, eligibility. |
 | Loan Product Composite Context | LoanProductComposite | Aggregates multiple LoanProduct entities, including ratings, reviews, and metadata for front-end consumption. |
 | Product Rating Context | ProductRating | Captures borrower ratings (stars, feedback) for a LoanProduct. |
 | Product Review Context | ProductReview | Stores textual reviews and feedback for a LoanProduct by borrowers. |
