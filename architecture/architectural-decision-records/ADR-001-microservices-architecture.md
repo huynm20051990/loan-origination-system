@@ -1,7 +1,3 @@
-# 📝 Architectural Decision Records (ADR)
-
----
-
 ## ADR-001: Microservices Architecture
 **Status:** Accepted
 
