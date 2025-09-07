@@ -1,6 +1,8 @@
-# 📌 Architectural Characteristics
+# 📐 Architectural Characteristics
 
 The system is designed with the following architectural characteristics in mind:
+
+## 📋 Summary of Architectural Characteristics
 
 | Attribute       | Description                                                                 |
 |-----------------|-----------------------------------------------------------------------------|
@@ -11,6 +13,8 @@ The system is designed with the following architectural characteristics in mind:
 | Modifiability   | Business rules and services evolve independently via microservice updates. |
 | Auditability    | Full event tracking for compliance and regulatory requirements.             |
 | Usability       | Clear, user-friendly UI with transparent loan application tracking.         |
+
+## ✅ Quality Attributes
 
 - **Scalability**
     - Must handle an increasing number of users exploring loan products and submitting applications.
@@ -29,4 +33,19 @@ The system is designed with the following architectural characteristics in mind:
     - Secure authentication & authorization (OAuth 2.0 / OIDC).
     - Role-based access control (customers, loan officers, admins).
 
-- **Mod**
+- **Modifiability**
+    - Support evolving business rules (e.g., new eligibility criteria, new loan products).
+    - Independent deployments of microservices without impacting the whole system.
+
+- **Auditability**
+    - Track all loan application events for compliance and regulatory needs.
+    - Maintain review and rating history.
+
+- **Usability**
+    - User-friendly interface for exploring products and tracking application status.
+    - Clear status notifications (submitted, under review, approved, rejected).
+
+## 📊 Trade-offs
+
+- Favor **consistency within a service**, but eventual consistency across services (e.g., loan application status vs. user dashboard view).
+- Emphasis on **security & reliability** over absolute performance.
