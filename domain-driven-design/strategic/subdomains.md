@@ -1,14 +1,45 @@
-# Loan Origination System – Domain-Driven Design (DDD)
+# 📌 Mortgage Business Process - DDD Subdomain Analysis
 
-This document classifies the subdomains of a Loan Origination System (LOS) into **Core**, **Supporting**, and **Generic** subdomains following DDD principles.  
-It also provides a **Context Map** and suggested **Microservice Split** for practical implementation.
+## **1. Core Subdomain**
+These are the unique, strategic parts of the mortgage business:
+
+| **Subdomain** | **Reasoning** |
+|---------------|---------------|
+| Loan Origination | Intake of applications, borrower interaction, and pre-qualification is business-critical. Differentiation can occur in evaluation, personalized offers, or speed. |
+| Underwriting | Risk assessment, eligibility evaluation, and decision-making is core intellectual property. |
+| Loan Decision Engine | Automating final approval decisions using business-specific rules is strategic. |
 
 ---
 
-## 📌 Subdomain Classification
+## **2. Supporting Subdomain**
+Specialized but non-core; supports the main business:
 
-| Subdomain Type   | Subdomains |
-|------------------|------------|
-| **Core**         | - Loan Application & Workflow Management <br> - Credit Decisioning & Risk Assessment <br> - Underwriting Rules & Policy Enforcement <br> - Loan Offer & Pricing Engine |
-| **Supporting**   | - Loan Product Exploration <br> - Document Management <br> - Customer Communication & Notifications <br> - KYC / Identity Verification <br> - Compliance & Audit Logging <br> - Loan Funding & Disbursement <br> - Workflow Orchestration / Process Manager |
-| **Generic**      | - Authentication & Authorization <br> - User Management / Roles & Permissions <br> - Logging & Monitoring <br> - Reporting & Analytics Infrastructure <br> - Integration Infrastructure (APIs, Kafka, ESB, etc.) <br> - CRM / Customer Data Management <br> - Payment Processing Gateway |
+| **Subdomain** | **Reasoning** |
+|---------------|---------------|
+| Borrower Management / KYC | Managing borrower identity and compliance; can use standardized verification services. |
+| Income & Asset Verification | Supports underwriting; often integrates with third-party providers. |
+| Property Verification | Supports collateral assessment using MLS and appraisal services. |
+| Notification Service | Sends emails/alerts; important for UX but not differentiating. |
+| Process Orchestration (Process Manager) | Coordinates workflow; can leverage messaging/event-driven frameworks. |
+
+---
+
+## **3. Generic Subdomain**
+Commoditized or common services; off-the-shelf solutions often suffice:
+
+| **Subdomain** | **Reasoning** |
+|---------------|---------------|
+| Credit Bureau Integration | Standard credit reporting from Experian, Equifax, TransUnion; generic integration. |
+| Secondary Market / Investor Reporting | Selling loans to Fannie Mae, Freddie Mac, or tracking remittance is common; can use existing platforms. |
+| Escrow & Closing Management | Standardized financial/legal process; usually supported by external escrow providers. |
+| Document Management & Storage | Generic document upload, storage, and retrieval; not business differentiating. |
+
+---
+
+## **Summary Table**
+
+| **Subdomain Type** | **Subdomains** |
+|-------------------|----------------|
+| **Core Domain** | Loan Origination, Underwriting, Loan Decision Engine |
+| **Supporting Domain** | Borrower/KYC Management, Income & Asset Verification, Property Verification, Notification Service, Process Orchestration |
+| **Generic Domain** | Credit Bureau Integration, Secondary Market / Investor Reporting, Escrow & Closing Management, Document Management & Storage |

@@ -1,84 +1,49 @@
-# Loan Origination System – Recommended Microservice Split
+# 📌 Mortgage System - Microservices Identification (Updated)
 
-This document suggests a microservice split aligned with **DDD subdomains and bounded contexts** for a Loan Origination System (LOS).
-
----
-
-## 🔑 Core Microservices
-
-- **loan-application-service**
-  Handles borrower loan applications, workflow, and state transitions.
-  *Domain terms:* Loan Application, Applicant, Status, Workflow Step.
-
-- **credit-decisioning-service**
-  Integrates with credit bureaus, applies scoring models, calculates risk.
-  *Domain terms:* Credit Score, Risk Assessment, Decision Outcome.
-
-- **underwriting-service**
-  Applies lending policies and eligibility rules for approval/decline.
-  *Domain terms:* Underwriter, Eligibility Criteria, Policy Rule.
-
-- **loan-offer-service**
-  Generates personalized loan offers with terms, interest rates, and repayment schedules.
-  *Domain terms:* Loan Offer, Interest Rate, APR, Repayment Schedule.
+Based on DDD subdomains and bounded contexts, the following microservices are defined:
 
 ---
 
-## 🤝 Supporting Microservices
+## **Core Domain Microservices**
 
-- **loan-product-service**
-  Manages product catalog and loan product exploration.
-  *Domain terms:* Loan Product, Rate Table, Eligibility Information.
-
-- **document-service**
-  Handles document upload, storage, and verification.
-  *Domain terms:* Document, Document Type, Verification, Fraud Check.
-
-- **kyc-service**
-  Manages AML/KYC checks and identity verification.
-  *Domain terms:* KYC, Identity Document, AML Check, Verification Result.
-
-- **compliance-service**
-  Provides audit trail, decision justification, and regulatory reporting.
-  *Domain terms:* Audit Trail, Retention Policy, Decision Justification.
-
-- **notification-service**
-  Sends email/SMS/push notifications to applicants.
-  *Domain terms:* Notification, Status Update, Reminder.
-
-- **funding-service**
-  Manages loan disbursement and payout confirmation.
-  *Domain terms:* Disbursement, Funding Instruction, Settlement Account.
+| **Microservice** | **Purpose / Responsibility** | **Bounded Context** |
+|-----------------|-----------------------------|------------------|
+| Loan Application Service | Handles borrower loan applications, manages application lifecycle, initial validation | Loan Application Context |
+| Underwriting Service | Evaluates borrower risk, creditworthiness, DTI/LTV, and generates underwriting findings | Underwriting Context |
+| Loan Decision Engine Service | Applies final loan decision rules, calculates risk score, approves or rejects loan | Loan Decision Context |
 
 ---
 
-## ⚙️ Generic/Shared Infrastructure
+## **Supporting Domain Microservices**
 
-- **auth-service**
-  Authentication and authorization (SSO, OAuth2, Keycloak).
-  *Domain terms:* User, Role, Access Token.
-
-- **user-service**
-  User management and role assignments.
-  *Domain terms:* User Profile, Group, Account Status.
-
-- **logging-service**
-  Centralized logging and monitoring.
-  *Domain terms:* Log Entry, Metric, Alert.
-
-- **reporting-service**
-  Reporting, dashboards, and analytics.
-  *Domain terms:* Report, Dashboard, KPI, Data Export.
-
-- **integration-service**
-  Provides API gateway, messaging, and external system connectors.
-  *Domain terms:* API, Event, Message Queue, Connector.
+| **Microservice** | **Purpose / Responsibility** | **Bounded Context** |
+|-----------------|-----------------------------|------------------|
+| Borrower Service | Manages borrower personal information, identity verification, KYC/AML checks | Borrower Context |
+| Income Verification Service | Pulls and verifies borrower income, employment, and tax documents | Financial Verification Context |
+| Asset Verification Service | Pulls and verifies borrower bank balances, investments, and other assets | Financial Verification Context |
+| Property Service | Verifies property details, appraisal, and title | Property Context |
+| Notification Service | Sends emails, alerts, and notifications to borrowers | Notification Context |
+| Loan Process Orchestrator | Coordinates workflow between microservices, handles events, and drives application process | Loan Process Context |
+| Credit Service | Retrieves and standardizes credit reports and scores from credit bureaus | Credit Context |
+| Investor Service | Handles loan sale, MBS securitization, and reporting to investors | Investor Context |
+| Escrow / Closing Service | Manages escrow accounts, fund disbursement, and closing process | Escrow Context |
+| Document Service | Provides storage, retrieval, and management of all borrower and loan-related documents | Document Context |
 
 ---
 
-## ✅ Notes
+## **Generic Domain Microservices**
 
-- Core microservices require **rich domain models** with aggregates, entities, and events.
-- Supporting microservices may use **simpler models** or external libraries.
-- Generic microservices should rely on **off-the-shelf solutions** when possible.
-- Cross-cutting concerns (auth, logging, reporting) should not duplicate business logic.
+| **Microservice** | **Purpose / Responsibility** | **Domain Terms / Context** |
+|-----------------|-----------------------------|---------------------------|
+| Auth Service | Authentication and authorization (SSO, OAuth2, Keycloak) | User, Role, Access Token |
+| User Service | User management and role assignments | User Profile, Group, Account Status |
+| Logging Service | Centralized logging and monitoring | Log Entry, Metric, Alert |
+| Reporting Service | Reporting, dashboards, and analytics | Report, Dashboard, KPI, Data Export |
+| Integration Service | Provides API gateway, messaging, and external system connectors | API, Event, Message Queue, Connector |
+
+---
+
+### **Notes**
+- Supporting microservices now include previously generic mortgage-specific services like Credit, Investor, Escrow, and Document services.
+- Generic microservices handle cross-cutting concerns such as authentication, user management, logging, reporting, and integrations.
+- All microservices are designed with **bounded contexts**, **own domain models**, and communicate via **APIs or events**.
