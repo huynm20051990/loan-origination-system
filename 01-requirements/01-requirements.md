@@ -1,6 +1,5 @@
 # 📌 Requirement: Loan Origination System
 
-## **Description**
 The Loan Origination System allows users to browse loan products (e.g., personal loans, mortgages, auto loans) with details such as interest rates, terms, and eligibility criteria.
 
 Users can then submit a loan application by providing identity and contact information. Supporting financial documents are pulled automatically through third-party services. Credit checks and verifications are performed without manual intervention.

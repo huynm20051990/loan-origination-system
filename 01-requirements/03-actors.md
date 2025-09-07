@@ -1,8 +1,5 @@
 # 📌 Actors and Roles
 
-
-# 📌 Summary
-
 | **Actor** | **Role / Responsibilities** | **Process Steps** |
 |-----------|-----------------------------|------------------|
 | Borrower | Initiates loan, provides personal & financial info, signs documents, makes payments | Loan Origination, Loan Approval & Closing, Servicing |
