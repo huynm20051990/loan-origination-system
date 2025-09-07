@@ -1,45 +1,51 @@
-# 📌 Mortgage Business Process - DDD Subdomain Analysis
+# 📌 Mortgage System - Subdomains (Updated)
 
-## **1. Core Subdomain**
-These are the unique, strategic parts of the mortgage business:
-
-| **Subdomain** | **Reasoning** |
-|---------------|---------------|
-| Loan Origination | Intake of applications, borrower interaction, and pre-qualification is business-critical. Differentiation can occur in evaluation, personalized offers, or speed. |
-| Underwriting | Risk assessment, eligibility evaluation, and decision-making is core intellectual property. |
-| Loan Decision Engine | Automating final approval decisions using business-specific rules is strategic. |
+Based on DDD principles, the mortgage system subdomains are classified as **Core**, **Supporting**, and **Generic**.
 
 ---
 
-## **2. Supporting Subdomain**
-Specialized but non-core; supports the main business:
+## **Core Domain**
+These are the unique, strategic parts of the mortgage business that provide competitive advantage:
 
 | **Subdomain** | **Reasoning** |
 |---------------|---------------|
-| Borrower Management / KYC | Managing borrower identity and compliance; can use standardized verification services. |
-| Income & Asset Verification | Supports underwriting; often integrates with third-party providers. |
-| Property Verification | Supports collateral assessment using MLS and appraisal services. |
-| Notification Service | Sends emails/alerts; important for UX but not differentiating. |
-| Process Orchestration (Process Manager) | Coordinates workflow; can leverage messaging/event-driven frameworks. |
+| Loan Origination | Handles borrower intake, application submission, and pre-qualification. |
+| Underwriting | Evaluates borrower risk, creditworthiness, and eligibility. |
+| Loan Decision Engine | Applies final decision rules, calculates risk scores, and approves or rejects loans. |
 
 ---
 
-## **3. Generic Subdomain**
-Commoditized or common services; off-the-shelf solutions often suffice:
+## **Supporting Domain**
+Specialized services that support the core business:
 
 | **Subdomain** | **Reasoning** |
 |---------------|---------------|
-| Credit Bureau Integration | Standard credit reporting from Experian, Equifax, TransUnion; generic integration. |
-| Secondary Market / Investor Reporting | Selling loans to Fannie Mae, Freddie Mac, or tracking remittance is common; can use existing platforms. |
-| Escrow & Closing Management | Standardized financial/legal process; usually supported by external escrow providers. |
-| Document Management & Storage | Generic document upload, storage, and retrieval; not business differentiating. |
+| Borrower Management / KYC | Manages borrower identity, personal info, and AML/KYC checks. |
+| Income & Asset Verification | Verifies borrower income, employment, and asset details. |
+| Property Verification | Verifies property details, appraisal, and title. |
+| Notification Service | Sends emails, alerts, and notifications to borrowers. |
+| Process Orchestration (Process Manager) | Coordinates workflow, event handling, and loan application process. |
+| Credit Bureau Integration | Retrieves and standardizes credit reports and scores from bureaus. |
+| Secondary Market / Investor Reporting | Handles loan sales, securitization, and investor reporting. |
+| Escrow & Closing Management | Manages escrow accounts, fund disbursement, and closing processes. |
+| Document Management & Storage | Stores, retrieves, and manages all borrower and loan-related documents. |
 
 ---
 
-## **Summary Table**
+## **Generic Domain**
+Cross-cutting, commoditized services applicable across multiple domains:
 
-| **Subdomain Type** | **Subdomains** |
-|-------------------|----------------|
-| **Core Domain** | Loan Origination, Underwriting, Loan Decision Engine |
-| **Supporting Domain** | Borrower/KYC Management, Income & Asset Verification, Property Verification, Notification Service, Process Orchestration |
-| **Generic Domain** | Credit Bureau Integration, Secondary Market / Investor Reporting, Escrow & Closing Management, Document Management & Storage |
+| **Subdomain** | **Reasoning / Domain Terms** |
+|---------------|-----------------------------|
+| Auth Service | Authentication and authorization (SSO, OAuth2, Keycloak). Domain terms: User, Role, Access Token. |
+| User Service | User management and role assignments. Domain terms: User Profile, Group, Account Status. |
+| Logging Service | Centralized logging and monitoring. Domain terms: Log Entry, Metric, Alert. |
+| Reporting Service | Reporting, dashboards, and analytics. Domain terms: Report, Dashboard, KPI, Data Export. |
+| Integration Service | Provides API gateway, messaging, and external system connectors. Domain terms: API, Event, Message Queue, Connector. |
+
+---
+
+### **Notes**
+- Supporting subdomains now include mortgage-specific services previously classified as generic (Credit, Investor, Escrow, Document).
+- Generic subdomains handle cross-cutting concerns and are largely reusable across systems.
+- Each subdomain has its **bounded context, language, and domain rules**.
