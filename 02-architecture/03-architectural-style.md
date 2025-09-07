@@ -1,5 +1,13 @@
 # 📌 Architectural Style Analysis
 
+## **Winning Choice**
+
+Based on our analysis, **Microservices architecture** is selected for the Loan Origination System.
+- It aligns with the **DDD subdomains** and **bounded contexts**.
+- Allows independent scaling of high-volume services (Loan Application, Underwriting, Notification).
+- Supports event-driven workflows where necessary (verification, underwriting, notifications) while keeping synchronous interactions where simpler.
+
+---
 ## **Monolith Architecture Analysis**
 
 **Pros**
@@ -44,12 +52,3 @@
 - Not all operations require events; some synchronous queries (loan product lookup, borrower details retrieval) are simpler without EDA.
 - Complexity in tracking events and handling failure scenarios.
 - Requires robust monitoring and error-handling strategy.
-
----
-
-## **Winning Choice**
-
-Based on our analysis, **Microservices architecture** is selected for the Mortgage Loan Origination System.
-- It aligns with the **DDD subdomains** and **bounded contexts**.
-- Allows independent scaling of high-volume services (Loan Application, Underwriting, Notification).
-- Supports event-driven workflows where necessary (verification, underwriting, notifications) while keeping synchronous interactions where simpler.  
