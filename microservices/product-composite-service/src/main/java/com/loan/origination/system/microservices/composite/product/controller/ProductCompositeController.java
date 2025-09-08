@@ -161,7 +161,7 @@ public class ProductCompositeController implements ProductCompositeAPI {
     String ratingAddress =
         (ratings != null && ratings.size() > 0) ? ratings.get(0).getServiceAddress() : "";
     ServiceAddresses serviceAddresses =
-        new ServiceAddresses(serviceAddress, productAddress, reviewAddress, ratingAddress);
+        new ServiceAddresses(serviceAddress, productAddress, ratingAddress, reviewAddress);
 
     return new ProductAggregate(
         productId, name, description, ratingSummaries, reviewSummaries, serviceAddresses);

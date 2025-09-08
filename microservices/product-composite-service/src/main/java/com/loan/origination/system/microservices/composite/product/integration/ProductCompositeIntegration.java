@@ -45,11 +45,11 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   @Autowired
   public ProductCompositeIntegration(
       @Qualifier("publishEventScheduler") Scheduler publishEventScheduler,
-      WebClient.Builder webClient,
+      WebClient.Builder webClientBuilder,
       ObjectMapper mapper,
       StreamBridge streamBridge) {
     this.publishEventScheduler = publishEventScheduler;
-    this.webClient = webClient.build();
+    this.webClient = webClientBuilder.build();
     this.mapper = mapper;
     this.streamBridge = streamBridge;
   }

@@ -86,3 +86,13 @@ docker-compose up -d --scale review=3
 docker-compose logs review | grep Started
 curl -H "accept:application/json" localhost:8761/eureka/apps -s | jq -r .applications.application[].instance[].instanceId
 curl localhost:8080/product-composite/1 -s | jq -r .serviceAddresses.rev
+docker-compose logs review | grep "Response size"
+docker-compose up -d --scale review=2
+curl localhost:8080/product-composite/1 -m 2
+
+docker-compose up -d --scale review=2 --scale eureka=0
+curl localhost:8080/product-composite/1 -s | jq -r .serviceAddresses.rev
+docker-compose up -d --scale review=2 --scale eureka=0 --scale product=2
+curl localhost:8080/product-composite/1 -s | jq -r .serviceAddresses.pro
+docker-compose up -d --scale review=1 --scale eureka=1 --scale product=2
+curl localhost:8080/product-composite/1 -s | jq -r .serviceAddresses
