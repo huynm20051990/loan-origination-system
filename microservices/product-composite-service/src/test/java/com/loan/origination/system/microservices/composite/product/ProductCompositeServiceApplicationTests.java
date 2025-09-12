@@ -20,7 +20,14 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"eureka.client.enabled=false"})
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = {TestSecurityConfig.class},
+    properties = {
+      "spring.security.oauth2.resourceserver.jwt.issuer-uri=",
+      "spring.main.allow-bean-definition-overriding=true",
+      "eureka.client.enabled=false"
+    })
 class ProductCompositeServiceApplicationTests {
 
   private static final int PRODUCT_ID_OK = 1;
