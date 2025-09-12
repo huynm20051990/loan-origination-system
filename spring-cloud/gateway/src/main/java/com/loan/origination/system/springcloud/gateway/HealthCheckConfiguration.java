@@ -36,6 +36,7 @@ public class HealthCheckConfiguration {
     registry.put("rating", () -> getHealth("http://rating"));
     registry.put("review", () -> getHealth("http://review"));
     registry.put("product-composite", () -> getHealth("http://product-composite"));
+    registry.put("auth-server", () -> getHealth("http://auth-server"));
 
     return CompositeReactiveHealthContributor.fromMap(registry);
   }
