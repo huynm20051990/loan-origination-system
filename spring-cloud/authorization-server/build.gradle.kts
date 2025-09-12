@@ -31,7 +31,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-oauth2-authorization-server:1.5.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("net.sourceforge.htmlunit:htmlunit")
+    testImplementation("net.sourceforge.htmlunit:htmlunit:2.70.0")
 }
 
 dependencyManagement {
