@@ -28,7 +28,8 @@ public class SecurityConfig {
                         "/login/**",
                         "/error/**",
                         "/openapi/**",
-                        "/webjars/**")
+                        "/webjars/**",
+                        "/config/**")
                     .permitAll()
                     .anyExchange()
                     .authenticated())
