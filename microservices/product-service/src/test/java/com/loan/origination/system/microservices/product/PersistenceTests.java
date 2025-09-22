@@ -12,7 +12,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import reactor.test.StepVerifier;
 
-@DataMongoTest
+@DataMongoTest(properties = {"spring.cloud.config.enabled=false"})
 public class PersistenceTests extends MongoDBTestBase {
 
   @Autowired private ProductRepository repository;
