@@ -96,3 +96,25 @@ docker-compose up -d --scale review=2 --scale eureka=0 --scale product=2
 curl localhost:8080/product-composite/1 -s | jq -r .serviceAddresses.pro
 docker-compose up -d --scale review=1 --scale eureka=1 --scale product=2
 curl localhost:8080/product-composite/1 -s | jq -r .serviceAddresses
+
+docker-compose ps gateway eureka product-composite product rating review
+
+curl localhost:8080/actuator/gateway/routes -s | jq '.[] | {"\(.route_id)": "\(.uri)"}' | grep -v '{\|}'
+docker-compose logs -f --tail=0 gateway
+curl http://localhost:8080/product-composite/1
+curl -H "accept:application/json" \localhost:8080/eureka/api/apps -s | \jq -r .applications.application[].instance[].instanceId
+curl http://localhost:8080/headerrouting -H "Host: i.feel.lucky:8080"
+curl http://localhost:8080/headerrouting -H "Host: im.a.teapot:8080"
+curl http://localhost:8080/headerrouting
+
+curl -H "accept:application/json" https://u:p@localhost:8443/eureka/api/apps -ks | jq -r .applications.application[].instance[].instanceId
+
+curl -k https://writer:secret-writer@localhost:8443/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -s | jq .
+
+curl -k https://reader:secret-reader@localhost:8443/oauth2/token -d grant_type=client_credentials -d scope="product:read" -s | jq .
+
+curl https://dev-usr:dev-pwd@localhost:8443/config/product/docker -ks | jq .
+
+curl -k https://dev-usr:dev-pwd@localhost:8443/config/encrypt --data urlencode "hello world"
+
+curl -k https://dev-usr:dev-pwd@localhost:8443/config/decrypt -d d91001603dcdf3eb1392ccbd40ff201cdcf7b9af2fcaab3da39e37919033b206
