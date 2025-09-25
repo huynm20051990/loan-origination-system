@@ -11,6 +11,7 @@ import com.loan.origination.system.microservices.composite.product.integration.P
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,10 @@ class ProductCompositeServiceApplicationTests {
 
   @BeforeEach
   void setup() {
-    when(integration.getProduct(PRODUCT_ID_OK))
+    when(integration.getProduct(
+            ArgumentMatchers.eq(PRODUCT_ID_OK),
+            ArgumentMatchers.anyInt(),
+            ArgumentMatchers.anyInt()))
         .thenReturn(
             Mono.just(new Product(PRODUCT_ID_OK, "name", "name-" + PRODUCT_ID_OK, "mock-address")));
     when(integration.getRatings(PRODUCT_ID_OK))
@@ -54,10 +58,16 @@ class ProductCompositeServiceApplicationTests {
                 Collections.singletonList(
                     new Review(PRODUCT_ID_OK, 1, "author", "subject", "content", "mock-address"))));
 
-    when(integration.getProduct(PRODUCT_ID_NOT_FOUND))
+    when(integration.getProduct(
+            ArgumentMatchers.eq(PRODUCT_ID_NOT_FOUND),
+            ArgumentMatchers.anyInt(),
+            ArgumentMatchers.anyInt()))
         .thenThrow(new NotFoundException("NOT FOUND: " + PRODUCT_ID_NOT_FOUND));
 
-    when(integration.getProduct(PRODUCT_ID_INVALID))
+    when(integration.getProduct(
+            ArgumentMatchers.eq(PRODUCT_ID_INVALID),
+            ArgumentMatchers.anyInt(),
+            ArgumentMatchers.anyInt()))
         .thenThrow(new InvalidInputException("INVALID: " + PRODUCT_ID_INVALID));
   }
 

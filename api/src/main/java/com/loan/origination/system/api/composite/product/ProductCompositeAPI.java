@@ -15,6 +15,8 @@ public interface ProductCompositeAPI {
    * Sample usage: "curl $HOST:$PORT/product-composite/1".
    *
    * @param productId Id of the product
+   * @param delay
+   * @param faultPercent
    * @return the composite product info, if found, else null
    */
   @Operation(
@@ -32,7 +34,10 @@ public interface ProductCompositeAPI {
             description = "api.responseCodes.unprocessableEntity.description")
       })
   @GetMapping(value = "/product-composite/{productId}", produces = "application/json")
-  Mono<ProductAggregate> getProduct(@PathVariable int productId);
+  Mono<ProductAggregate> getProduct(
+      @PathVariable int productId,
+      @RequestParam(value = "delay", required = false, defaultValue = "0") int delay,
+      @RequestParam(value = "faultPercent", required = false, defaultValue = "0") int faultPercent);
 
   /**
    * Sample usage, see below.

@@ -6,7 +6,6 @@ import com.loan.origination.system.api.core.rating.Rating;
 import com.loan.origination.system.api.core.review.Review;
 import com.loan.origination.system.microservices.composite.product.integration.ProductCompositeIntegration;
 import com.loan.origination.system.util.http.ServiceUtil;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class ProductCompositeController implements ProductCompositeAPI {
   }
 
   @Override
-  public Mono<ProductAggregate> getProduct(int productId) {
+  public Mono<ProductAggregate> getProduct(int productId, int delay, int faultPercent) {
     LOG.info("Will get composite product info for product.id={}", productId);
     return Mono.zip(
             values ->
@@ -52,7 +51,7 @@ public class ProductCompositeController implements ProductCompositeAPI {
                     (List<Review>) values[3],
                     serviceUtil.getServiceAddress()),
             getSecurityContextMono(),
-            integration.getProduct(productId),
+            integration.getProduct(productId, delay, faultPercent),
             integration.getRatings(productId).collectList(),
             integration.getReviews(productId).collectList())
         .doOnError(ex -> LOG.warn("getCompositeProduct failed: {}", ex.toString()))

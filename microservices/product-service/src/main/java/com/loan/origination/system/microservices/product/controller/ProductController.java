@@ -22,8 +22,8 @@ public class ProductController implements ProductAPI {
   }
 
   @Override
-  public Mono<Product> getProduct(int productId) {
-    return productService.getProduct(productId);
+  public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
+    return productService.getProduct(productId, delay, faultPercent);
   }
 
   @Override
