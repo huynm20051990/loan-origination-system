@@ -21,7 +21,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = {
       "spring.cloud.stream.defaultBinder=rabbit",
-      "logging.level.se.magnus=DEBUG",
+      "logging.level.com.loan.origination.system=DEBUG",
       "eureka.client.enabled=false",
       "spring.jpa.hibernate.ddl-auto=update",
       "spring.cloud.config.enabled=false"

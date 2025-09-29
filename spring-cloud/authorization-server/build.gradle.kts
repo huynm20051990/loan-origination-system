@@ -29,6 +29,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-config")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel")
+    implementation("io.opentelemetry:opentelemetry-exporter-zipkin")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.security:spring-security-oauth2-authorization-server:1.5.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

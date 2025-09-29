@@ -24,6 +24,10 @@ tasks.named<Jar>("jar") {
     enabled = false
 }
 
+springBoot {
+    buildInfo()
+}
+
 dependencies {
     implementation(project(":api"))
     implementation(project(":util"))
@@ -37,6 +41,9 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-config")
+    implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel")
+    implementation("io.opentelemetry:opentelemetry-exporter-zipkin")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.9")
     implementation("io.github.resilience4j:resilience4j-spring-boot3:$resilience4jVersion")

@@ -5,10 +5,12 @@ import com.loan.origination.system.api.core.product.Product;
 import com.loan.origination.system.api.core.rating.Rating;
 import com.loan.origination.system.api.core.review.Review;
 import com.loan.origination.system.microservices.composite.product.integration.ProductCompositeIntegration;
+import com.loan.origination.system.microservices.composite.product.tracing.ObservationUtil;
 import com.loan.origination.system.util.http.ServiceUtil;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -30,17 +32,26 @@ public class ProductCompositeController implements ProductCompositeAPI {
   private final SecurityContext nullSecCtx = new SecurityContextImpl();
 
   private final ServiceUtil serviceUtil;
+  private final ObservationUtil observationUtil;
   private ProductCompositeIntegration integration;
 
   @Autowired
   public ProductCompositeController(
-      ServiceUtil serviceUtil, ProductCompositeIntegration integration) {
+      ServiceUtil serviceUtil,
+      ObservationUtil observationUtil,
+      ProductCompositeIntegration integration) {
     this.serviceUtil = serviceUtil;
+    this.observationUtil = observationUtil;
     this.integration = integration;
   }
 
   @Override
   public Mono<ProductAggregate> getProduct(int productId, int delay, int faultPercent) {
+    return observationWithProductInfo(
+        productId, () -> getProductInternal(productId, delay, faultPercent));
+  }
+
+  private Mono<ProductAggregate> getProductInternal(int productId, int delay, int faultPercent) {
     LOG.info("Will get composite product info for product.id={}", productId);
     return Mono.zip(
             values ->
@@ -60,6 +71,10 @@ public class ProductCompositeController implements ProductCompositeAPI {
 
   @Override
   public Mono<Void> createProduct(ProductAggregate body) {
+    return observationWithProductInfo(body.getProductId(), () -> createProductInternal(body));
+  }
+
+  private Mono<Void> createProductInternal(ProductAggregate body) {
     try {
 
       List<Mono> monoList = new ArrayList<>();
@@ -119,6 +134,10 @@ public class ProductCompositeController implements ProductCompositeAPI {
 
   @Override
   public Mono<Void> deleteProduct(int productId) {
+    return observationWithProductInfo(productId, () -> deleteProductInternal(productId));
+  }
+
+  private Mono<Void> deleteProductInternal(int productId) {
     try {
       LOG.info("Will delete a product aggregate for product.id: {}", productId);
       return Mono.zip(
@@ -134,6 +153,15 @@ public class ProductCompositeController implements ProductCompositeAPI {
       LOG.warn("deleteCompositeProduct failed: {}", re.toString());
       throw re;
     }
+  }
+
+  private <T> T observationWithProductInfo(int productInfo, Supplier<T> supplier) {
+    return observationUtil.observe(
+        "composite observation",
+        "product info",
+        "productId",
+        String.valueOf(productInfo),
+        supplier);
   }
 
   private ProductAggregate createProductAggregate(
