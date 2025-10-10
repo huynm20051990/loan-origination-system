@@ -14,7 +14,8 @@ public class SecurityConfig {
     http
         // Disable CSRF so POST requests to /encrypt and /decrypt are allowed
         .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+        .authorizeHttpRequests(
+            auth -> auth.requestMatchers("/actuator/**").permitAll().anyRequest().authenticated())
         .httpBasic(Customizer.withDefaults());
 
     return http.build();

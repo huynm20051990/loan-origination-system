@@ -2,6 +2,7 @@
 services:
   product:
     build: microservices/product-service
+    image: loan-origination-system/product-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -15,6 +16,7 @@ services:
 
   rating:
     build: microservices/rating-service
+    image: loan-origination-system/rating-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -29,6 +31,7 @@ services:
 
   review:
     build: microservices/review-service
+    image: loan-origination-system/review-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -42,6 +45,7 @@ services:
 
   product-composite:
     build: microservices/product-composite-service
+    image: loan-origination-system/product-composite-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -93,14 +97,6 @@ services:
       timeout: 2s
       retries: 60
 
-  eureka:
-    build: spring-cloud/eureka-server
-    mem_limit: 512m
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - CONFIG_SERVER_USR=${CONFIG_SERVER_USR}
-      - CONFIG_SERVER_PWD=${CONFIG_SERVER_PWD}
-
   gateway:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -109,6 +105,7 @@ services:
     volumes:
       - $PWD/keystore:/keystore
     build: spring-cloud/gateway
+    image: loan-origination-system/gateway
     mem_limit: 512m
     ports:
       - "8443:8443"
@@ -118,6 +115,7 @@ services:
 
   auth-server:
     build: spring-cloud/authorization-server
+    image: loan-origination-system/auth-server
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -131,6 +129,7 @@ services:
 
   config-server:
     build: spring-cloud/config-server
+    image: loan-origination-system/config-server
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,native

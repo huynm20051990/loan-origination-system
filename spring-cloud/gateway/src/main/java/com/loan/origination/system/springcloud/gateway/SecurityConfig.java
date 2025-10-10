@@ -23,7 +23,6 @@ public class SecurityConfig {
                     .pathMatchers(
                         "/headerrouting/**",
                         "/actuator/**",
-                        "/eureka/**",
                         "/oauth2/**",
                         "/login/**",
                         "/error/**",

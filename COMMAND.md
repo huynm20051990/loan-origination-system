@@ -156,3 +156,100 @@ curl -H "Authorization: Bearer $ACCESS_TOKEN" -k https://localhost:8443/product-
 
 curl -X DELETE -H "Authorization: Bearer $ACCESS_TOKEN" -k https://localhost:8443/product-composite/12345 -w "%{http_code}\n" -o /dev/null -s
 
+unset KUBECONFIG
+minikube start \
+--profile=loan-origination-system \
+--memory=6144 \
+--cpus=4 \
+--disk-size=30g \
+--kubernetes-version=v1.31.0 \
+--driver=docker \
+--ports=8080:80 --ports=8443:443 \
+--ports=30080:30080 --ports=30443:30443
+minikube profile loan-origination-system
+minikube addons enable ingress
+minikube addons enable metrics-server
+
+kubectl get nodes
+kubectl get pods --all-namespaces
+
+kubectl create namespace first-attempts
+kubectl config set-context $(kubectl config current-context) --namespace=first attempts
+
+kubectl apply -f kubernetes/first-attempts/nginx-deployment.yaml
+
+kubectl get pod --watch
+kubectl delete pod --selector app=nginx-app
+
+kubectl apply -f kubernetes/first-attempts/nginx-service.yaml
+kubectl get svc
+
+kubectl run -i --rm --restart=Never curl-client --image=curlimages/curl --command -- curl -s 'http://nginx-service:80'
+
+kubectl delete namespace first-attempts
+
+minikube stop
+minikube start
+minikube delete --profile loan-origination-system
+
+helm dependency update .
+helm template . -s templates/configmap_from_file.yaml
+
+for f in components/*; do helm dependency update $f; done
+helm dependency update environments/dev-env
+helm template environments/dev-env -s templates/secrets.yaml
+
+helm dependency update components/product
+helm template components/product -s templates/service.yaml
+
+helm dependency update components/gateway
+helm template components/gateway -s templates/service.yaml
+
+helm dependency update components/product
+helm template components/product -s templates/deployment.yaml
+
+helm dependency update components/mongodb
+helm template components/mongodb -s templates/deployment.yaml
+
+./gradlew build
+eval $(minikube docker-env)
+docker-compose build
+
+for f in kubernetes/helm/components/*; do helm dep up $f; done
+for f in kubernetes/helm/environments/*; do helm dep up $f; done
+helm dep ls kubernetes/helm/environments/dev-env/
+
+eval $(minikube docker-env)
+docker pull mysql:8.4.0
+docker pull mongo:7.0.9
+docker pull rabbitmq:3.13.7-management
+docker pull openzipkin/zipkin:3.5.1
+
+helm template kubernetes/helm/environments/dev-env
+
+minikube start --profile=loan-origination-system
+
+helm install --dry-run --debug loan-origination-system-dev-env \
+kubernetes/helm/environments/dev-env
+
+helm install loan-origination-system-dev-env \
+kubernetes/helm/environments/dev-env \
+-n loan-origination-system \
+--create-namespace
+
+kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
+
+kubectl get pods --watch
+
+kubectl wait --timeout=600s --for=condition=ready pod --all
+
+kubectl get pods -o json | jq .items[].spec.containers[].image
+
+kubectl delete namespace loan-origination-system
+
+eval $(minikube docker-env)
+docker-compose down
+eval $(minikube docker-env -u)
+
+docker run -it --rm loan-origination-system/product-service:latest
+

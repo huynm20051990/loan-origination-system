@@ -46,24 +46,24 @@ spec:
           {{- end }}
           {{- if .Values.livenessProbe_enabled }}
           livenessProbe:
-  {{ toYaml .Values.livenessProbe | indent 12 }}
-  {{- end }}
-  {{- if .Values.readinessProbe_enabled }}
-readinessProbe:
-  {{ toYaml .Values.readinessProbe | indent 12 }}
-  {{- end }}
-ports:
-  {{ toYaml .Values.ports | indent 12 }}
-resources:
-  {{ toYaml .Values.resources | indent 12 }}
-  {{- if .Values.configmap.enabled }}
-volumeMounts:
-  - name: {{ include "common.fullname" . }}
-    mountPath: {{ .Values.configmap.volumeMounts.mountPath }}
-volumes:
-  - name: {{ include "common.fullname" . }}
-    configMap:
-      name: {{ include "common.fullname" . }}
-  {{- end }}
-  {{- end -}}
-  {{- end -}}
+{{ toYaml .Values.livenessProbe | indent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe_enabled }}
+          readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 12 }}
+          {{- end }}
+          ports:
+{{ toYaml .Values.ports | indent 12 }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      {{- if .Values.configmap.enabled }}
+          volumeMounts:
+            - name: {{ include "common.fullname" . }}
+              mountPath: {{ .Values.configmap.volumeMounts.mountPath }}
+      volumes:
+        - name: {{ include "common.fullname" . }}
+          configMap:
+            name: {{ include "common.fullname" . }}
+      {{- end }}
+{{- end -}}
+{{- end -}}

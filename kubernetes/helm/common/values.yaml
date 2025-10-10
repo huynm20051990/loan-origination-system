@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: hands-on
+  repository: loan-origination-system
   tag: latest
   pullPolicy: Never
   args: []

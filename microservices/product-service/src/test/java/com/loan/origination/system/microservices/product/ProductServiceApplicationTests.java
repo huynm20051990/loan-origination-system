@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = {"eureka.client.enabled=false", "spring.cloud.config.enabled=false"})
+    properties = {"spring.cloud.config.enabled=false"})
 class ProductServiceApplicationTests extends MongoDBTestBase {
 
   @Autowired private WebTestClient client;
