@@ -253,3 +253,22 @@ eval $(minikube docker-env -u)
 
 docker run -it --rm loan-origination-system/product-service:latest
 
+helm repo add jetstack https://charts.jetstack.io
+
+helm repo update
+
+helm install cert-manager jetstack/cert-manager \
+--create-namespace \
+--namespace cert-manager \
+--version v1.11.0 \
+--set installCRDs=true \
+--wait
+
+kubectl get pods --namespace cert-manager
+
+sudo bash -c "echo 127.0.0.1 minikube.me | tee -a /etc/hosts"
+
+eval $(minikube docker-env -u)
+./gradlew build
+eval $(minikube docker-env)
+docker-compose build
