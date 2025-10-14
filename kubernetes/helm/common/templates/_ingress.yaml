@@ -12,8 +12,8 @@ metadata:
     app.kubernetes.io/name: {{ include "common.name" . }}
     helm.sh/chart: {{ include "common.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-  {{- with .Values.ingress.annotations }}
-annotations:
+{{- with .Values.ingress.annotations }}
+  annotations:
   {{ toYaml . | indent 4 }}
   {{- end }}
 spec:
@@ -25,7 +25,7 @@ spec:
     - host: {{ .Values.ingress.host | quote }}
       http:
         paths:
-        {{- range .Values.ingress.paths }}
+{{- range .Values.ingress.paths }}
         - path: {{ .path }}
           pathType: Prefix
           backend:
@@ -35,5 +35,5 @@ spec:
                 name: http
 
         {{- end }}
-  {{- end }}
-  {{- end -}}
+{{- end }}
+{{- end -}}

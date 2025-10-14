@@ -272,3 +272,20 @@ eval $(minikube docker-env -u)
 ./gradlew build
 eval $(minikube docker-env)
 docker-compose build
+
+for f in kubernetes/helm/components/*; do helm dep up $f; done
+
+kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
+
+helm list -n loan-origination-system
+helm uninstall loan-origination-system-dev-env -n loan-origination-system
+
+helm install loan-origination-system-dev-env \
+kubernetes/helm/environments/dev-env \
+-n loan-origination-system \
+--create-namespace \
+--wait
+
+kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
+
+kubectl get deploy rabbitmq -o yaml | grep -A10 readinessProbe

@@ -10,6 +10,8 @@ spring.data.mongodb:
 
 spring.cloud.function.definition: messageProcessor
 
+management.endpoint.health.group.readiness.include: readinessState, rabbit, mongo
+
 spring.cloud.stream:
   default.contentType: application/json
   bindings.messageProcessor-in-0:

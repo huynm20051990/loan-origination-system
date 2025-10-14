@@ -13,6 +13,8 @@ spring.datasource.hikari.initializationFailTimeout: 60000
 
 spring.cloud.function.definition: messageProcessor
 
+management.endpoint.health.group.readiness.include: readinessState, rabbit, db
+
 spring.cloud.stream:
   default.contentType: application/json
   bindings.messageProcessor-in-0:

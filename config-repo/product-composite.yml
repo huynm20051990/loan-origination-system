@@ -125,6 +125,7 @@ resilience4j.retry:
         - org.springframework.web.reactive.function.client.WebClientResponseException$InternalServerError
 
 management.health.circuitbreakers.enabled: true
+management.endpoint.health.group.readiness.include: readinessState, rabbit
 
 resilience4j.circuitbreaker:
   instances:

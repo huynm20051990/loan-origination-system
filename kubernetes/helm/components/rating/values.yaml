@@ -1,4 +1,4 @@
-fullnameOverride: recommendation
+fullnameOverride: rating
 
 image:
   name: rating-service

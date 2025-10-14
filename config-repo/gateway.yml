@@ -14,17 +14,17 @@ spring.cloud.gateway.routes:
   - Path=/product-composite/**
 
 - id: oauth2-server
-  uri: http://auth-server
+  uri: http://${app.auth-server}
   predicates:
   - Path=/oauth2/**
 
 - id: oauth2-login
-  uri: http://auth-server
+  uri: http://${app.auth-server}
   predicates:
   - Path=/login/**
 
 - id: oauth2-error
-  uri: http://auth-server
+  uri: http://${app.auth-server}
   predicates:
   - Path=/error/**
 
