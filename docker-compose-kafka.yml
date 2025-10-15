@@ -193,7 +193,7 @@ services:
 
   auth-server:
     build: spring-cloud/authorization-server
-    image: loan-origination-system/authorization-server
+    image: loan-origination-system/auth-server
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -201,7 +201,7 @@ services:
     volumes:
       - $PWD/config-repo:/config-repo
     healthcheck:
-      test: [ "CMD", "curl", "-fs", "http://localhost:9999/actuator/health" ]
+      test: [ "CMD", "curl", "-fs", "http://localhost/actuator/health" ]
       interval: 5s
       timeout: 2s
       retries: 60

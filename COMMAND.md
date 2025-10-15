@@ -237,9 +237,14 @@ kubernetes/helm/environments/dev-env \
 -n loan-origination-system \
 --create-namespace
 
+helm install loan-origination-system-prod-env \
+kubernetes/helm/environments/prod-env \
+-n loan-origination-system \
+--create-namespace
+
 kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
 
-kubectl get pods --watch
+`kubectl get pods` --watch
 
 kubectl wait --timeout=600s --for=condition=ready pod --all
 
@@ -289,3 +294,12 @@ kubernetes/helm/environments/dev-env \
 kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
 
 kubectl get deploy rabbitmq -o yaml | grep -A10 readinessProbe
+
+eval $(minikube docker-env --unset)
+minikube stop
+docker-compose build
+COMPOSE_FILE=docker-compose.yml ./test-em-all.bash start stop
+COMPOSE_FILE=docker-compose-partitions.yml ./test-em-all.bash start stop
+COMPOSE_FILE=docker-compose-kafka.yml ./test-em-all.bash start stop
+COMPOSE_FILE=docker-compose-kafka.yml ./test-em-all.bash stop
+
