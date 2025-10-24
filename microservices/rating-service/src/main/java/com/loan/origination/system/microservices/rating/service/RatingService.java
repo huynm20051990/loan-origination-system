@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -53,7 +54,7 @@ public class RatingService {
     return newEntity;
   }
 
-  public Flux<Rating> getRatings(int productId) {
+  public Flux<Rating> getRatings(HttpHeaders headers, int productId) {
     if (productId < 1) {
       throw new InvalidInputException("Invalid productId: " + productId);
     }

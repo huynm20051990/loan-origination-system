@@ -123,6 +123,7 @@ services:
 
   mongodb:
     image: mongo:7.0.9
+    restart: always
     mem_limit: 512m
     ports:
       - "27017:27017"
@@ -138,6 +139,7 @@ services:
 
   mysql:
     image: mysql:8.4.0
+    restart: always
     mem_limit: 512m
     ports:
       - "3306:3306"
@@ -201,12 +203,12 @@ services:
     volumes:
       - $PWD/config-repo:/config-repo
     healthcheck:
-      test: [ "CMD", "curl", "-fs", "http://localhost/actuator/health" ]
+      test: [ "CMD", "curl", "-fs", "http://localhost:4004/actuator/health" ]
       interval: 5s
       timeout: 2s
       retries: 60
 
-  zipkin-server:
+  jaeger-collector.istio-system:
     image: openzipkin/zipkin:3.5.1
     restart: always
     mem_limit: 1024m

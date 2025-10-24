@@ -291,6 +291,11 @@ kubernetes/helm/environments/dev-env \
 --create-namespace \
 --wait
 
+helm install loan-origination-system-dev-env \
+kubernetes/helm/environments/dev-env \
+-n loan-origination-system \
+--wait
+
 kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
 
 kubectl get deploy rabbitmq -o yaml | grep -A10 readinessProbe
@@ -302,4 +307,78 @@ COMPOSE_FILE=docker-compose.yml ./test-em-all.bash start stop
 COMPOSE_FILE=docker-compose-partitions.yml ./test-em-all.bash start stop
 COMPOSE_FILE=docker-compose-kafka.yml ./test-em-all.bash start stop
 COMPOSE_FILE=docker-compose-kafka.yml ./test-em-all.bash stop
+
+istioctl experimental precheck
+
+istioctl install --skip-confirmation \
+--set profile=demo \
+--set meshConfig.accessLogFile=/dev/stdout \
+--set meshConfig.accessLogEncoding=JSON \
+--set values.pilot.env.PILOT_JWT_PUB_KEY_REFRESH_INTERVAL=15s \
+-f kubernetes/istio-tracing.yml
+
+kubectl -n istio-system wait --timeout=600s --for=condition=available deployment --all
+
+istio_version=$(istioctl version --short --remote=false)
+echo "Installing integrations for Istio v$istio_version"
+export istio_version=1.24.0
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/${istio_version}/samples/addons/kiali.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/${istio_version}/samples/addons/jaeger.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/${istio_version}/samples/addons/prometheus.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/${istio_version}/samples/addons/grafana.yaml
+
+kubectl -n istio-system wait --timeout=600s --for=condition=available deployment --all
+
+kubectl -n istio-system get deploy
+
+helm upgrade --install istio-loan-origination-system-addons kubernetes/helm/environments/istio-system -n istio-system --wait
+kubectl -n istio-system get secret loan-origination-system-certificate
+kubectl -n istio-system get certificate loan-origination-system-certificate
+
+minikube tunnel
+sudo -E minikube tunnel -p loan-origination-system
+
+INGRESS_IP=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo $INGRESS_IP
+MINIKUBE_HOSTS="minikube.me grafana.minikube.me kiali.minikube.me prometheus.minikube.me tracing.minikube.me kibana.minikube.me elasticsearch.minikube.me mail.minikube.me health.minikube.me"
+echo "127.0.0.1 $MINIKUBE_HOSTS" | sudo tee -a /etc/hosts
+
+127.0.0.1 minikube.me grafana.minikube.me kiali.minikube.me prometheus.minikube.me tracing.minikube.me kibana.minikube.me elasticsearch.minikube.me mail.minikube.me health.minikube.me
+
+curl -o /dev/null -sk -L -w "%{http_code}\n" https://kiali.minikube.me/kiali/
+curl -o /dev/null -sk -L -w "%{http_code}\n" https://tracing.minikube.me
+curl -o /dev/null -sk -L -w "%{http_code}\n" https://grafana.minikube.me
+curl -o /dev/null -sk -L -w "%{http_code}\n" https://prometheus.minikube.me/graph#/
+
+kubectl delete namespace loan-origination-system
+kubectl apply -f kubernetes/loan-origination-system.yml
+kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
+
+for f in kubernetes/helm/components/*; do helm dep up $f; done
+for f in kubernetes/helm/environments/*; do helm dep up $f; done
+
+helm install loan-origination-system-dev-env \
+kubernetes/helm/environments/dev-env \
+-n loan-origination-system \
+--wait
+
+kubectl edit cm product-composite
+
+kubectl logs -f -l app=product-composite
+unset ACCESS_TOKEN
+ACCESS_TOKEN=$(curl -k https://writer:secret-writer@minikube.me/oauth2/token \
+-d grant_type=client_credentials \
+-d scope="product:read product:write" \
+-s | jq -r .access_token)
+echo $ACCESS_TOKEN
+curl -H "Authorization: Bearer $ACCESS_TOKEN" -k https://minikube.me/product-composite/1 -w "%{http_code}\n" -o /dev/null -s
+
+ACCESS_TOKEN=$(curl https://writer:secret-writer@minikube.me/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -ks | jq .access_token -r)
+echo ACCESS_TOKEN=$ACCESS_TOKEN
+
+siege https://minikube.me/product-composite/1 -H "Authorization: Bearer $ACCESS_TOKEN" -c1 -d1 -v
+
+while true; do curl -k -H "Authorization: Bearer $ACCESS_TOKEN" -o /dev/null -s -w "%{http_code}\n" https://minikube.me/product-composite/1; sleep 1; done
+
+
 

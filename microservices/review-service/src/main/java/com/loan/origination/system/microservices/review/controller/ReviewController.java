@@ -6,6 +6,7 @@ import com.loan.origination.system.microservices.review.service.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,8 +23,8 @@ public class ReviewController implements ReviewAPI {
   }
 
   @Override
-  public Flux<Review> getReviews(int productId) {
-    return reviewService.getReviews(productId);
+  public Flux<Review> getReviews(HttpHeaders headers, int productId) {
+    return reviewService.getReviews(headers, productId);
   }
 
   @Override

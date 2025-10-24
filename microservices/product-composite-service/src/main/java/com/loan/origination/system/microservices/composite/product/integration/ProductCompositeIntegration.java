@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
@@ -68,7 +69,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   @Retry(name = "product")
   @TimeLimiter(name = "product")
   @CircuitBreaker(name = "product", fallbackMethod = "getProductFallbackValue")
-  public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
+  public Mono<Product> getProduct(HttpHeaders headers, int productId, int delay, int faultPercent) {
     URI url =
         UriComponentsBuilder.fromUriString(
                 PRODUCT_SERVICE_URL
@@ -79,6 +80,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
     return webClient
         .get()
         .uri(url)
+        .headers(h -> h.addAll(headers))
         .retrieve()
         .bodyToMono(Product.class)
         .log(LOG.getName(), Level.FINE)
@@ -86,7 +88,11 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   private Mono<Product> getProductFallbackValue(
-      int productId, int delay, int faultPercent, CallNotPermittedException ex) {
+      HttpHeaders headers,
+      int productId,
+      int delay,
+      int faultPercent,
+      CallNotPermittedException ex) {
 
     LOG.warn(
         "Creating a fail-fast fallback product for productId = {}, delay = {}, faultPercent = {} and exception = {} ",
@@ -94,6 +100,10 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
         delay,
         faultPercent,
         ex.toString());
+
+    if (productId < 1) {
+      throw new InvalidInputException("Invalid productId: " + productId);
+    }
 
     if (productId == 13) {
       String errMsg = "Product Id: " + productId + " not found in fallback cache!";
@@ -129,7 +139,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public Flux<Rating> getRatings(int productId) {
+  public Flux<Rating> getRatings(HttpHeaders headers, int productId) {
     URI url =
         UriComponentsBuilder.fromUriString(RATING_SERVICE_URL + "/rating?productId={productId}")
             .build(productId);
@@ -141,6 +151,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
     return webClient
         .get()
         .uri(url)
+        .headers(h -> h.addAll(headers))
         .retrieve()
         .bodyToFlux(Rating.class)
         .log(LOG.getName(), Level.FINE)
@@ -166,7 +177,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
   }
 
   @Override
-  public Flux<Review> getReviews(int productId) {
+  public Flux<Review> getReviews(HttpHeaders headers, int productId) {
     URI url =
         UriComponentsBuilder.fromUriString(REVIEW_SERVICE_URL + "/review?productId={productId}")
             .build(productId);
@@ -178,6 +189,7 @@ public class ProductCompositeIntegration implements ProductAPI, RatingAPI, Revie
     return webClient
         .get()
         .uri(url)
+        .headers(h -> h.addAll(headers))
         .retrieve()
         .bodyToFlux(Review.class)
         .log(LOG.getName(), Level.FINE)

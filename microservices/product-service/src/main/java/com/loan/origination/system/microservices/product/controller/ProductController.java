@@ -6,6 +6,7 @@ import com.loan.origination.system.microservices.product.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
@@ -22,8 +23,8 @@ public class ProductController implements ProductAPI {
   }
 
   @Override
-  public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
-    return productService.getProduct(productId, delay, faultPercent);
+  public Mono<Product> getProduct(HttpHeaders headers, int productId, int delay, int faultPercent) {
+    return productService.getProduct(headers, productId, delay, faultPercent);
   }
 
   @Override

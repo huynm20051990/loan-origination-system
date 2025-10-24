@@ -1,6 +1,6 @@
 apiVersion: v2
 appVersion: "1.0"
-description: A Helm chart for HANDS-ON MICROSERVICES WITH SPRING BOOT AND SPRING CLOUD running in a QA or Production environment
+description: A Helm chart for LOAN-ORIGINATION-SYSTEM MICROSERVICES WITH SPRING BOOT AND SPRING CLOUD running in a QA or Production environment
 name: prod-env
 version: 1.0.0
 
@@ -30,6 +30,14 @@ dependencies:
     version: 1.0.0
     repository: file://../../components/product-composite
 
-  - name: zipkin-server
+  - name: product-green
     version: 1.0.0
-    repository: file://../../components/zipkin-server
+    repository: file://../../components/product-green
+
+  - name: rating-green
+    version: 1.0.0
+    repository: file://../../components/rating-green
+
+  - name: review-green
+    version: 1.0.0
+    repository: file://../../components/review-green

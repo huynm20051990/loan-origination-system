@@ -1,5 +1,6 @@
 package com.loan.origination.system.api.core.rating;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -9,11 +10,14 @@ public interface RatingAPI {
   /**
    * Sample usage: "curl $HOST:$PORT/rating?productId=1".
    *
+   * @param headers
    * @param productId Id of the product
    * @return the rating of the product
    */
   @GetMapping(value = "/rating", produces = "application/json")
-  Flux<Rating> getRatings(@RequestParam(value = "productId", required = true) int productId);
+  Flux<Rating> getRatings(
+      @RequestHeader HttpHeaders headers,
+      @RequestParam(value = "productId", required = true) int productId);
 
   /**
    * Sample usage, see below.

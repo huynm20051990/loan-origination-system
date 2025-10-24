@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -46,13 +47,16 @@ public class ProductCompositeController implements ProductCompositeAPI {
   }
 
   @Override
-  public Mono<ProductAggregate> getProduct(int productId, int delay, int faultPercent) {
+  public Mono<ProductAggregate> getProduct(
+      HttpHeaders headers, int productId, int delay, int faultPercent) {
     return observationWithProductInfo(
-        productId, () -> getProductInternal(productId, delay, faultPercent));
+        productId, () -> getProductInternal(headers, productId, delay, faultPercent));
   }
 
-  private Mono<ProductAggregate> getProductInternal(int productId, int delay, int faultPercent) {
+  private Mono<ProductAggregate> getProductInternal(
+      HttpHeaders requestHeaders, int productId, int delay, int faultPercent) {
     LOG.info("Will get composite product info for product.id={}", productId);
+    HttpHeaders headers = getHeaders(requestHeaders, "X-group");
     return Mono.zip(
             values ->
                 createProductAggregate(
@@ -62,11 +66,24 @@ public class ProductCompositeController implements ProductCompositeAPI {
                     (List<Review>) values[3],
                     serviceUtil.getServiceAddress()),
             getSecurityContextMono(),
-            integration.getProduct(productId, delay, faultPercent),
-            integration.getRatings(productId).collectList(),
-            integration.getReviews(productId).collectList())
+            integration.getProduct(headers, productId, delay, faultPercent),
+            integration.getRatings(headers, productId).collectList(),
+            integration.getReviews(headers, productId).collectList())
         .doOnError(ex -> LOG.warn("getCompositeProduct failed: {}", ex.toString()))
         .log(LOG.getName(), Level.FINE);
+  }
+
+  private HttpHeaders getHeaders(HttpHeaders requesthHeaders, String... headers) {
+    LOG.trace("Will look for {} headers: {}", headers.length, headers);
+    HttpHeaders h = new HttpHeaders();
+    for (String header : headers) {
+      List<String> value = requesthHeaders.get(header);
+      if (value != null) {
+        h.addAll(header, value);
+      }
+    }
+    LOG.trace("Will transfer {}, headers: {}", h.size(), h);
+    return h;
   }
 
   @Override

@@ -40,29 +40,32 @@ class ProductCompositeServiceApplicationTests {
   @BeforeEach
   void setup() {
     when(integration.getProduct(
+            ArgumentMatchers.any(),
             ArgumentMatchers.eq(PRODUCT_ID_OK),
             ArgumentMatchers.anyInt(),
             ArgumentMatchers.anyInt()))
         .thenReturn(
             Mono.just(new Product(PRODUCT_ID_OK, "name", "name-" + PRODUCT_ID_OK, "mock-address")));
-    when(integration.getRatings(PRODUCT_ID_OK))
+    when(integration.getRatings(ArgumentMatchers.any(), ArgumentMatchers.eq(PRODUCT_ID_OK)))
         .thenReturn(
             Flux.fromIterable(
                 Collections.singletonList(
                     new Rating(PRODUCT_ID_OK, 1, "author", 1, "content", "mock-address"))));
-    when(integration.getReviews(PRODUCT_ID_OK))
+    when(integration.getReviews(ArgumentMatchers.any(), ArgumentMatchers.eq(PRODUCT_ID_OK)))
         .thenReturn(
             Flux.fromIterable(
                 Collections.singletonList(
                     new Review(PRODUCT_ID_OK, 1, "author", "subject", "content", "mock-address"))));
 
     when(integration.getProduct(
+            ArgumentMatchers.any(),
             ArgumentMatchers.eq(PRODUCT_ID_NOT_FOUND),
             ArgumentMatchers.anyInt(),
             ArgumentMatchers.anyInt()))
         .thenThrow(new NotFoundException("NOT FOUND: " + PRODUCT_ID_NOT_FOUND));
 
     when(integration.getProduct(
+            ArgumentMatchers.any(),
             ArgumentMatchers.eq(PRODUCT_ID_INVALID),
             ArgumentMatchers.anyInt(),
             ArgumentMatchers.anyInt()))

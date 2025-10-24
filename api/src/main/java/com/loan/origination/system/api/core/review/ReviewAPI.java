@@ -1,5 +1,6 @@
 package com.loan.origination.system.api.core.review;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -9,11 +10,14 @@ public interface ReviewAPI {
   /**
    * Sample usage: "curl $HOST:$PORT/review?productId=1".
    *
+   * @param headers
    * @param productId Id of the product
    * @return the reviews of the product
    */
   @GetMapping(value = "/review", produces = "application/json")
-  Flux<Review> getReviews(@RequestParam(value = "productId", required = true) int productId);
+  Flux<Review> getReviews(
+      @RequestHeader HttpHeaders headers,
+      @RequestParam(value = "productId", required = true) int productId);
 
   /**
    * Sample usage, see below.

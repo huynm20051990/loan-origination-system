@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -52,7 +53,7 @@ public class ProductService {
     return newEntity;
   }
 
-  public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
+  public Mono<Product> getProduct(HttpHeaders headers, int productId, int delay, int faultPercent) {
     if (productId < 1) {
       throw new InvalidInputException("Invalid productId: " + productId);
     }
