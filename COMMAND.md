@@ -380,5 +380,65 @@ siege https://minikube.me/product-composite/1 -H "Authorization: Bearer $ACCESS_
 
 while true; do curl -k -H "Authorization: Bearer $ACCESS_TOKEN" -o /dev/null -s -w "%{http_code}\n" https://minikube.me/product-composite/1; sleep 1; done
 
+kubectl delete namespace loan-origination-system
+kubectl apply -f kubernetes/loan-origination-system.yml
+kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
+for f in kubernetes/helm/components/*; do helm dep up $f; done
+for f in kubernetes/helm/environments/*; do helm dep up $f; done
+
+ACCESS_TOKEN=$(curl -k https://writer:secret-writer@minikube.me/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -s | jq .access_token -r)
+
+echo ACCESS_TOKEN=$ACCESS_TOKEN
+
+curl -ks https://minikube.me/product-composite/1 -H "Authorization:Bearer $ACCESS_TOKEN" | jq .productId
+
+eval $(minikube docker-env)
+docker pull docker.elastic.co/elasticsearch/elasticsearch:7.17.10
+docker pull docker.elastic.co/kibana/kibana:7.17.1
+
+helm install logging-loan-origination-system-add-on kubernetes/helm/environments/logging \
+-n logging --create-namespace --wait
+
+curl https://elasticsearch.minikube.me -sk | jq -r .tagline
+
+curl https://kibana.minikube.me \
+-kLs -o /dev/null -w "%{http_code}\n"
+
+eval $(minikube docker-env)
+docker build -f kubernetes/efk/Dockerfile -t loan-origination-system/fluentd:v1 kubernetes/efk/
+
+kubectl apply -f kubernetes/efk/fluentd-loan-origination-system-configmap.yml
+kubectl apply -f kubernetes/efk/fluentd-ds.yml
+kubectl wait --timeout=120s --for=condition=Ready pod -l app=fluentd -n kube-system
+
+kubectl logs -n kube-system -l app=fluentd --tail=-1 | grep "fluentd worker is now running worker"
+
+curl https://elasticsearch.minikube.me/_all/_count -sk | jq .count
+
+ACCESS_TOKEN=$(curl -k https://writer:secret-writer@minikube.me/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -s | jq .access_token -r)
+echo ACCESS_TOKEN=$ACCESS_TOKEN
+
+curl -X POST -k https://minikube.me/product-composite \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $ACCESS_TOKEN" \
+--data '{"productId":1234,"name":"Product name 1234","description": "New product 1234"}'
+
+curl -H "Authorization: Bearer $ACCESS_TOKEN" -k 'https://minikube.me/product-composite/1234' -s | jq .
+
+# 1. Apply the updated config
+kubectl apply -f fluentd-loan-origination-system-configmap.yml -n kube-system
+
+# 2. Restart Fluentd pods
+kubectl rollout restart daemonset fluentd -n kube-system
+
+# 3. Confirm it's using the right config
+kubectl describe daemonset fluentd -n kube-system | grep ConfigMap
+
+# 4. Watch pods restart
+kubectl get pods -n kube-system -w
+
+
+curl -H "Authorization: Bearer $ACCESS_TOKEN" -k 'https://minikube.me/product-composite/1234?faultPercent=100' -s | jq .
+
 
 
