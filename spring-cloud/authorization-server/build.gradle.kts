@@ -29,6 +29,7 @@ dependencies {
     implementation("io.zipkin.reporter2:zipkin-reporter-brave")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.security:spring-security-oauth2-authorization-server:1.5.2")
+    implementation("io.micrometer:micrometer-registry-prometheus")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("net.sourceforge.htmlunit:htmlunit:2.70.0")

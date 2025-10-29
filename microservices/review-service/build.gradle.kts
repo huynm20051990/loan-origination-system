@@ -39,6 +39,7 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
     implementation("com.mysql:mysql-connector-j")
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
+    implementation("io.micrometer:micrometer-registry-prometheus")
     compileOnly("org.mapstruct:mapstruct-processor:$mapstructVersion")
     annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")

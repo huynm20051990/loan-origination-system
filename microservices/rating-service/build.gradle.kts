@@ -37,6 +37,7 @@ dependencies {
     implementation("io.zipkin.reporter2:zipkin-reporter-brave")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
+    implementation("io.micrometer:micrometer-registry-prometheus")
     compileOnly("org.mapstruct:mapstruct-processor:$mapstructVersion")
     annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")

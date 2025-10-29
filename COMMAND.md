@@ -380,11 +380,22 @@ siege https://minikube.me/product-composite/1 -H "Authorization: Bearer $ACCESS_
 
 while true; do curl -k -H "Authorization: Bearer $ACCESS_TOKEN" -o /dev/null -s -w "%{http_code}\n" https://minikube.me/product-composite/1; sleep 1; done
 
+eval $(minikube docker-env -u)
+./gradlew build
+eval $(minikube docker-env)
+docker-compose build
+
 kubectl delete namespace loan-origination-system
 kubectl apply -f kubernetes/loan-origination-system.yml
 kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
 for f in kubernetes/helm/components/*; do helm dep up $f; done
 for f in kubernetes/helm/environments/*; do helm dep up $f; done
+helm install loan-origination-system-dev-env \
+kubernetes/helm/environments/dev-env \
+-n loan-origination-system \
+--wait
+
+minikube tunnel
 
 ACCESS_TOKEN=$(curl -k https://writer:secret-writer@minikube.me/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -s | jq .access_token -r)
 
@@ -439,6 +450,30 @@ kubectl get pods -n kube-system -w
 
 
 curl -H "Authorization: Bearer $ACCESS_TOKEN" -k 'https://minikube.me/product-composite/1234?faultPercent=100' -s | jq .
+
+kubectl -n istio-system create deployment mail-server --image maildev/maildev:2.0.5
+kubectl -n istio-system expose deployment mail-server --port=1080,1025 --type=ClusterIP
+kubectl -n istio-system wait --timeout=60s --for=condition=ready pod -l app=mail-server
+
+helm upgrade istio-loan-origination-system-addons kubernetes/helm/environments/istio-system -n istio-system
+
+kubectl apply -f kubernetes/loan-origination-system.yml
+
+kubectl -n istio-system set env deployment/grafana \
+GF_ALERTING_ENABLED=true \
+GF_UNIFIED_ALERTING_ENABLED=false \
+GF_SMTP_ENABLED=true \
+GF_SMTP_SKIP_VERIFY=true \
+GF_SMTP_HOST=mail-server:1025 \
+GF_SMTP_FROM_ADDRESS=grafana@minikube.me
+#kubectl -n istio-system wait --timeout=60s --for=condition=ready pod -l app=Grafana
+kubectl -n istio-system wait --for=condition=ready pod -l app.kubernetes.io/name=grafana --timeout=60s
+
+siege https://minikube.me/product-composite/1 -H "Authorization: Bearer $ACCESS_TOKEN" -c1 -d1 -v
+
+siege -r5 https://minikube.me/product-composite/1 -H "Authorization: Bearer $ACCESS_TOKEN" -c1 -v
+
+
 
 
 

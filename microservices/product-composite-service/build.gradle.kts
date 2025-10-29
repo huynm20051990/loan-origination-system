@@ -46,6 +46,7 @@ dependencies {
     implementation("io.github.resilience4j:resilience4j-spring-boot3:$resilience4jVersion")
     implementation("io.github.resilience4j:resilience4j-reactor:$resilience4jVersion")
     implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("io.micrometer:micrometer-registry-prometheus")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.cloud:spring-cloud-stream-test-binder")
     testImplementation("io.projectreactor:reactor-test")

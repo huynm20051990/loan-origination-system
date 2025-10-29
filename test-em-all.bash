@@ -320,6 +320,13 @@ then
 fi
 assertCurl 200 "curl -ks  https://$HOST:$PORT/openapi/v3/api-docs.yaml"
 
+if [[ $USE_K8S == "true" ]]
+then
+  # Verify access to Prometheus formatted metrics
+  echo "Prometheus metrics tests"
+  assertCurl 200 "curl -ks https://health.minikube.me/actuator/prometheus"
+fi
+
 if [[ $SKIP_CB_TESTS == "false" ]]
 then
     testCircuitBreaker
