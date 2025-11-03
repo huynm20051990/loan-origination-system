@@ -5,7 +5,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.MySQLContainer;
 
-public class MySqlTestBase {
+public abstract class MySqlTestBase {
   // Extend startup timeout since a MySQLContainer with MySQL 8 starts very slow on Win10/WSL2
   private static JdbcDatabaseContainer database =
       new MySQLContainer("mysql:8.4.0").withStartupTimeoutSeconds(300);
