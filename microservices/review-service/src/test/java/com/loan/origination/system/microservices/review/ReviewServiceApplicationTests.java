@@ -160,18 +160,6 @@ class ReviewServiceApplicationTests extends MySqlTestBase {
         .expectBody();
   }
 
-  private WebTestClient.BodyContentSpec deleteAndVerifyReviewsByProductId(
-      int productId, HttpStatus expectedStatus) {
-    return client
-        .delete()
-        .uri("/review?productId=" + productId)
-        .accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus()
-        .isEqualTo(expectedStatus)
-        .expectBody();
-  }
-
   private void sendCreateReviewEvent(int productId, int reviewId) {
     Review review =
         new Review(

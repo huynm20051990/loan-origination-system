@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Mono;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductServiceApplicationTests extends MongoDBTestBase {
@@ -126,34 +125,6 @@ class ProductServiceApplicationTests extends MongoDBTestBase {
         .isEqualTo(expectedStatus)
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
-        .expectBody();
-  }
-
-  private WebTestClient.BodyContentSpec postAndVerifyProduct(
-      int productId, HttpStatus expectedStatus) {
-    Product product = new Product(productId, "Name " + productId, String.valueOf(productId), "SA");
-    return client
-        .post()
-        .uri("/product")
-        .body(Mono.just(product), Product.class)
-        .accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus()
-        .isEqualTo(expectedStatus)
-        .expectHeader()
-        .contentType(MediaType.APPLICATION_JSON)
-        .expectBody();
-  }
-
-  private WebTestClient.BodyContentSpec deleteAndVerifyProduct(
-      int productId, HttpStatus expectedStatus) {
-    return client
-        .delete()
-        .uri("/product/" + productId)
-        .accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus()
-        .isEqualTo(expectedStatus)
         .expectBody();
   }
 
