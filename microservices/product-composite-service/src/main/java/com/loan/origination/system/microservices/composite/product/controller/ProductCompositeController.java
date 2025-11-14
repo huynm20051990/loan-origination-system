@@ -32,7 +32,7 @@ public class ProductCompositeController implements ProductCompositeAPI {
 
   private final SecurityContext nullSecCtx = new SecurityContextImpl();
 
-  // Add comment to test ci
+  // Add comment to test ci again
   private final ServiceUtil serviceUtil;
   private final ObservationUtil observationUtil;
   private ProductCompositeIntegration integration;
