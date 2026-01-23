@@ -29,15 +29,3 @@ dependencies:
   - name: product-composite
     version: 1.0.0
     repository: file://../../components/product-composite
-
-  - name: product-green
-    version: 1.0.0
-    repository: file://../../components/product-green
-
-  - name: rating-green
-    version: 1.0.0
-    repository: file://../../components/rating-green
-
-  - name: review-green
-    version: 1.0.0
-    repository: file://../../components/review-green

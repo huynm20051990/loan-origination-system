@@ -156,6 +156,8 @@ curl -H "Authorization: Bearer $ACCESS_TOKEN" -k https://localhost:8443/product-
 
 curl -X DELETE -H "Authorization: Bearer $ACCESS_TOKEN" -k https://localhost:8443/product-composite/12345 -w "%{http_code}\n" -o /dev/null -s
 
+curl -X DELETE -H "Authorization: Bearer $ACCESS_TOKEN" -k https://localhost:8443/product-composite/1234 -w "%{http_code}\n" -o /dev/null -s
+
 unset KUBECONFIG
 minikube start \
 --profile=loan-origination-system \
@@ -436,6 +438,11 @@ curl -X POST -k https://minikube.me/product-composite \
 
 curl -H "Authorization: Bearer $ACCESS_TOKEN" -k 'https://minikube.me/product-composite/1234' -s | jq .
 
+curl -X DELETE -H "Authorization: Bearer $ACCESS_TOKEN" \
+-k https://minikube.me/product-composite/1234 \
+-w "%{http_code}\n" \
+-o /dev/null -s
+
 # 1. Apply the updated config
 kubectl apply -f fluentd-loan-origination-system-configmap.yml -n kube-system
 
@@ -472,6 +479,41 @@ kubectl -n istio-system wait --for=condition=ready pod -l app.kubernetes.io/name
 siege https://minikube.me/product-composite/1 -H "Authorization: Bearer $ACCESS_TOKEN" -c1 -d1 -v
 
 siege -r5 https://minikube.me/product-composite/1 -H "Authorization: Bearer $ACCESS_TOKEN" -c1 -v
+
+# Testing resilience by injecting faults
+# Apply
+kubectl apply -f kubernetes/resilience-tests/product-virtual-service
+with-faults.yml
+# Remove
+kubectl delete -f kubernetes/resilience-tests/product-virtual-service
+with-faults.yml
+
+# Testing resilience by injecting delays
+# Apply
+kubectl apply -f kubernetes/resilience-tests/product-virtual-service
+with-delay.yml
+# Acquire an access token as follows
+ACCESS_TOKEN=$(curl -k https://writer:secret-writer@minikube.me/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -s | jq .access_token -r)
+echo ACCESS_TOKEN=$ACCESS_TOKEN
+# Send six requests in a row
+for i in {1..6}; do time curl -k https://minikube.me/product-composite/1 -H "Authorization: Bearer $ACCESS_TOKEN"; done
+
+# Expect the following:
+# a. The circuit opens up after the first three failed calls
+# b. The circuit breaker applies fast-fail logic for the last three calls
+# c. A fallback response is returned for the last three calls
+
+# Remove
+kubectl delete -f kubernetes/resilience-tests/product-virtual-service
+with-delay.yml
+
+for ((n=0; n<4; n++)); do curl -o /dev/null -skL -w "%{http_code}\n" https://minikube.me/product-composite/1?delay=0 -H "Authorization: Bearer $ACCESS_TOKEN" -s; done
+
+# Git command
+# Create new branch
+git checkout -b feature/add-login-page
+
+
 
 
 

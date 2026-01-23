@@ -99,8 +99,8 @@ product-green:
     limits:
       memory: 400Mi
 
-recommendation-green:
-  fullnameOverride: recommendation-v2
+rating-green:
+  fullnameOverride: rating-v2
   image:
     tag: v2
   env:
@@ -131,7 +131,7 @@ review-green:
 
 virtualServices:
   - product
-  - recommendation
+  - rating
   - review
 
 destinationRules:
@@ -145,7 +145,7 @@ destinationRules:
       - labels:
           version: v2
         name: new
-  - name: recommendation
+  - name: rating
     subsets:
       - labels:
           version: v1
