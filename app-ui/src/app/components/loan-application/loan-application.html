@@ -1,0 +1,103 @@
+<div class="container">
+  <mat-stepper linear #stepper>
+    <mat-step [stepControl]="personalInfo">
+      <form [formGroup]="personalInfo">
+        <ng-template matStepLabel>Personal Info</ng-template>
+
+        <div class="form-column">
+          <mat-form-field appearance="outline">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="fullName" required>
+            @if (personalInfo.get('fullName')?.hasError('required')) {
+            <mat-error>Full name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="email" required>
+            @if (personalInfo.get('email')?.hasError('email')) {
+            <mat-error>Please enter a valid email address</mat-error>
+            }
+            @if (personalInfo.get('email')?.hasError('required')) {
+            <mat-error>Email is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="step-actions">
+          <button mat-flat-button color="primary" matStepperNext>Next Step</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="financialInfo">
+      <form [formGroup]="financialInfo">
+        <ng-template matStepLabel>Financial Info</ng-template>
+
+        <div class="form-column">
+          <mat-form-field appearance="outline">
+            <mat-label>Annual Income</mat-label>
+            <span matPrefix>$ &nbsp;</span>
+            <input matInput type="number" formControlName="annualIncome" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Employer Name</mat-label>
+            <input matInput formControlName="employer" required>
+          </mat-form-field>
+        </div>
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-flat-button color="primary" matStepperNext>Next Step</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+
+      <ng-template matStepperIcon="done">
+        <mat-icon>verified</mat-icon>
+      </ng-template>
+
+      <div class="review-container">
+        <h3>Application Summary</h3>
+
+        <div class="review-section">
+          <h4>Personal Details</h4>
+          <p><strong>Name:</strong> {{ personalInfo.value.fullName }}</p>
+          <p><strong>Email:</strong> {{ personalInfo.value.email }}</p>
+        </div>
+
+        <hr>
+
+        <div class="review-section">
+          <h4>Financial Details</h4>
+          <p><strong>Annual Income:</strong> {{ financialInfo.value.annualIncome | currency }}</p>
+          <p><strong>Employer:</strong> {{ financialInfo.value.employer }}</p>
+        </div>
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-raised-button color="accent" (click)="submitApplication()">Submit Loan Request</button>
+        </div>
+      </div>
+    </mat-step>
+
+    <mat-step *ngIf="isCompleted">
+      <ng-template matStepLabel>Done</ng-template>
+
+      <div class="success-container">
+        <h2>Application Received!</h2>
+        <p>Thank you, <strong>{{ personalInfo.value.fullName }}</strong>.</p>
+        <p>Your loan application has been submitted for review. You will receive an email at <i>{{ personalInfo.value.email }}</i> within 24 hours.</p>
+
+        <button mat-flat-button color="primary" routerLink="/listings">
+          Return to Home
+        </button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</div>

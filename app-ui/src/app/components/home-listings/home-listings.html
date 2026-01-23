@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="header-section">
+    <h1>Featured Properties</h1>
+    <p>Find your dream home and start your application today.</p>
+  </div>
+
+  <div class="property-grid">
+    @for (home of homes; track home.id) {
+    <mat-card class="home-card">
+      <img mat-card-image [src]="home.imageUrl" [alt]="home.address">
+      <mat-card-content>
+        <div class="price-tag">{{ home.price | currency }}</div>
+        <h3 class="address">{{ home.address }}</h3>
+        <p class="details">
+          <mat-icon>bed</mat-icon> {{ home.beds }} Beds |
+          <mat-icon>bathtub</mat-icon> {{ home.baths }} Baths
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-flat-button color="accent" (click)="applyForLoan(home)">
+          APPLY FOR A LOAN
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+</div>
