@@ -513,6 +513,8 @@ for ((n=0; n<4; n++)); do curl -o /dev/null -skL -w "%{http_code}\n" https://min
 # Create new branch
 git checkout -b feature/add-login-page
 
+ng serve --host 0.0.0.0
+
 
 
 

@@ -5,3 +5,23 @@
 main {
   padding: 20px;
 }
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.register-btn {
+  margin-left: 8px;
+  border-color: white !important;
+  color: white !important;
+}
+
+.container {
+  padding: 20px;
+}

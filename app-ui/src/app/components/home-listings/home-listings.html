@@ -1,24 +1,34 @@
-<div class="container">
-  <div class="header-section">
-    <h1>Featured Properties</h1>
-    <p>Find your dream home and start your application today.</p>
-  </div>
+<div class="page-container">
+  <header class="listings-header">
+    <h1>Available Properties</h1>
+    <div class="search-bar">
+      <mat-form-field appearance="outline">
+        <mat-label>Search by address...</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput>
+      </mat-form-field>
+    </div>
+  </header>
 
-  <div class="property-grid">
+  <div class="listings-grid">
     @for (home of homes; track home.id) {
     <mat-card class="home-card">
-      <img mat-card-image [src]="home.imageUrl" [alt]="home.address">
+      <div class="image-wrapper">
+        <img mat-card-image [src]="home.imageUrl" alt="Photo of {{home.address}}">
+        <div class="price-tag">{{ home.price | currency:'USD':'symbol':'1.0-0' }}</div>
+      </div>
+
       <mat-card-content>
-        <div class="price-tag">{{ home.price | currency }}</div>
-        <h3 class="address">{{ home.address }}</h3>
-        <p class="details">
-          <mat-icon>bed</mat-icon> {{ home.beds }} Beds |
-          <mat-icon>bathtub</mat-icon> {{ home.baths }} Baths
-        </p>
+        <h2 class="address">{{ home.address }}</h2>
+        <div class="specs">
+          <span><mat-icon>bed</mat-icon> {{ home.beds }} Beds</span>
+          <span><mat-icon>bathtub</mat-icon> {{ home.baths }} Baths</span>
+        </div>
       </mat-card-content>
+
       <mat-card-actions>
-        <button mat-flat-button color="accent" (click)="applyForLoan(home)">
-          APPLY FOR A LOAN
+        <button mat-flat-button color="primary" [routerLink]="['/apply', home.id]">
+          APPLY NOW
         </button>
       </mat-card-actions>
     </mat-card>
