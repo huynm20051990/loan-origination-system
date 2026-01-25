@@ -1,44 +1,49 @@
-<div class="register-container">
-  <mat-card class="register-card">
-    <div class="form-header">
-      <mat-icon class="header-icon">person_add</mat-icon>
-      <h2>Create your Account</h2>
-      <p>Start your journey to a better loan experience</p>
+<div class="auth-wrapper">
+  <mat-card class="auth-card" appearance="outlined">
+    <div class="auth-header">
+      <h1>Register</h1>
     </div>
 
     <mat-card-content>
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Full Name</mat-label>
-          <input matInput formControlName="fullName" placeholder="John Doe">
-          <mat-icon matSuffix>badge</mat-icon>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email Address</mat-label>
-          <input matInput formControlName="email" type="email" placeholder="name@example.com">
-          <mat-icon matSuffix>email</mat-icon>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-          <input matInput formControlName="password" type="password" placeholder="At least 6 characters">
-          <mat-icon matSuffix>lock</mat-icon>
-        </mat-form-field>
-
-        <div class="terms">
-          <p>By registering, you agree to our <a>Terms of Service</a> and <a>Privacy Policy</a>.</p>
+        <div class="form-field-group">
+          <label class="input-label">Full Name</label>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <input matInput formControlName="fullName" placeholder="John Doe">
+            <mat-icon matSuffix class="subtle-icon">badge</mat-icon>
+          </mat-form-field>
         </div>
 
-        <button mat-flat-button color="primary" class="register-btn" [disabled]="registerForm.invalid">
-          CREATE ACCOUNT
+        <div class="form-field-group">
+          <label class="input-label">Email Address</label>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <input matInput formControlName="email" type="email" placeholder="name@company.com">
+            <mat-icon matSuffix class="subtle-icon">mail_outline</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-field-group">
+          <label class="input-label">Password</label>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <input matInput formControlName="password" type="password" placeholder="Min. 6 characters">
+            <mat-icon matSuffix class="subtle-icon">lock_outline</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="terms-text">
+          By clicking "Create Account", you agree to our
+          <a routerLink="/terms">Terms</a> and <a routerLink="/privacy">Privacy Policy</a>.
+        </div>
+
+        <button mat-flat-button class="submit-btn" [disabled]="registerForm.invalid">
+          Create Account
         </button>
       </form>
     </mat-card-content>
 
-    <mat-card-footer class="form-footer">
-      <span>Already have an account? <a routerLink="/login">Sign In</a></span>
-    </mat-card-footer>
+    <div class="auth-footer">
+      <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+    </div>
   </mat-card>
 </div>
