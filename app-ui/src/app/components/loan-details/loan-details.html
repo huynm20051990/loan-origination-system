@@ -1,0 +1,54 @@
+<div class="details-wrapper">
+  <div class="back-nav">
+    <button mat-button routerLink="/user-dashboard">
+      <mat-icon>arrow_back</mat-icon> Back to Dashboard
+    </button>
+  </div>
+
+  <header class="header">
+    <h1>Application: {{ loanData.id }}</h1>
+    <mat-chip-set>
+      <mat-chip class="status-chip">{{ loanData.status }}</mat-chip>
+    </mat-chip-set>
+  </header>
+
+  <mat-card class="progress-card">
+    <div class="progress-info">
+      <span>Overall Progress</span>
+      <span>{{ loanData.progress }}%</span>
+    </div>
+    <mat-progress-bar mode="determinate" [value]="loanData.progress"></mat-progress-bar>
+  </mat-card>
+
+  <div class="details-grid">
+    <mat-card class="info-section">
+      <h3>Loan Information</h3>
+      <div class="info-row">
+        <span class="label">Amount Requested:</span>
+        <span class="value">{{ loanData.amount | currency }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Loan Purpose:</span>
+        <span class="value">{{ loanData.purpose }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Submission Date:</span>
+        <span class="value">{{ loanData.dateSubmitted }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="checklist-section">
+      <h3>Requirements Checklist</h3>
+      <div class="checklist-item" *ngFor="let item of loanData.checklist">
+        <mat-icon [ngClass]="item.status.toLowerCase()">{{ item.icon }}</mat-icon>
+        <div class="item-text">
+          <span class="item-name">{{ item.name }}</span>
+          <span class="item-status">{{ item.status }}</span>
+        </div>
+        <button mat-stroked-button color="primary" *ngIf="item.status !== 'Completed'">
+          Upload
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</div>

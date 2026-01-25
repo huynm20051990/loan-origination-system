@@ -1,0 +1,67 @@
+.details-wrapper {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  h1 { margin: 0; color: #1a237e; }
+}
+
+.progress-card {
+  padding: 20px;
+  margin-bottom: 30px;
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.info-section {
+  padding: 20px;
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    .label { color: #666; }
+    .value { font-weight: 600; }
+  }
+}
+
+.checklist-section {
+  padding: 20px;
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid #f5f5f5;
+
+    mat-icon {
+      &.completed { color: #4caf50; }
+      &.pending { color: #ff9800; }
+      &.required { color: #f44336; }
+    }
+
+    .item-text {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      .item-name { font-weight: 500; }
+      .item-status { font-size: 12px; color: #888; }
+    }
+  }
+}
