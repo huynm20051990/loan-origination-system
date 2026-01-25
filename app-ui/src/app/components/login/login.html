@@ -1,34 +1,41 @@
 <div class="auth-wrapper">
-  <mat-card class="auth-card">
-    <mat-card-header>
-      <mat-card-title>Welcome Back</mat-card-title>
-      <mat-card-subtitle>Login to your loan account</mat-card-subtitle>
-    </mat-card-header>
+  <mat-card class="auth-card" appearance="outlined">
+    <div class="auth-header">
+      <h1>Login</h1>
+    </div>
 
     <mat-card-content>
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email Address</mat-label>
-          <input matInput formControlName="email" type="email" placeholder="name@example.com">
-          <mat-icon matSuffix>email</mat-icon>
-        </mat-form-field>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'">
-          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
-            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-        </mat-form-field>
+        <div class="field-container">
+          <label class="input-label">Email Address</label>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <input matInput formControlName="email" type="email" placeholder="name@company.com">
+            <mat-icon matSuffix class="field-icon">mail_outline</mat-icon>
+          </mat-form-field>
+        </div>
 
-        <button mat-flat-button color="primary" class="submit-btn" [disabled]="loginForm.invalid">
-          LOG IN
+        <div class="field-container">
+          <div class="label-row">
+            <label class="input-label">Password</label>
+            <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+          </div>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button" tabindex="-1">
+              <mat-icon class="field-icon">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+        <button mat-flat-button class="submit-btn" [disabled]="loginForm.invalid">
+          Sign In
         </button>
       </form>
     </mat-card-content>
 
-    <mat-card-footer>
-      <p>Don't have an account? <a routerLink="/register">Register here</a></p>
-    </mat-card-footer>
+    <div class="auth-footer">
+      <p>Don't have an account? <a routerLink="/register">Create an account</a></p>
+    </div>
   </mat-card>
 </div>
