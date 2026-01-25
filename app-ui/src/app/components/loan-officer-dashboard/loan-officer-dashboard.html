@@ -1,0 +1,71 @@
+<div class="dashboard-wrapper">
+  <div class="header-section">
+    <h1>Officer Control Center</h1>
+    <p>System-wide loan application oversight</p>
+  </div>
+
+  <div class="stats-grid">
+    <mat-card *ngFor="let stat of stats" class="stat-card">
+      <mat-icon [style.color]="stat.color">{{stat.icon}}</mat-icon>
+      <div class="stat-info">
+        <div class="stat-value">{{stat.value}}</div>
+        <div class="stat-label">{{stat.label}}</div>
+      </div>
+    </mat-card>
+  </div>
+
+  <mat-card class="table-card">
+    <div class="table-header">
+      <h3>Incoming Applications</h3>
+      <button mat-stroked-button color="primary">
+        <mat-icon>filter_list</mat-icon> Filter
+      </button>
+    </div>
+
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z0">
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+        <mat-cell *matCellDef="let row"> <strong>{{row.id}}</strong> </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="applicant">
+        <mat-header-cell *matHeaderCellDef> Applicant </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.applicant}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <mat-header-cell *matHeaderCellDef> Requested </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.amount | currency}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="riskScore">
+        <mat-header-cell *matHeaderCellDef> Risk Score </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <span class="badge" [ngClass]="row.riskScore > 700 ? 'high' : 'low'">
+            {{row.riskScore}}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <mat-chip-set>
+            <mat-chip>{{row.status}}</mat-chip>
+          </mat-chip-set>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="process(row.id, 'view')"><mat-icon>visibility</mat-icon></button>
+          <button mat-icon-button color="primary" (click)="process(row.id, 'approve')"><mat-icon>check_circle</mat-icon></button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </mat-card>
+</div>
