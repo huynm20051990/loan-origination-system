@@ -1,0 +1,169 @@
+/* Main Dashboard Wrapper */
+.dashboard-container {
+  padding: 48px 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: #fbfcfe; /* Soft tinted background */
+  min-height: 100vh;
+}
+
+/* Header Styling */
+.dashboard-header {
+  margin-bottom: 40px;
+
+  h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #121828; /* Deep charcoal for high contrast */
+    margin: 0;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin-top: 8px;
+  }
+}
+
+/* Section Title */
+.section-title h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+    margin-left: 16px;
+  }
+}
+
+/* Loan Card Enhancements */
+.loan-card {
+  margin-bottom: 28px;
+  border: 1px solid #eef0f3 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff !important;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    border-color: #d1d5db !important;
+  }
+}
+
+/* Avatar Icon Container */
+.loan-icon-container {
+  background-color: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+}
+
+/* Status Indicators */
+.status-indicator {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  /* Status Colors */
+  &.approved { background: #dcfce7; color: #15803d; }
+  &.in-review { background: #dbeafe; color: #1d4ed8; }
+  &.pending { background: #fef9c3; color: #a16207; }
+  &.cancelled { background: #fee2e2; color: #b91c1c; }
+}
+
+/* Card Body Layout */
+.loan-body {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 32px;
+  padding: 24px 0;
+  align-items: center;
+}
+
+.data-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.data-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+/* Progress Section */
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #4b5563;
+
+  .percentage {
+    color: #2563eb;
+  }
+}
+
+mat-progress-bar {
+  height: 8px;
+  border-radius: 10px;
+  background-color: #f3f4f6;
+
+  ::ng-deep .mdc-linear-progress__bar-inner {
+    border-color: #2563eb !important; /* Custom Blue */
+  }
+}
+
+/* Actions Bar */
+mat-card-actions {
+  padding: 16px 24px !important;
+  background-color: #f9fafb;
+  border-top: 1px solid #f3f4f6;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+
+  button {
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    padding: 0 16px;
+  }
+
+  .cancel-btn {
+    color: #9ca3af;
+    &:hover { color: #dc2626; background: #fee2e2; }
+  }
+}
+
+.spacer { flex: 1 1 auto; }
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .loan-body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .dashboard-header h1 { font-size: 1.8rem; }
+}

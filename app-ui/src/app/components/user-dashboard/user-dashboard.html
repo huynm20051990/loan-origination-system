@@ -1,0 +1,55 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1>Welcome back, John</h1>
+      <p>Manage your properties and track application statuses.</p>
+    </div>
+  </header>
+
+  <div class="dashboard-content">
+    <div class="main-column">
+      <div class="section-title">
+        <h3>Active Applications</h3>
+      </div>
+
+      <mat-card *ngFor="let app of applications" class="loan-card" appearance="outlined">
+        <mat-card-header>
+          <div mat-card-avatar class="loan-icon-container">
+            <mat-icon>account_balance</mat-icon>
+          </div>
+          <mat-card-title>{{app.type}}</mat-card-title>
+          <mat-card-subtitle>Ref ID: {{app.id}} • {{app.date | date:'mediumDate'}}</mat-card-subtitle>
+          <span class="spacer"></span>
+
+          <span class="status-indicator" [ngClass]="app.status.toLowerCase().replace(' ', '-')">
+            {{app.status}}
+          </span>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="loan-body">
+            <div class="data-point">
+              <span class="data-label">Requested Amount</span>
+              <span class="data-value">{{app.amount | currency:'USD':'symbol':'1.0-0'}}</span>
+            </div>
+
+            <div class="data-point progress">
+              <div class="progress-info">
+                <span>Completion Status</span>
+                <span class="percentage">{{app.progress}}%</span>
+              </div>
+              <mat-progress-bar mode="determinate" [value]="app.progress"></mat-progress-bar>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-button class="cancel-btn" *ngIf="app.status !== 'Approved'">CANCEL</button>
+          <button mat-flat-button color="primary" [routerLink]="['/loan-details', app.id]">
+            VIEW DETAILS
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>
