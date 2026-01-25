@@ -1,34 +1,38 @@
 <div class="page-container">
-  <header class="listings-header">
-    <h1>Available Properties</h1>
-    <div class="search-bar">
-      <mat-form-field appearance="outline">
-        <mat-label>Search by address...</mat-label>
+  <div class="search-hero-section">
+    <div class="search-container">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="minimal-search">
         <mat-icon matPrefix>search</mat-icon>
-        <input matInput>
+        <input matInput placeholder="Ask me anything: '3 bedroom house in Austin under $500k'...">
       </mat-form-field>
     </div>
-  </header>
+  </div>
 
   <div class="listings-grid">
     @for (home of homes; track home.id) {
-    <mat-card class="home-card">
+    <mat-card class="home-card" appearance="outlined">
       <div class="image-wrapper">
         <img mat-card-image [src]="home.imageUrl" alt="Photo of {{home.address}}">
-        <div class="price-tag">{{ home.price | currency:'USD':'symbol':'1.0-0' }}</div>
+        <div class="price-overlay">{{ home.price | currency:'USD':'symbol':'1.0-0' }}</div>
       </div>
 
       <mat-card-content>
-        <h2 class="address">{{ home.address }}</h2>
-        <div class="specs">
-          <span><mat-icon>bed</mat-icon> {{ home.beds }} Beds</span>
-          <span><mat-icon>bathtub</mat-icon> {{ home.baths }} Baths</span>
+        <div class="card-body">
+          <h2 class="address">{{ home.address }}</h2>
+          <div class="specs-row">
+            <span><strong>{{ home.beds }}</strong> bds</span>
+            <span class="dot"></span>
+            <span><strong>{{ home.baths }}</strong> ba</span>
+            <span class="dot"></span>
+            <span><strong>2,150</strong> sqft</span>
+          </div>
         </div>
       </mat-card-content>
 
       <mat-card-actions>
-        <button mat-flat-button color="primary" [routerLink]="['/apply', home.id]">
-          APPLY NOW
+        <button mat-flat-button class="apply-btn" [routerLink]="['/apply', home.id]">
+          <mat-icon>real_estate_agent</mat-icon>
+          Apply Now
         </button>
       </mat-card-actions>
     </mat-card>
