@@ -1,0 +1,66 @@
+<div class="review-container">
+  <header class="review-header">
+    <button mat-icon-button routerLink="/officer-dashboard"><mat-icon>arrow_back</mat-icon></button>
+    <h1>Underwriting Review: {{application.id}}</h1>
+    <span class="spacer"></span>
+    <mat-chip class="risk-chip" [attr.data-grade]="application.riskGrade">
+      Risk Grade: {{application.riskGrade}}
+    </mat-chip>
+  </header>
+
+  <div class="review-grid">
+    <div class="data-column">
+      <mat-card class="data-card">
+        <h3>Applicant Financials</h3>
+        <div class="stats-row">
+          <div class="stat">
+            <label>Credit Score</label>
+            <span class="value score-high">{{application.creditScore}}</span>
+          </div>
+          <div class="stat">
+            <label>Monthly Income</label>
+            <span class="value">{{application.income / 12 | currency}}</span>
+          </div>
+          <div class="stat">
+            <label>DTI Ratio</label>
+            <span class="value">{{application.dti}}</span>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card class="docs-card">
+        <h3>Verified Documents</h3>
+        <mat-list>
+          @for (doc of application.docs; track doc) {
+          <mat-list-item>
+            <mat-icon matListItemIcon>description</mat-icon>
+            <div matListItemTitle>{{doc}}</div>
+            <button mat-icon-button matListItemMeta color="primary">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </mat-list-item>
+          }
+        </mat-list>
+      </mat-card>
+    </div>
+
+    <div class="decision-column">
+      <mat-card class="decision-card">
+        <h3>Final Decision</h3>
+        <mat-form-field appearance="outline">
+          <mat-label>Underwriter Notes</mat-label>
+          <textarea matInput [(ngModel)]="reviewNote" rows="5" placeholder="Explain the reasoning for approval/rejection..."></textarea>
+        </mat-form-field>
+
+        <div class="action-buttons">
+          <button mat-flat-button class="btn-reject" (click)="processDecision('Rejected')">
+            REJECT LOAN
+          </button>
+          <button mat-flat-button class="btn-approve" (click)="processDecision('Approved')">
+            APPROVE LOAN
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

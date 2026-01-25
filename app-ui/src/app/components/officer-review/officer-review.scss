@@ -1,0 +1,53 @@
+.review-container {
+  padding: 30px;
+  background: #f4f7f9;
+  min-height: 100vh;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  h1 { margin: 0 16px; font-size: 1.5rem; color: #334155; }
+}
+
+.risk-chip {
+  background: #1e293b;
+  color: white;
+  font-weight: 700;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  .stat {
+    display: flex;
+    flex-direction: column;
+    label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; }
+    .value { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+    .score-high { color: #10b981; }
+  }
+}
+
+.decision-card {
+  position: sticky;
+  top: 30px;
+  border-top: 4px solid #6366f1;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+
+  .btn-approve { background: #10b981; color: white; }
+  .btn-reject { background: #ef4444; color: white; }
+}
