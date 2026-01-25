@@ -17,7 +17,6 @@ import { AsyncPipe, NgIf, CommonModule } from '@angular/common';
     MatButtonModule,
     MatIconModule,
     AsyncPipe,
-    NgIf,
     CommonModule
   ],
   templateUrl: './app.html',

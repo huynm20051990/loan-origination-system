@@ -27,6 +27,9 @@
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "externalDependencies": [
+              "@angular/animations/browser"
+            ],
             "assets": [
               {
                 "glob": "**/*",

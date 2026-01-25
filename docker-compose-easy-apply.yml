@@ -1,0 +1,9 @@
+
+services:
+  app-ui:
+    build: app-ui # Path to your Angular project folder
+    image: loan-origination-system/app-ui
+    mem_limit: 512m
+    ports:
+      - "80:80"
+    restart: always
