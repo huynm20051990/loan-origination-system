@@ -1,11 +1,46 @@
-<mat-toolbar color="primary">
-  <span>Loan Origination System</span>
-  <span class="spacer"></span>
-  <button mat-button routerLink="/listings">Homes</button>
-  <button mat-button routerLink="/apply">Apply Now</button>
-  <button mat-button routerLink="/login">Login</button>
-  <button mat-button routerLink="/register">Register</button>
-</mat-toolbar>
+<nav class="main-nav">
+  <div class="nav-container">
+    <div class="logo" routerLink="/">
+      <mat-icon>home_work</mat-icon>
+      <span>EasyApply</span>
+    </div>
+
+    <span class="spacer"></span>
+
+    <div class="nav-links">
+      <a routerLink="/listings"
+         class="nav-item"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact: true}">Home</a>
+
+      @if ((authService.isLoggedIn$ | async) === false) {
+      <div class="auth-group">
+        <a routerLink="/login"
+           class="login-link"
+           routerLinkActive="active">Login</a>
+
+        <button mat-flat-button
+                class="register-btn"
+                routerLink="/register"
+                routerLinkActive="active">
+          Register
+        </button>
+      </div>
+      }
+
+      @if ((authService.isLoggedIn$ | async) === true) {
+      <button mat-icon-button routerLink="/user-dashboard" matTooltip="My Account">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <div class="auth-group">
+        <button mat-stroked-button (click)="authService.logout()">
+          <mat-icon>logout</mat-icon> Logout
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+</nav>
 
 <main>
   <router-outlet></router-outlet>

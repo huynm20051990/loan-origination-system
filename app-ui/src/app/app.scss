@@ -1,27 +1,147 @@
+/* --- Global Layout --- */
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  min-height: calc(100vh - 72px);
+  background-color: #ffffff;
+}
+
 .spacer {
   flex: 1 1 auto;
 }
 
-main {
-  padding: 20px;
-}
-
-.example-spacer {
-  flex: 1 1 auto;
-}
-
-.nav-links {
+/* --- Professional Navigation Bar --- */
+.main-nav {
+  height: 72px;
+  background: #ffffff;
+  border-bottom: 1px solid #f0f2f5;
   display: flex;
-  gap: 8px;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0 24px;
+}
+
+.nav-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
   align-items: center;
 }
 
-.register-btn {
-  margin-left: 8px;
-  border-color: white !important;
-  color: white !important;
+/* Brand/Logo Styling */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: #1e293b;
+  cursor: pointer;
+  text-decoration: none;
+
+  mat-icon {
+    color: #2563eb;
+    font-size: 28px;
+    width: 28px; height: 28px;
+  }
 }
 
-.container {
-  padding: 20px;
+/* --- Shared Button Style for All Nav Items --- */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  /* Apply same base styling to Home, Login, and Register */
+  .nav-item, .login-link, .register-btn {
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 0 20px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color: #64748b; /* Default grey for all */
+
+    /* Hover effect for all buttons */
+    &:hover {
+      background-color: #f1f5f9;
+      color: #2563eb;
+    }
+
+    /* Active State: All buttons turn solid blue when selected */
+    &.active {
+      background: #2563eb !important;
+      color: white !important;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    }
+  }
+}
+
+/* Auth Grouping */
+.auth-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Logout Button (Special case) */
+button[mat-stroked-button] {
+  border-color: #e2e8f0;
+  color: #64748b;
+  border-radius: 8px;
+  height: 40px;
+  font-weight: 600;
+
+  &:hover {
+    background-color: #fef2f2;
+    color: #ef4444;
+    border-color: #fee2e2;
+  }
+}
+
+button[mat-button] {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
+  color: #1e293b;
+
+  mat-icon {
+    color: #2563eb; /* Makes the dashboard icon blue */
+  }
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      margin-right: 4px; // Only if there is text next to the icon
+      font-size: 24px;
+      color: #64748b; // Neutral slate color
+    }
+
+    &:hover mat-icon {
+      color: #2563eb; // Turns blue on hover
+    }
+  }
 }
