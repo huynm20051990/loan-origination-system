@@ -39,6 +39,11 @@ spring.cloud.gateway.routes:
   predicates:
   - Path=/webjars/**
 
+- id: app-ui
+  uri: http://app-ui:80
+  predicates:
+  - Path=/**
+
 spring.security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}
 
 management.endpoint.gateway.enabled: true

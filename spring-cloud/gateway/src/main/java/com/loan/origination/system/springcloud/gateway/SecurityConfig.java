@@ -20,6 +20,12 @@ public class SecurityConfig {
         .authorizeExchange(
             exchange ->
                 exchange
+                    .pathMatchers("/", "/index.html", "/*.js", "/*.css", "/*.ico")
+                    .permitAll()
+                    .pathMatchers("/assets/**", "/static/**")
+                    .permitAll()
+                    .pathMatchers("/listings/**")
+                    .permitAll()
                     .pathMatchers(
                         "/headerrouting/**",
                         "/actuator/**",
