@@ -147,7 +147,7 @@ curl -X POST https://localhost:8443/api/v1/homes \
 "beds": 3,
 "baths": 2.5,
 "sqft": 2100,
-"imageUrl": "https://images.example.com/home1.jpg",
+"imageUrl": "assets/home.png",
 "status": "AVAILABLE",
 "address": {
 "street": "123 Maple Avenue",
@@ -157,5 +157,9 @@ curl -X POST https://localhost:8443/api/v1/homes \
 "country": "USA"
 }
 }' -k
+
+curl -k -X GET https://localhost:8443/api/v1/homes   -H "Authorization: Bearer $ACCESS_TOKEN"   -H "Accept: application/json"
+
+
 
 
