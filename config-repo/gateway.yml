@@ -8,6 +8,10 @@ server.ssl:
   key-alias: localhost
 
 spring.cloud.gateway.routes:
+- id: home-service
+  uri: http://home-service
+  predicates:
+    - Path=/api/v1/homes/**
 
 - id: product-composite
   uri: http://product-composite

@@ -27,14 +27,15 @@ services:
       timeout: 5s
       retries: 5
 
-  home:
+  home-service:
     build: microservices/home-service
     image: loan-origination-system/home-service
-    container_name: home
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/home.yml
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
     volumes:
       - $PWD/config-repo:/config-repo
     depends_on:

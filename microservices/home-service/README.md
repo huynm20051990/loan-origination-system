@@ -136,3 +136,26 @@ Explicit wiring of dependencies to preserve clean architecture boundaries.
 - **Domain:** Pure Java, framework-agnostic
 - **Infrastructure:** Fully replaceable adapters
 - **Design Goal:** Clean separation of concerns, testability, and scalability
+
+
+## Sample Command
+curl -X POST https://localhost:8443/api/v1/homes \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $ACCESS_TOKEN" \
+-d '{
+"price": 450000.00,
+"beds": 3,
+"baths": 2.5,
+"sqft": 2100,
+"imageUrl": "https://images.example.com/home1.jpg",
+"status": "AVAILABLE",
+"address": {
+"street": "123 Maple Avenue",
+"city": "Springfield",
+"state": "IL",
+"zipCode": "62704",
+"country": "USA"
+}
+}' -k
+
+

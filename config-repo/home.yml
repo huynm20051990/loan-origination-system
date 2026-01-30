@@ -13,9 +13,9 @@ spring.jpa:
     hibernate.format_sql: true
 
 spring.datasource:
-  url: jdbc:postgresql://localhost:5432/home-db
-  username: user
-  password: pwd
+  url: jdbc:postgresql://postgres:5432/home-db
+  username: ${POSTGRES_USR}
+  password: ${POSTGRES_PWD}
   driver-class-name: org.postgresql.Driver
 
 spring.datasource.hikari:

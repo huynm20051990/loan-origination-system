@@ -8,8 +8,12 @@ import com.loan.origination.system.microservices.home.domain.port.out.HomeReposi
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HomeApplicationService implements AddHomeUseCase, GetHomeUseCase, DeleteHomeUseCase {
+
+  private static final Logger LOG = LoggerFactory.getLogger(HomeApplicationService.class);
 
   private final HomeRepositoryPort repositoryPort;
 
@@ -19,7 +23,7 @@ public class HomeApplicationService implements AddHomeUseCase, GetHomeUseCase, D
 
   @Override
   public Home execute(Home home) {
-    // Business logic check: Ensure price is not negative before saving
+    LOG.info(home.toString());
     return repositoryPort.save(home);
   }
 

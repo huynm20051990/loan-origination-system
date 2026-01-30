@@ -1,12 +1,8 @@
 package com.loan.origination.system.microservices.home.adapter.out.persistence.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.UUID;
-import org.springframework.data.annotation.Id;
 
 @Entity
 @Table(
@@ -14,13 +10,18 @@ import org.springframework.data.annotation.Id;
     indexes = {
       @Index(name = "idx_home_status", columnList = "status"),
       @Index(name = "idx_home_price", columnList = "price"),
-      @Index(name = "idx_home_address_id", columnList = "address_id")
+      @Index(name = "idx_home_city", columnList = "city"),
+      @Index(name = "idx_home_zip", columnList = "zip_code")
     })
 public class HomeEntity {
 
-  @Id private UUID id;
+  @Id
+  @Column(name = "id", updatable = false, nullable = false)
+  private UUID id;
 
+  @Column(nullable = false)
   private BigDecimal price;
+
   private Integer beds;
   private Double baths;
   private Integer sqft;
@@ -28,10 +29,10 @@ public class HomeEntity {
   @Column(name = "image_url")
   private String imageUrl;
 
+  @Column(nullable = false)
   private String status;
 
-  @Column(name = "address_id")
-  private UUID addressId;
+  @Embedded private AddressEmbeddable address;
 
   public HomeEntity() {}
 
@@ -43,7 +44,7 @@ public class HomeEntity {
       Integer sqft,
       String imageUrl,
       String status,
-      UUID addressId) {
+      AddressEmbeddable address) {
     this.id = id;
     this.price = price;
     this.beds = beds;
@@ -51,7 +52,7 @@ public class HomeEntity {
     this.sqft = sqft;
     this.imageUrl = imageUrl;
     this.status = status;
-    this.addressId = addressId;
+    this.address = address;
   }
 
   public UUID getId() {
@@ -110,11 +111,11 @@ public class HomeEntity {
     this.status = status;
   }
 
-  public UUID getAddressId() {
-    return addressId;
+  public AddressEmbeddable getAddress() {
+    return address;
   }
 
-  public void setAddressId(UUID addressId) {
-    this.addressId = addressId;
+  public void setAddress(AddressEmbeddable address) {
+    this.address = address;
   }
 }

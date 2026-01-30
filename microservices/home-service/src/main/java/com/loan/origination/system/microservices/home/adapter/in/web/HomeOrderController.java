@@ -12,10 +12,14 @@ import com.loan.origination.system.microservices.home.domain.port.in.GetHomeUseC
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HomeOrderController implements HomeAPI {
+
+  private static final Logger LOG = LoggerFactory.getLogger(HomeOrderController.class);
 
   private final AddHomeUseCase addHomeUseCase;
   private final GetHomeUseCase getHomeUseCase;
@@ -35,7 +39,7 @@ public class HomeOrderController implements HomeAPI {
 
   @Override
   public HomeResponseDTO addHome(HomeRequestDTO request) {
-    // Direct execution: The Virtual Thread waits here without blocking system resources
+    LOG.info(request.toString());
     var homeDomain = addHomeUseCase.execute(mapper.toDomain(request));
     return mapper.toResponse(homeDomain);
   }

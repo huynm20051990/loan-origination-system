@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/homes")
 public interface HomeAPI {
 
-  @PostMapping
+  @PostMapping(consumes = "application/json", produces = "application/json")
   @ResponseStatus(HttpStatus.CREATED)
   HomeResponseDTO addHome(@RequestBody HomeRequestDTO request);
 
-  @GetMapping("/{id}")
+  @GetMapping(value = "/{id}", produces = "application/json")
   HomeResponseDTO getHome(@PathVariable UUID id);
 
-  @GetMapping
+  @GetMapping(produces = "application/json")
   List<HomeResponseDTO> getAllHomes();
 
   @DeleteMapping("/{id}")
