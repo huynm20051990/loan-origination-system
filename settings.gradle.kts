@@ -1,5 +1,6 @@
 include("api")
 include("util")
+include("microservices:home-service")
 include("microservices:product-service")
 include("microservices:review-service")
 include("microservices:rating-service")
