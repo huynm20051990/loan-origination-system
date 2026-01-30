@@ -1,0 +1,50 @@
+server.port: 7004
+server.error.include-message: always
+
+spring.application.name: home
+
+spring.threads.virtual.enabled: true
+
+spring.jpa:
+  hibernate.ddl-auto: update
+  show-sql: true
+  properties:
+    hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.format_sql: true
+
+spring.datasource:
+  url: jdbc:postgresql://localhost:5432/home-db
+  username: user
+  password: pwd
+  driver-class-name: org.postgresql.Driver
+
+spring.datasource.hikari:
+  initializationFailTimeout: 60000
+  maximum-pool-size: 10
+
+# Health checks now only focus on the DB and Disk, not RabbitMQ
+management:
+  endpoint:
+    health:
+      show-details: always
+  health:
+    rabbit:
+      enabled: false # Explicitly disable RabbitMQ health checks
+
+logging:
+  level:
+    root: INFO
+    com.loan.origination.system: INFO
+    org.hibernate.SQL: DEBUG
+
+---
+spring.config.activate.on-profile: docker
+
+server.port: 80
+spring.datasource.url: jdbc:postgresql://postgres/home-db
+
+---
+spring.config.activate.on-profile: prod
+
+spring.datasource.url: jdbc:postgresql://172.17.0.1:5432/home-db
+logging.level.org.hibernate.SQL: WARN
