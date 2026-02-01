@@ -1,0 +1,28 @@
+app:
+  auth-server: localhost
+
+# Actuator & tracing
+management.server.port: 4004
+management.endpoint.health.show-details: "ALWAYS"
+management.endpoints.web.exposure.include: "*"
+management.endpoint.health.probes.enabled: true
+management.metrics.tags.application: ${spring.application.name}
+
+management.zipkin.tracing.endpoint: http://jaeger-collector.istio-system:9411/api/v2/spans
+management.tracing.sampling.probability: 1.0
+
+logging.pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+server.shutdown: graceful
+spring.lifecycle.timeout-per-shutdown-phase: 10s
+
+---
+spring.config.activate.on-profile: docker
+
+app:
+  auth-server: auth-server
+
+---
+spring.config.activate.on-profile: prod
+
+management.endpoints.web.exposure.include: health,info,circuitbreakerevents,prometheus

@@ -4,7 +4,7 @@ services:
     build: app-ui
     image: loan-origination-system/app-ui
     mem_limit: 512m
-    container_name: app-ui
+    container_name: easy-apply-app-ui
     hostname: app-ui
     restart: always
     depends_on:
@@ -13,7 +13,7 @@ services:
 
   postgres:
     image: pgvector/pgvector:pg16
-    container_name: postgres
+    container_name: easy-apply-postgres
     mem_limit: 512m
     environment:
       - POSTGRES_DB=home-db
@@ -33,14 +33,15 @@ services:
     build: microservices/home-service
     image: loan-origination-system/home-service
     mem_limit: 512m
+    container_name: easy-apply-home-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/home.yml
+      - SPRING_CONFIG_LOCATION=file:/config-repo-easy-apply/application.yml,file:/config-repo-easy-apply/home.yml
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
       - SPRING_AI_GOOGLE_GENAI_API_KEY=${GEMINI_API_KEY}
     volumes:
-      - $PWD/config-repo:/config-repo
+      - $PWD/config-repo-easy-apply:/config-repo-easy-apply
     depends_on:
       postgres:
         condition: service_healthy
@@ -51,14 +52,15 @@ services:
     build: spring-cloud/gateway
     image: loan-origination-system/gateway
     mem_limit: 512m
+    container_name: easy-apply-gateway
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/gateway.yml
+      - SPRING_CONFIG_LOCATION=file:/config-repo-easy-apply/application.yml,file:/config-repo-easy-apply/gateway.yml
       - SERVER_SSL_KEY_STORE_PASSWORD=${GATEWAY_TLS_PWD}
       - SPRING_RABBITMQ_USERNAME=${RABBITMQ_USR}
       - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_PWD}
     volumes:
-      - $PWD/config-repo:/config-repo
+      - $PWD/config-repo-easy-apply:/config-repo-easy-apply
     ports:
       - "8443:8443"
     depends_on:
@@ -69,13 +71,14 @@ services:
     build: spring-cloud/authorization-server
     image: loan-origination-system/auth-server
     mem_limit: 512m
+    container_name: easy-apply-auth-server
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/auth-server.yml
+      - SPRING_CONFIG_LOCATION=file:/config-repo-easy-apply/application.yml,file:/config-repo-easy-apply/auth-server.yml
       - SPRING_RABBITMQ_USERNAME=${RABBITMQ_USR}
       - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_PWD}
     volumes:
-      - $PWD/config-repo:/config-repo
+      - $PWD/config-repo-easy-apply:/config-repo-easy-apply
     healthcheck:
       test: [ "CMD", "curl", "-fs", "http://localhost:4004/actuator/health" ]
       interval: 5s
@@ -86,6 +89,7 @@ services:
     image: openzipkin/zipkin:3.5.1
     restart: always
     mem_limit: 1024m
+    container_name: easy-apply-zipkin
     environment:
       - STORAGE_TYPE=mem
     ports:
