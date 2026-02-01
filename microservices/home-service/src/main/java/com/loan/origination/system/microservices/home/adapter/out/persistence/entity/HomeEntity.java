@@ -34,6 +34,9 @@ public class HomeEntity {
 
   @Embedded private AddressEmbeddable address;
 
+  @Column(columnDefinition = "vector(768)")
+  private float[] embedding;
+
   public HomeEntity() {}
 
   public HomeEntity(
@@ -117,5 +120,13 @@ public class HomeEntity {
 
   public void setAddress(AddressEmbeddable address) {
     this.address = address;
+  }
+
+  public float[] getEmbedding() {
+    return embedding;
+  }
+
+  public void setEmbedding(float[] embedding) {
+    this.embedding = embedding;
   }
 }

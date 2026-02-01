@@ -18,6 +18,7 @@ public class HomePersistenceMapper {
     entity.setSqft(home.getSqft());
     entity.setImageUrl(home.getImageUrl());
     entity.setStatus(home.getStatus().name());
+    entity.setEmbedding(home.getEmbedding());
 
     entity.setAddress(
         new AddressEmbeddable(
@@ -44,6 +45,7 @@ public class HomePersistenceMapper {
         entity.getBaths(),
         entity.getSqft(),
         entity.getImageUrl(),
-        HomeStatus.valueOf(entity.getStatus()));
+        HomeStatus.valueOf(entity.getStatus()),
+        entity.getEmbedding());
   }
 }

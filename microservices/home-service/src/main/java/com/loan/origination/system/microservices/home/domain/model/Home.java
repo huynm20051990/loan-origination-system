@@ -12,6 +12,7 @@ public class Home {
   private final Integer sqft;
   private final String imageUrl;
   private HomeStatus status;
+  private float[] embedding;
 
   public Home(
       UUID id,
@@ -21,7 +22,8 @@ public class Home {
       Double baths,
       Integer sqft,
       String imageUrl,
-      HomeStatus status) {
+      HomeStatus status,
+      float[] embedding) {
     this.id = id;
     this.address = address;
     this.price = price;
@@ -30,6 +32,7 @@ public class Home {
     this.sqft = sqft;
     this.imageUrl = imageUrl;
     this.status = status;
+    this.embedding = embedding;
   }
 
   public void markAsSold() {
@@ -73,5 +76,13 @@ public class Home {
 
   public HomeStatus getStatus() {
     return status;
+  }
+
+  public void updateEmbedding(float[] newEmbedding) {
+    this.embedding = newEmbedding;
+  }
+
+  public float[] getEmbedding() {
+    return embedding;
   }
 }

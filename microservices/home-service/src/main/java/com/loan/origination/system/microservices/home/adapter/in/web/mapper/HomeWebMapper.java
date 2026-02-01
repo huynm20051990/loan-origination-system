@@ -33,7 +33,8 @@ public class HomeWebMapper {
         dto.baths(),
         dto.sqft(),
         dto.imageUrl(),
-        HomeStatus.AVAILABLE);
+        HomeStatus.AVAILABLE,
+        null);
   }
 
   public HomeResponseDTO toResponse(Home home) {

@@ -160,6 +160,10 @@ curl -X POST https://localhost:8443/api/v1/homes \
 
 curl -k -X GET https://localhost:8443/api/v1/homes   -H "Authorization: Bearer $ACCESS_TOKEN"   -H "Accept: application/json"
 
+# Search for "a peaceful place surrounded by trees"
+curl -G "http://localhost:8080/api/v1/homes/search" \
+--data-urlencode "query=a peaceful place surrounded by trees"
+
 
 
 

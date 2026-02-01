@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,5 +45,12 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
   @Transactional
   public void deleteById(UUID id) {
     homeRepository.deleteById(id);
+  }
+
+  @Override
+  public List<Home> findSimilar(float[] embedding, int limit) {
+    List<HomeEntity> entities = homeRepository.findNearestNeighbors(embedding, limit);
+
+    return entities.stream().map(mapper::toDomain).collect(Collectors.toList());
   }
 }

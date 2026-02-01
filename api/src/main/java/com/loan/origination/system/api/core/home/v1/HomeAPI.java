@@ -20,6 +20,13 @@ public interface HomeAPI {
   @GetMapping(produces = "application/json")
   List<HomeResponseDTO> getAllHomes();
 
+  /**
+   * AI-powered semantic search. Example: GET
+   * /api/v1/homes/search?query=modern+apartment+with+large+windows
+   */
+  @GetMapping(value = "/search", produces = "application/json")
+  List<HomeResponseDTO> searchHomes(@RequestParam String query);
+
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   void deleteHome(@PathVariable UUID id);
