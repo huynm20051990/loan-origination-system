@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS homes (
     state_code CHAR(2) NOT NULL,
     zip_code VARCHAR(20),
     country VARCHAR(100) NOT NULL,
+    description TEXT,
     embedding vector(768)
 );
 
@@ -27,6 +28,7 @@ CREATE INDEX IF NOT EXISTS idx_home_status ON homes(status);
 CREATE INDEX IF NOT EXISTS idx_home_price ON homes(price);
 CREATE INDEX IF NOT EXISTS idx_home_city ON homes(city);
 CREATE INDEX IF NOT EXISTS idx_home_zip ON homes(zip_code);
+CREATE INDEX IF NOT EXISTS idx_homes_price_beds ON homes(price, beds);
 
 -- 3. Create an HNSW index for high-performance semantic search
 -- This allows the database to perform similarity searches significantly faster than a flat scan.
