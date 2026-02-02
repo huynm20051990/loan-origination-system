@@ -35,7 +35,7 @@ services:
     command: [ "postgres", "-c", "wal_level=logical" ] # Required for CDC
     mem_limit: 512m
     environment:
-      - POSTGRES_DB=application-db
+      - POSTGRES_DB=app-db
       - POSTGRES_USER=${POSTGRES_USR}
       - POSTGRES_PASSWORD=${POSTGRES_PWD}
     volumes:
@@ -164,6 +164,25 @@ services:
       - $PWD/config-repo-easy-apply:/config-repo-easy-apply
     depends_on:
       postgres:
+        condition: service_healthy
+      auth-server:
+        condition: service_healthy
+
+  app-service:
+    build: microservices/app-service
+    image: loan-origination-system/app-service
+    mem_limit: 512m
+    container_name: easy-apply-app-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_LOCATION=file:/config-repo-easy-apply/application.yml,file:/config-repo-easy-apply/app.yml
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
+      - SPRING_AI_GOOGLE_GENAI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - $PWD/config-repo-easy-apply:/config-repo-easy-apply
+    depends_on:
+      app-db:
         condition: service_healthy
       auth-server:
         condition: service_healthy

@@ -533,7 +533,7 @@ curl -s localhost:8083/connectors/notification-service-connector/status | jq
 curl -X DELETE localhost:8083/connectors/app-service-connector
 
 # Test
-docker exec -it easy-apply-app-db psql -U home-user-prod -d application-db -c \
+docker exec -it easy-apply-app-db psql -U home-user-prod -d app-db -c \
 "INSERT INTO outbox (id, aggregate_type, aggregate_id, type, payload)
 VALUES (gen_random_uuid(), 'loan-requests', 'loan-123', 'STARTED', '{\"customer\":\"John Doe\"}');"
 
