@@ -29,6 +29,56 @@ services:
       timeout: 5s
       retries: 5
 
+  app-db:
+    image: pgvector/pgvector:pg16
+    container_name: easy-apply-app-db
+    command: [ "postgres", "-c", "wal_level=logical" ] # Required for CDC
+    mem_limit: 512m
+    environment:
+      - POSTGRES_DB=application_db
+      - POSTGRES_USER=${POSTGRES_USR}
+      - POSTGRES_PASSWORD=${POSTGRES_PWD}
+    volumes:
+      - ./database/app-init:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d application_db" ]
+
+  # 3. NEW CREDIT SERVICE DATABASE
+  credit-db:
+    image: pgvector/pgvector:pg16
+    container_name: easy-apply-credit-db
+    command: [ "postgres", "-c", "wal_level=logical" ]
+    mem_limit: 512m
+    environment:
+      - POSTGRES_DB=credit-db
+      - POSTGRES_USER=${POSTGRES_USR}
+      - POSTGRES_PASSWORD=${POSTGRES_PWD}
+    volumes:
+      - ./database/credit-init:/docker-entrypoint-initdb.d
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d credit-db" ]
+
+  # 4. NEW NOTIFICATION SERVICE DATABASE
+  notify  -db:
+    image: pgvector/pgvector:pg16
+    container_name: easy-apply-notification-db
+    command: [ "postgres", "-c", "wal_level=logical" ]
+    mem_limit: 512m
+    environment:
+      - POSTGRES_DB=notification-db
+      - POSTGRES_USER=${POSTGRES_USR}
+      - POSTGRES_PASSWORD=${POSTGRES_PWD}
+    volumes:
+      - ./database/notify-init:/docker-entrypoint-initdb.d
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d notification-db" ]
+
   home-service:
     build: microservices/home-service
     image: loan-origination-system/home-service
