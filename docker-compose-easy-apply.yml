@@ -35,7 +35,7 @@ services:
     command: [ "postgres", "-c", "wal_level=logical" ] # Required for CDC
     mem_limit: 512m
     environment:
-      - POSTGRES_DB=application_db
+      - POSTGRES_DB=application-db
       - POSTGRES_USER=${POSTGRES_USR}
       - POSTGRES_PASSWORD=${POSTGRES_PWD}
     volumes:
@@ -138,6 +138,16 @@ services:
         condition: service_healthy
       notify-db:
         condition: service_healthy
+
+  connector-init:
+    image: curlimages/curl:latest
+    container_name: easy-apply-connector-init
+    volumes:
+      - ./connectors:/connectors
+      - ./register-connectors.sh:/register-connectors.sh
+    entrypoint: [ "/bin/sh", "/register-connectors.sh" ]
+    depends_on:
+      - connect
 
   home-service:
     build: microservices/home-service

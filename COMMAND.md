@@ -515,6 +515,50 @@ git checkout -b feature/add-login-page
 
 ng serve --host 0.0.0.0
 
+# To register your connector
+curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" \
+localhost:8083/connectors/ -d @connectors/app-service-connector.json
+# Register Credit Connector
+curl -i -X POST -H "Content-Type:application/json" localhost:8083/connectors/ -d @connectors/credit-service-connector.json
+
+# Register Notification Connector
+curl -i -X POST -H "Content-Type:application/json" localhost:8083/connectors/ -d @connectors/notification-service-connector.json
+
+# Check status
+curl -s localhost:8083/connectors/app-service-connector/status | jq
+curl -s localhost:8083/connectors/credit-service-connector/status | jq
+curl -s localhost:8083/connectors/notification-service-connector/status | jq
+
+# Delete
+curl -X DELETE localhost:8083/connectors/app-service-connector
+
+# Test
+docker exec -it easy-apply-app-db psql -U home-user-prod -d application-db -c \
+"INSERT INTO outbox (id, aggregate_type, aggregate_id, type, payload)
+VALUES (gen_random_uuid(), 'loan-requests', 'loan-123', 'STARTED', '{\"customer\":\"John Doe\"}');"
+
+# View the Messages
+docker exec -it easy-apply-kafka /opt/kafka/bin/kafka-console-consumer.sh \
+--bootstrap-server localhost:9092 \
+--topic application.loan-requests \
+--from-beginning \
+--property print.key=true \
+--property key.separator=" | "
+
+# Check status of all connectors
+curl -s localhost:8083/connectors?expand=status | jq
+
+# Check all available topics
+docker exec easy-apply-kafka /opt/kafka/bin/kafka-topics.sh \
+--list \
+--bootstrap-server localhost:9092
+
+# Delete old topic
+docker exec easy-apply-kafka /opt/kafka/bin/kafka-topics.sh \
+--bootstrap-server localhost:9092 \
+--delete \
+--topic outbox.event.loan-requests
+
 
 
 
