@@ -5,6 +5,50 @@ This document describes the complete inventory of files for the **Home Microserv
 The service follows **Hexagonal Architecture (Ports and Adapters)** and is implemented using **Spring WebFlux** and **R2DBC** to support a fully reactive, non-blocking model.
 
 ---
+## Folder Structure
+```
+com.loan.origination.system.microservices.home
+├── domain                                   <-- THE CORE (Logic)
+│   ├── model
+│   │   ├── Home.java                        <-- Domain Entity (Aggregate Root)
+│   │   └── Address.java                     <-- Value Object
+│   ├── port
+│   │   ├── in                               <-- Driving Ports (Interfaces)
+│   │   │   ├── AddHomeUseCase.java
+│   │   │   ├── GetHomeUseCase.java
+│   │   │   └── DeleteHomeUseCase.java
+│   │   └── out                              <-- Driven Ports (Interfaces)
+│   │       └── HomeRepositoryPort.java
+│   └── service
+│       └── HomeDomainService.java           <-- Internal Domain Logic
+│
+├── application                              <-- THE ORCHESTRATOR
+│   └── service
+│       └── HomeApplicationService.java      <-- Implements UseCases, coordinates flow
+│
+├── adapter
+│   ├── in
+│   │   └── web                              <-- Driving Adapter (REST)
+│   │       ├── HomeOrderController.java     <-- Implements the API Interface
+│   │       ├── mapper
+│   │       │   └── HomeWebMapper.java       <-- DTO <-> Domain mapping
+│   │       └── dto                          <-- (Optional: if not using shared API jar)
+│   └── out
+│       └── persistence                      <-- Driven Adapter (DB)
+│           ├── HomePersistenceAdapter.java  <-- Implements Repository Port
+│           ├── entity
+│           │   ├── HomeEntity.java          <-- JPA @Entity
+│           │   └── AddressEntity.java       <-- JPA @Embeddable or @Entity
+│           ├── repository
+│           │   └── SpringDataHomeRepository.java
+│           └── mapper
+│               └── HomePersistenceMapper.java <-- Entity <-> Domain mapping
+│
+└── infrastructure                           <-- CONFIGURATION
+    └── config
+        └── BeanConfiguration.java           <-- Wire Domain beans manually
+```
+---
 
 ## I. Domain Layer (The Heart)
 

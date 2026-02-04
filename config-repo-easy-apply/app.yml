@@ -23,6 +23,9 @@ spring.datasource.hikari:
   initializationFailTimeout: 60000
   maximum-pool-size: 10
 
+outbox:
+  aggregate-type: loan-requests
+
 # --- ADDED DB CONFIGURATION END ---
 
 # Health checks now only focus on the DB and Disk, not RabbitMQ

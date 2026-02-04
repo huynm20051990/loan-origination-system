@@ -13,6 +13,11 @@ spring.cloud.gateway.routes:
   predicates:
     - Path=/api/v1/homes/**
 
+- id: app-service
+  uri: http://app-service
+  predicates:
+    - Path=/api/v1/applications/**
+
 - id: product-composite
   uri: http://product-composite
   predicates:
