@@ -1,29 +1,63 @@
 plugins {
-	java
-	id("org.springframework.boot") version "3.5.10"
-	id("io.spring.dependency-management") version "1.1.7"
+    java
+    id("org.springframework.boot") version "3.5.10"
+    id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "com.example"
+group = "com.loan.origination.system.microservices"
 version = "0.0.1-SNAPSHOT"
-description = "Demo project for Spring Boot"
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
+val mapstructVersion = "1.6.3"
+var springCloudVersion = "2025.0.0"
+
 repositories {
-	mavenCentral()
+    mavenCentral()
+}
+
+tasks.named<Jar>("jar") {
+    enabled = false
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation(project(":api"))
+    implementation(project(":util"))
+    implementation(project(":contracts"))
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    // --- KAFKA & CLOUD STREAM ---
+    implementation("org.springframework.cloud:spring-cloud-stream")
+    implementation("org.springframework.cloud:spring-cloud-stream-binder-kafka")
+    // ------------------------------------------
+    implementation("io.micrometer:micrometer-tracing-bridge-brave")
+    implementation("io.zipkin.reporter2:zipkin-reporter-brave")
+    implementation("org.postgresql:postgresql")
+    implementation("com.pgvector:pgvector:0.1.6")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.projectreactor:reactor-test")
+    // --- FOR TESTING WITH KAFKA/DB ---
+    testImplementation("org.springframework.cloud:spring-cloud-stream-test-binder")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:kafka")
+    testImplementation("org.testcontainers:junit-jupiter")
+    // -------------------------------------------
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+    }
 }
 
 tasks.withType<Test> {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

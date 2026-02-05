@@ -2,10 +2,28 @@ server.port: 7006
 server.error.include-message: always
 
 spring.application.name: credit
-
 spring.threads.virtual.enabled: true
 
-# --- ADDED DB CONFIGURATION START ---
+# --- Spring Cloud Stream & Kafka Configuration ---
+spring.cloud:
+  function:
+    definition: processApplicationSubmission
+  stream:
+    bindings:
+      processApplicationSubmission-in-0:
+        destination: application.loan_application
+        group: credit-service-group
+        content-type: application/json
+      creditChecked-out-0:
+        destination: credit-checked-events
+        content-type: application/json
+    kafka:
+      binder:
+        brokers: localhost:9092 # Default for local dev
+        auto-create-topics: true
+# --- Spring Cloud Stream & Kafka Configuration ---
+
+# --- DB CONFIGURATION START ---
 spring.jpa:
   hibernate.ddl-auto: update
   show-sql: true
@@ -23,7 +41,7 @@ spring.datasource.hikari:
   initializationFailTimeout: 60000
   maximum-pool-size: 10
 
-# --- ADDED DB CONFIGURATION END ---
+# --- DB CONFIGURATION END ---
 
 # Health checks now only focus on the DB and Disk, not RabbitMQ
 management:
@@ -31,8 +49,7 @@ management:
     health:
       show-details: always
   health:
-    rabbit:
-      enabled: false # Explicitly disable RabbitMQ health checks
+    defaults.enabled: true
 
 logging:
   level:
@@ -46,8 +63,13 @@ spring.config.activate.on-profile: docker
 server.port: 80
 spring.datasource.url: jdbc:postgresql://credit-db/credit-db
 
+# Override Kafka broker for Docker network
+spring.cloud.stream.kafka.binder.brokers: kafka:9092
+
 ---
 spring.config.activate.on-profile: prod
 
 spring.datasource.url: jdbc:postgresql://172.17.0.1:5432/credit-db
+# Override Kafka broker for Prod
+spring.cloud.stream.kafka.binder.brokers: kafka-prod-broker:9092
 logging.level.org.hibernate.SQL: WARN

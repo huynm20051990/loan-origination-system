@@ -7,7 +7,7 @@ import java.util.UUID;
 public record ApplicationSubmittedEvent(
     UUID eventId,
     String aggregateType,
-    String aggregateId, // This will be the Application ID
+    String aggregateId, // This is the Application ID as a String
     String applicationNumber,
     String customerEmail,
     BigDecimal loanAmount,
@@ -15,6 +15,7 @@ public record ApplicationSubmittedEvent(
     LocalDateTime createdAt)
     implements DomainEvent {
 
+  /** Factory method to create the event. Maps the incoming parameters to the record components. */
   public static ApplicationSubmittedEvent of(
       String aggregateType,
       UUID appId,
@@ -33,6 +34,9 @@ public record ApplicationSubmittedEvent(
         LocalDateTime.now());
   }
 
+  /**
+   * Implementation of DomainEvent interface. Returns the specific enum value for this event type.
+   */
   @Override
   public EventType eventType() {
     return EventType.APPLICATION_SUBMITTED;
