@@ -1,3 +1,15 @@
+CREATE TABLE IF NOT EXISTS notifications (
+    id UUID PRIMARY KEY,
+    application_number VARCHAR(50) NOT NULL,
+    recipient_identifier VARCHAR(255) NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_app_number ON notifications(application_number);
+
 CREATE TABLE IF NOT EXISTS outbox (
     id UUID PRIMARY KEY,
     aggregate_type VARCHAR(255) NOT NULL,

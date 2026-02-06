@@ -11,11 +11,8 @@ spring.cloud:
   stream:
     bindings:
       processApplicationSubmission-in-0:
-        destination: application.loan_application
+        destination: application.application_submitted
         group: credit-service-group
-        content-type: application/json
-      creditChecked-out-0:
-        destination: credit-checked-events
         content-type: application/json
     kafka:
       binder:
@@ -64,7 +61,7 @@ server.port: 80
 spring.datasource.url: jdbc:postgresql://credit-db/credit-db
 
 # Override Kafka broker for Docker network
-spring.cloud.stream.kafka.binder.brokers: kafka:9092
+spring.cloud.stream.kafka.binder.brokers: kafka:29092
 
 ---
 spring.config.activate.on-profile: prod

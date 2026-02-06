@@ -3,7 +3,7 @@ package com.loan.origination.system.contracts.domain.events;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record CreditCheckedEvent(
+public record CreditAccessedEvent(
     UUID eventId,
     String aggregateType,
     String aggregateId, // This will be the Application ID
@@ -14,11 +14,11 @@ public record CreditCheckedEvent(
     implements DomainEvent {
 
   /** Factory method for the Credit Service to easily create this event. */
-  public static CreditCheckedEvent of(
-      String aggregateType, String aggregateId, String applicationNumber, int score, String tier) {
-    return new CreditCheckedEvent(
+  public static CreditAccessedEvent of(
+      String aggregateId, String applicationNumber, int score, String tier) {
+    return new CreditAccessedEvent(
         UUID.randomUUID(),
-        aggregateType,
+        EventType.CREDIT_ACCESSED.getTopicSuffix(),
         aggregateId,
         applicationNumber,
         score,
@@ -28,6 +28,6 @@ public record CreditCheckedEvent(
 
   @Override
   public EventType eventType() {
-    return EventType.CREDIT_CHECKED;
+    return EventType.CREDIT_ACCESSED;
   }
 }

@@ -23,7 +23,7 @@ public class ApplicationSubmissionConsumer {
    * topic defined in application.yml.
    */
   @Bean
-  public Consumer<ApplicationSubmittedEvent> processLoanSubmission() {
+  public Consumer<ApplicationSubmittedEvent> processApplicationSubmission() {
     return event -> {
       log.info("Received Loan Submission Event for Application: {}", event.applicationNumber());
       try {

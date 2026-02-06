@@ -16,9 +16,6 @@ logging.pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId
 server.shutdown: graceful
 spring.lifecycle.timeout-per-shutdown-phase: 10s
 
-outbox:
-  aggregate-type: loan_application
-
 ---
 spring.config.activate.on-profile: docker
 

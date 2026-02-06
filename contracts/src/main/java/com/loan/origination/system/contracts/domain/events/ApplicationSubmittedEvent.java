@@ -17,15 +17,10 @@ public record ApplicationSubmittedEvent(
 
   /** Factory method to create the event. Maps the incoming parameters to the record components. */
   public static ApplicationSubmittedEvent of(
-      String aggregateType,
-      UUID appId,
-      String appNum,
-      String email,
-      BigDecimal amount,
-      String ssn) {
+      UUID appId, String appNum, String email, BigDecimal amount, String ssn) {
     return new ApplicationSubmittedEvent(
         UUID.randomUUID(),
-        aggregateType,
+        EventType.APPLICATION_SUBMITTED.getTopicSuffix(),
         appId.toString(),
         appNum,
         email,

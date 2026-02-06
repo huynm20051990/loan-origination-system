@@ -22,4 +22,4 @@ CREATE TABLE IF NOT EXISTS outbox (
 );
 
 -- Index for performance (optional, but good for large volumes)
-CREATE INDEX IF NOT EXISTS idx_outbox_aggregate_id ON outbox(aggregate_id);
+CREATE INDEX IF NOT EXISTS idx_outbox_aggregate_id ON outbox(created_at);

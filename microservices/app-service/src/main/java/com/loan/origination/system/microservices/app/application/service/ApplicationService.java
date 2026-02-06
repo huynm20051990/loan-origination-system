@@ -2,38 +2,38 @@ package com.loan.origination.system.microservices.app.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loan.origination.system.contracts.domain.events.ApplicationSubmittedEvent;
+import com.loan.origination.system.contracts.domain.events.DomainEvent;
 import com.loan.origination.system.microservices.app.domain.model.Application;
 import com.loan.origination.system.microservices.app.domain.model.Borrower;
+import com.loan.origination.system.microservices.app.domain.port.in.ProcessUnderwritingUseCase;
 import com.loan.origination.system.microservices.app.domain.port.in.SubmitApplicationUseCase;
+import com.loan.origination.system.microservices.app.domain.port.in.UpdateNotificationStatusUseCase;
 import com.loan.origination.system.microservices.app.domain.port.out.ApplicationRepositoryPort;
 import com.loan.origination.system.microservices.app.domain.port.out.OutboxRepositoryPort;
 import com.loan.origination.system.microservices.app.domain.service.ApplicationDomainService;
 import java.math.BigDecimal;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ApplicationService implements SubmitApplicationUseCase {
+public class ApplicationService
+    implements SubmitApplicationUseCase,
+        ProcessUnderwritingUseCase,
+        UpdateNotificationStatusUseCase {
 
   private final ApplicationDomainService loanDomainService;
-  private final ApplicationRepositoryPort loanRepository;
+  private final ApplicationRepositoryPort applicationRepository;
   private final OutboxRepositoryPort outboxRepository;
-  private final ObjectMapper objectMapper;
-
-  @Value("${outbox.aggregate-type}")
-  private String aggregateType;
 
   public ApplicationService(
       ApplicationDomainService loanDomainService,
-      ApplicationRepositoryPort loanRepository,
+      ApplicationRepositoryPort applicationRepository,
       OutboxRepositoryPort outboxRepository,
       ObjectMapper objectMapper) {
     this.loanDomainService = loanDomainService;
-    this.loanRepository = loanRepository;
+    this.applicationRepository = applicationRepository;
     this.outboxRepository = outboxRepository;
-    this.objectMapper = objectMapper;
   } // For JSON conversion
 
   @Override
@@ -46,12 +46,11 @@ public class ApplicationService implements SubmitApplicationUseCase {
         loanDomainService.initiateApplication(homeId, borrower, loanAmount, loanPurpose);
 
     // 2. Persist the Loan Application
-    loanRepository.save(application);
+    applicationRepository.save(application);
 
     // 3. Create and persist the Outbox Event for Kafka
     ApplicationSubmittedEvent event =
         ApplicationSubmittedEvent.of(
-            aggregateType,
             application.getId(),
             application.getApplicationNumber(),
             application.getBorrower().email(),
@@ -61,4 +60,12 @@ public class ApplicationService implements SubmitApplicationUseCase {
 
     return application;
   }
+
+  @Override
+  public void execute(DomainEvent event) {
+    outboxRepository.save(event);
+  }
+
+  @Override
+  public void markAsNotified(DomainEvent event) {}
 }

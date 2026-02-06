@@ -5,6 +5,31 @@ spring.application.name: app
 
 spring.threads.virtual.enabled: true
 
+# --- Spring Cloud Stream & Kafka Configuration ---
+spring.cloud:
+  function:
+    # Use a semicolon to define multiple functions
+    definition: consumeCreditAssessed;consumeNotificationSent
+  stream:
+    bindings:
+      # Binding for Credit Service Result
+      consumeCreditAssessed-in-0:
+        destination: credit.credit_assessed
+        group: application-service-group
+        content-type: application/json
+
+      # Binding for Notification Service Feedback
+      consumeNotificationSent-in-0:
+        destination: notification.notification_sent
+        group: application-service-group
+        content-type: application/json
+
+    kafka:
+      binder:
+        brokers: localhost:9092
+        auto-create-topics: true
+# --- Spring Cloud Stream & Kafka Configuration ---
+
 # --- ADDED DB CONFIGURATION START ---
 spring.jpa:
   hibernate.ddl-auto: update
@@ -45,6 +70,9 @@ spring.config.activate.on-profile: docker
 
 server.port: 80
 spring.datasource.url: jdbc:postgresql://app-db/app-db
+
+# Override Kafka broker for Docker network
+spring.cloud.stream.kafka.binder.brokers: kafka:29092
 
 ---
 spring.config.activate.on-profile: prod

@@ -1,7 +1,7 @@
 package com.loan.origination.system.microservices.credit.application.service;
 
 import com.loan.origination.system.contracts.domain.events.ApplicationSubmittedEvent;
-import com.loan.origination.system.contracts.domain.events.CreditCheckedEvent;
+import com.loan.origination.system.contracts.domain.events.CreditAccessedEvent;
 import com.loan.origination.system.microservices.credit.domain.model.CreditReport;
 import com.loan.origination.system.microservices.credit.domain.port.in.PerformCreditCheckUseCase;
 import com.loan.origination.system.microservices.credit.domain.port.out.CreditBureauPort;
@@ -10,7 +10,6 @@ import com.loan.origination.system.microservices.credit.domain.port.out.OutboxRe
 import com.loan.origination.system.microservices.credit.domain.service.ScoringDomainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +23,6 @@ public class CreditCheckApplicationService implements PerformCreditCheckUseCase 
   private final CreditRepositoryPort creditRepositoryPort;
   private final OutboxRepositoryPort outboxRepositoryPort;
   private final ScoringDomainService scoringDomainService;
-
-  @Value("${outbox.aggregate-type}")
-  private String aggregateType;
 
   // 2. Manual Constructor for Spring Injection
   public CreditCheckApplicationService(
@@ -58,9 +54,8 @@ public class CreditCheckApplicationService implements PerformCreditCheckUseCase 
     creditRepositoryPort.save(report, event.aggregateId());
 
     // 5. Publish result to Kafka (Port)
-    CreditCheckedEvent outputEvent =
-        CreditCheckedEvent.of(
-            aggregateType, // aggregateType (propagated from the submission)
+    CreditAccessedEvent outputEvent =
+        CreditAccessedEvent.of(
             event.aggregateId(),
             event.applicationNumber(), // applicationNumber (the human-readable ID)
             score, // creditScore

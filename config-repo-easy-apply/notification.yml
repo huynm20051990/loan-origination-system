@@ -23,6 +23,22 @@ spring.datasource.hikari:
   initializationFailTimeout: 60000
   maximum-pool-size: 10
 
+# --- Spring Cloud Stream & Kafka Configuration ---
+spring.cloud:
+  function:
+    definition: consumeUnderwritingCompleted
+  stream:
+    bindings:
+      consumeUnderwritingCompleted-in-0:
+        destination: application.underwriting_completed
+        group: notification-service-group
+        content-type: application/json
+    kafka:
+      binder:
+        brokers: localhost:9092 # Default for local dev
+        auto-create-topics: true
+# --- Spring Cloud Stream & Kafka Configuration ---
+
 # --- ADDED DB CONFIGURATION END ---
 
 # Health checks now only focus on the DB and Disk, not RabbitMQ
@@ -31,8 +47,7 @@ management:
     health:
       show-details: always
   health:
-    rabbit:
-      enabled: false # Explicitly disable RabbitMQ health checks
+    defaults.enabled: true
 
 logging:
   level:
@@ -46,8 +61,14 @@ spring.config.activate.on-profile: docker
 server.port: 80
 spring.datasource.url: jdbc:postgresql://notify-db/notification-db
 
+# Override Kafka broker for Docker network
+spring.cloud.stream.kafka.binder.brokers: kafka:29092
+
 ---
 spring.config.activate.on-profile: prod
 
 spring.datasource.url: jdbc:postgresql://172.17.0.1:5432/notification-db
 logging.level.org.hibernate.SQL: WARN
+
+# Override Kafka broker for Prod
+spring.cloud.stream.kafka.binder.brokers: kafka-prod-broker:9092
