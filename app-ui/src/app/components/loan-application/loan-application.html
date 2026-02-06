@@ -20,6 +20,25 @@
               <input matInput formControlName="phone" required>
               <mat-icon matSuffix>phone</mat-icon>
             </mat-form-field>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button mat-flat-button class="btn-primary" matStepperNext>Continue to Identity</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="identityInfo" [editable]="!isSubmitted">
+      <form [formGroup]="identityInfo">
+        <ng-template matStepLabel>Identity</ng-template>
+        <div class="step-content">
+          <p class="form-description">Verify your identity securely.</p>
+          <div class="vertical-form-layout">
+            <mat-form-field appearance="outline">
+              <mat-label>Date of Birth</mat-label>
+              <input matInput formControlName="dob" type="date" required>
+              <mat-icon matSuffix>calendar_today</mat-icon>
+            </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>SSN</mat-label>
               <input matInput formControlName="ssn" placeholder="XXX-XX-XXXX" required>
@@ -28,31 +47,8 @@
           </div>
         </div>
         <div class="step-actions">
-          <button mat-flat-button class="btn-primary" matStepperNext>Continue to Financials</button>
-        </div>
-      </form>
-    </mat-step>
-
-    <mat-step [stepControl]="financialInfo" [editable]="!isSubmitted">
-      <form [formGroup]="financialInfo">
-        <ng-template matStepLabel>Financial</ng-template>
-        <div class="step-content">
-          <p class="form-description">Tell us about your current employment and income.</p>
-          <div class="vertical-form-layout">
-            <mat-form-field appearance="outline">
-              <mat-label>Annual Income</mat-label>
-              <span matPrefix>$ &nbsp;</span>
-              <input matInput type="number" formControlName="annualIncome" required>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Employer Name</mat-label>
-              <input matInput formControlName="employer" required>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="step-actions">
           <button mat-stroked-button matStepperPrevious>Back</button>
-          <button mat-flat-button class="btn-primary" matStepperNext>Continue to Loan Request</button>
+          <button mat-flat-button class="btn-primary" matStepperNext>Continue to Request</button>
         </div>
       </form>
     </mat-step>
@@ -94,13 +90,12 @@
             <div class="section-title"><mat-icon>person_outline</mat-icon> Personal</div>
             <div class="data-row"><span>Name</span><strong>{{ personalInfo.value.fullName }}</strong></div>
             <div class="data-row"><span>Email</span><strong>{{ personalInfo.value.email }}</strong></div>
-            <div class="data-row"><span>SSN</span><strong>XXX-XX-{{ personalInfo.value.ssn?.slice(-4) }}</strong></div>
           </div>
 
           <div class="review-section">
-            <div class="section-title"><mat-icon>account_balance</mat-icon> Financial</div>
-            <div class="data-row"><span>Employer</span><strong>{{ financialInfo.value.employer }}</strong></div>
-            <div class="data-row"><span>Income</span><strong>{{ financialInfo.value.annualIncome | currency }}</strong></div>
+            <div class="section-title"><mat-icon>fingerprint</mat-icon> Identity</div>
+            <div class="data-row"><span>DOB</span><strong>{{ identityInfo.value.dob }}</strong></div>
+            <div class="data-row"><span>SSN</span><strong>XXX-XX-{{ identityInfo.value.ssn?.slice(-4) }}</strong></div>
           </div>
 
           <div class="review-section">
@@ -128,8 +123,7 @@
         <h2>Application Submitted!</h2>
         <p>Reference ID: <strong>#{{ (100000 + Math.random() * 900000) | number:'1.0-0' }}</strong></p>
         <p class="success-desc">
-          Thank you, {{ personalInfo.value.fullName }}. We have received your request for
-          {{ loanDetails.value.loanAmount | currency }} and will contact you via email shortly.
+          Thank you, {{ personalInfo.value.fullName }}. We have received your request and will contact you via email shortly.
         </p>
         <div class="success-buttons">
           <button mat-flat-button class="btn-primary" (click)="goToDashboard()">

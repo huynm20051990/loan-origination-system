@@ -1,5 +1,5 @@
 .container {
-  max-width: 700px; // Slightly narrowed for better vertical field aesthetics
+  max-width: 700px;
   margin: 40px auto;
   padding: 0 20px;
 }
@@ -28,13 +28,12 @@ mat-stepper {
   margin-bottom: 24px;
 }
 
-/* Vertical stacking logic */
 .vertical-form-layout {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-width: 500px; // Keeps inputs from stretching too wide on desktop
-  margin: 0 auto; // Centers the vertical form
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 mat-form-field {
@@ -50,7 +49,6 @@ mat-form-field {
   gap: 12px;
 }
 
-/* Review Grid - Kept 3 columns for desktop as it's a summary */
 .review-header {
   margin-bottom: 24px;
   h2 { font-weight: 800; color: #0f172a; margin: 0; }
@@ -96,11 +94,9 @@ mat-form-field {
   }
 }
 
-/* Success State */
 .success-container {
   text-align: center;
   padding: 60px 20px;
-
   .success-icon {
     font-size: 80px;
     height: 80px;
@@ -108,12 +104,10 @@ mat-form-field {
     color: #22c55e;
     margin-bottom: 24px;
   }
-
   h2 { font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
   .success-desc { color: #64748b; max-width: 500px; margin: 0 auto 32px; line-height: 1.6; }
 }
 
-/* Buttons */
 .btn-primary {
   background-color: #2563eb !important;
   color: white !important;
