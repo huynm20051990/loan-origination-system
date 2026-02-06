@@ -19,7 +19,6 @@ public class ApplicationPersistenceMapper {
     this.objectMapper = objectMapper;
   }
 
-  /** Convert Domain Model -> JPA Entity (Flattening the structure) */
   public ApplicationEntity toEntity(Application domain) {
     ApplicationEntity entity = new ApplicationEntity();
     entity.setId(domain.getId());
@@ -33,25 +32,21 @@ public class ApplicationPersistenceMapper {
     entity.setFullName(borrower.fullName());
     entity.setEmail(borrower.email());
     entity.setPhone(borrower.phone());
+    entity.setDateOfBirth(borrower.dob());
     entity.setSsn(borrower.ssn());
-    entity.setAnnualIncome(borrower.annualIncome());
-    entity.setEmployerName(borrower.employerName());
-
     entity.setLoanAmount(domain.getLoanAmount());
     entity.setLoanPurpose(domain.getLoanPurpose());
     return entity;
   }
 
-  /** Convert JPA Entity -> Domain Model (Reconstructing the structure) */
   public Application toDomain(ApplicationEntity entity) {
     Borrower borrower =
         new Borrower(
             entity.getFullName(),
             entity.getEmail(),
             entity.getPhone(),
-            entity.getSsn(),
-            entity.getAnnualIncome(),
-            entity.getEmployerName());
+            entity.getDateOfBirth(),
+            entity.getSsn());
 
     return new Application(
         entity.getId(),

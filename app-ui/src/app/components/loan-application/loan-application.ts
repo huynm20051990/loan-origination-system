@@ -11,6 +11,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { ApplicationService } from '../../core/services/application';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+type SubmissionStatus = 'IDLE' | 'SUBMITTING' | 'SUCCESS' | 'ERROR';
 
 @Component({
   selector: 'app-loan-application',
@@ -24,20 +28,26 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatSelectModule,
     MatOptionModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './loan-application.html',
   styleUrl: './loan-application.scss'
 })
+
 export class LoanApplicationComponent implements OnInit {
   @ViewChild('stepper') stepper!: MatStepper;
 
   private _formBuilder = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private applicationService = inject(ApplicationService);
 
   Math = Math;
   isSubmitted = false;
+
+  submissionStatus: SubmissionStatus = 'IDLE';
+  referenceId: string = '';
 
   // Step 1: Personal
   personalInfo = this._formBuilder.group({
@@ -68,17 +78,34 @@ export class LoanApplicationComponent implements OnInit {
 
   handleSubmission(stepper: MatStepper) {
     if (this.personalInfo.valid && this.identityInfo.valid && this.loanDetails.valid) {
-      const applicationData = {
-        ...this.personalInfo.value,
-        ...this.identityInfo.value,
-        ...this.loanDetails.getRawValue()
+
+      this.submissionStatus = 'SUBMITTING';
+      stepper.next(); // Move to the "Finish" step immediately to show loader
+
+      const payload = {
+        homeId: this.route.snapshot.paramMap.get('id'),
+        personal: this.personalInfo.value,
+        identity: this.identityInfo.value,
+        request: this.loanDetails.getRawValue()
       };
 
-      console.log('Submitting Application:', applicationData);
-
-      this.isSubmitted = true;
-      stepper.next();
+      this.applicationService.submitApplication(payload).subscribe({
+        next: (response) => {
+          this.referenceId = response.applicationNumber || response.id;
+          this.submissionStatus = 'SUCCESS';
+          this.isSubmitted = true;
+        },
+        error: (err) => {
+          console.error('Submission failed:', err);
+          this.submissionStatus = 'ERROR';
+        }
+      });
     }
+  }
+
+  retry(): void {
+    this.submissionStatus = 'IDLE';
+    this.stepper.previous(); // Takes user back to the Review step
   }
 
   goToDashboard() {

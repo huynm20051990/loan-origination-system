@@ -1,18 +1,19 @@
 package com.loan.origination.system.microservices.app.domain.model;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 
-/** Value Object representing the person applying for the loan. Immutable by design. */
 public record Borrower(
     String fullName,
     String email,
     String phone,
-    String ssn,
-    BigDecimal annualIncome,
-    String employerName) {
-  // Domain logic: You could add a helper here to get only the last 4 of SSN
+    LocalDate dob, // Added DOB
+    String ssn) {
+
   public String ssnLastFour() {
-    if (ssn == null || ssn.length() < 4) return "****";
-    return ssn.substring(ssn.length() - 4);
+    if (ssn == null || ssn.length() < 4) {
+      return "****";
+    }
+    String digitsOnly = ssn.replaceAll("[^0-9]", "");
+    return digitsOnly.length() >= 4 ? digitsOnly.substring(digitsOnly.length() - 4) : "****";
   }
 }

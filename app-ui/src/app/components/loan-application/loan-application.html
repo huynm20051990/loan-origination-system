@@ -116,20 +116,49 @@
 
     <mat-step>
       <ng-template matStepLabel>Finish</ng-template>
-      <div class="success-container">
-        <div class="check-animation">
-          <mat-icon class="success-icon">check_circle</mat-icon>
+      <div class="status-container">
+
+        @if (submissionStatus === 'SUBMITTING') {
+        <div class="loading-state">
+          <mat-spinner diameter="50"></mat-spinner>
+          <h2>Processing Application...</h2>
+          <p>We are verifying your details with our underwriting system.</p>
         </div>
-        <h2>Application Submitted!</h2>
-        <p>Reference ID: <strong>#{{ (100000 + Math.random() * 900000) | number:'1.0-0' }}</strong></p>
-        <p class="success-desc">
-          Thank you, {{ personalInfo.value.fullName }}. We have received your request and will contact you via email shortly.
-        </p>
-        <div class="success-buttons">
-          <button mat-flat-button class="btn-primary" (click)="goToDashboard()">
-            Go to My Dashboard
-          </button>
+        }
+
+        @if (submissionStatus === 'SUCCESS') {
+        <div class="success-container">
+          <div class="check-animation">
+            <mat-icon class="success-icon">check_circle</mat-icon>
+          </div>
+          <h2>Thank you, {{ personalInfo.value.fullName }}!</h2>
+          <p class="success-desc">
+            We have received your request and will contact you shortly.
+          </p>
+          <div class="success-buttons">
+            <button mat-flat-button class="btn-primary" (click)="goToDashboard()">
+              Go to My Dashboard
+            </button>
+          </div>
         </div>
+        }
+
+        @if (submissionStatus === 'ERROR') {
+        <div class="error-container">
+          <div class="error-animation">
+            <mat-icon class="error-icon">dangerous</mat-icon>
+          </div>
+          <h2>Submission Failed</h2>
+          <p>We encountered a technical issue while processing your request.</p>
+          <p class="error-desc">Please check your connection or try again in a few minutes.</p>
+          <div class="success-buttons">
+            <button mat-stroked-button (click)="retry()">
+              Go Back & Retry
+            </button>
+          </div>
+        </div>
+        }
+
       </div>
     </mat-step>
 

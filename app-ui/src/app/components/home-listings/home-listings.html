@@ -2,8 +2,13 @@
   <div class="search-hero-section">
     <div class="search-container">
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="minimal-search">
-        <mat-icon matPrefix>search</mat-icon>
-        <input matInput placeholder="Ask me anything: '3 bedroom house in Austin under $500k'...">
+        <mat-icon matPrefix class="ai-sparkle">auto_awesome</mat-icon>
+        <input matInput #searchInput placeholder="Ask me anything: '3 bedroom house in Austin under $500k'...">
+        <div matSuffix class="button-wrapper">
+          <button mat-flat-button class="ai-search-btn">
+            AI Search
+          </button>
+        </div>
       </mat-form-field>
     </div>
   </div>

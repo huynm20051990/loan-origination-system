@@ -2,6 +2,7 @@ package com.loan.origination.system.microservices.app.adapter.out.persistence.en
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public class ApplicationEntity {
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;
 
-  // Flattened Borrower Information
+  // Flattened Personal & Identity Information
   @Column(name = "full_name", nullable = false)
   private String fullName;
 
@@ -32,14 +33,11 @@ public class ApplicationEntity {
 
   private String phone;
 
+  @Column(name = "date_of_birth", nullable = false)
+  private LocalDate dateOfBirth; // Added to match new stepper
+
   @Column(name = "ssn", nullable = false)
   private String ssn;
-
-  @Column(name = "annual_income", nullable = false, precision = 15, scale = 2)
-  private BigDecimal annualIncome;
-
-  @Column(name = "employer_name")
-  private String employerName;
 
   // Loan Request Details
   @Column(name = "loan_amount", nullable = false, precision = 15, scale = 2)
@@ -51,7 +49,7 @@ public class ApplicationEntity {
   // Default constructor for JPA
   public ApplicationEntity() {}
 
-  // Getters and Setters (standard for JPA Entities)
+  // Getters and Setters
   public UUID getId() {
     return id;
   }
@@ -116,28 +114,20 @@ public class ApplicationEntity {
     this.phone = phone;
   }
 
+  public LocalDate getDateOfBirth() {
+    return dateOfBirth;
+  }
+
+  public void setDateOfBirth(LocalDate dateOfBirth) {
+    this.dateOfBirth = dateOfBirth;
+  }
+
   public String getSsn() {
     return ssn;
   }
 
   public void setSsn(String ssn) {
     this.ssn = ssn;
-  }
-
-  public BigDecimal getAnnualIncome() {
-    return annualIncome;
-  }
-
-  public void setAnnualIncome(BigDecimal annualIncome) {
-    this.annualIncome = annualIncome;
-  }
-
-  public String getEmployerName() {
-    return employerName;
-  }
-
-  public void setEmployerName(String employerName) {
-    this.employerName = employerName;
   }
 
   public BigDecimal getLoanAmount() {
