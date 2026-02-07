@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Import the service and model we created in previous steps
 import { HomeService } from '../../core/services/home';
@@ -21,7 +22,8 @@ import { Home } from '../../core/models/home';
     MatButtonModule,
     MatIconModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './home-listings.html',
   styleUrls: ['./home-listings.scss']

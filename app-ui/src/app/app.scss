@@ -147,6 +147,48 @@ button[mat-button] {
 }
 
 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-decoration: none;
+
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    /* ICON: Matches the brand color exactly */
+    color: #2563eb;
+  }
+}
+
+.logo-text-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.1;
+}
+
 .brand-text {
+  font-size: 1.55rem;
+  font-weight: 900; /* Max weight for a strong brand presence */
+  letter-spacing: -0.8px;
+
+  /* BRAND: Solid unified color */
+  .brand-main,
+  .brand-accent {
+    color: #2563eb;
+  }
+}
+
+.slogan {
+  font-size: 0.65rem;
+  font-weight: 700;
+  /* SLOGAN: Matches the brand color but with slight transparency for depth */
   color: #2563eb;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-top: 2px;
 }

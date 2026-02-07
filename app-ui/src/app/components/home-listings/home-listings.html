@@ -3,7 +3,10 @@
     <div class="search-container">
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="minimal-search">
         <mat-icon matPrefix class="ai-sparkle">auto_awesome</mat-icon>
-        <input matInput #searchInput placeholder="Ask me anything: '3 bedroom house in Austin under $500k'...">
+        <input matInput
+               #searchInput
+               class="ai-input"
+               placeholder="Ask me anything: 'Modern 3-bed in Austin under $500k'...">
         <div matSuffix class="button-wrapper">
           <button mat-flat-button class="ai-search-btn">
             AI Search
@@ -17,33 +20,39 @@
     @for (home of (homes$ | async); track home.id) {
     <mat-card class="home-card" appearance="outlined">
       <div class="image-wrapper">
+        <div class="price-tag">{{ home.price | currency:'USD':'symbol':'1.0-0' }}</div>
         <img mat-card-image [src]="home.imageUrl" alt="Photo of {{home.address.street}}">
-        <div class="price-overlay">{{ home.price | currency:'USD':'symbol':'1.0-0' }}</div>
       </div>
 
-      <mat-card-content>
+      <mat-card-content class="compact-content">
         <div class="card-body">
           <h2 class="address">{{ home.address.street }}, {{ home.address.city }}</h2>
+
           <div class="specs-row">
-            <span><strong>{{ home.beds }}</strong> bds</span>
+            <span><strong>{{ home.beds }}</strong> Bedrooms</span>
             <span class="dot"></span>
-            <span><strong>{{ home.baths }}</strong> ba</span>
+            <span><strong>{{ home.baths }}</strong> Bathrooms</span>
             <span class="dot"></span>
-            <span><strong>{{ home.sqft | number }}</strong> sqft</span>
+            <span><strong>{{ home.sqft | number }}</strong> Square Feet</span>
+          </div>
+
+          <div class="ai-description">
+            <p>Modern living space featuring an open floor plan and premium finishes throughout.</p>
           </div>
         </div>
       </mat-card-content>
 
-      <mat-card-actions>
+      <mat-card-actions class="compact-actions">
         <button mat-flat-button class="apply-btn" (click)="applyForLoan(home)">
-          <mat-icon>real_estate_agent</mat-icon>
+          <mat-icon>send</mat-icon>
           Apply Now
         </button>
       </mat-card-actions>
     </mat-card>
     } @empty {
     <div class="loading-placeholder">
-      <p>No listings available or loading...</p>
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Finding the perfect homes for you...</p>
     </div>
     }
   </div>
