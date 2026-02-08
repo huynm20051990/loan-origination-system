@@ -9,29 +9,6 @@ dependencies:
     version: 1.0.0
     repository: file://../../common
 
-  # Infrastructure
-  - name: postgres
-    version: 1.0.0
-    repository: file://../../components/postgres
-  - name: app-db
-    version: 1.0.0
-    repository: file://../../components/app-db
-  - name: credit-db
-    version: 1.0.0
-    repository: file://../../components/credit-db
-  - name: notify-db
-    version: 1.0.0
-    repository: file://../../components/notify-db
-  - name: kafka
-    version: 1.0.0
-    repository: file://../../components/kafka
-  - name: connect
-    version: 1.0.0
-    repository: file://../../components/connect
-  - name: connector-init
-    version: 1.0.0
-    repository: file://../../components/connector-init
-
   # Spring Cloud Core
   - name: auth-server
     version: 1.0.0

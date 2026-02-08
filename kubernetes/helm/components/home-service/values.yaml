@@ -12,26 +12,14 @@ image:
 # Environment variables from docker-compose
 env:
   SPRING_PROFILES_ACTIVE: "docker"
-  SPRING_CONFIG_LOCATION: "file:/config-repo-easy-apply/application.yml,file:/config-repo-easy-apply/home.yml"
-  SPRING_DATASOURCE_USERNAME: ${POSTGRES_USR}
-  SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PWD}
-  SPRING_AI_GOOGLE_GENAI_API_KEY: ${GEMINI_API_KEY}
+  SPRING_CONFIG_LOCATION: "file:/config-repo/application.yml,file:/config-repo/home.yml"
 
 # Using your product-style pattern for mounting config files
 configmap:
   enabled: true
   volumeMounts:
-    mountPath: /config-repo-easy-apply
-
-resources:
-  limits:
-    memory: 512Mi
+    mountPath: /config-repo
 
 # Standard Spring Boot Probes
 livenessProbe_enabled: true
 readinessProbe_enabled: true
-
-service:
-  ports:
-    - name: http
-      port: 8080 # Default Spring Boot port
