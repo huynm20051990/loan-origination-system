@@ -67,6 +67,6 @@ spring.cloud.stream.kafka.binder.brokers: kafka:29092
 spring.config.activate.on-profile: prod
 
 spring.datasource.url: jdbc:postgresql://172.17.0.1:5432/credit-db
+logging.level.org.hibernate.SQL: WARN
 # Override Kafka broker for Prod
 spring.cloud.stream.kafka.binder.brokers: kafka-prod-broker:9092
-logging.level.org.hibernate.SQL: WARN

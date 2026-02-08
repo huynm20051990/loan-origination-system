@@ -1,0 +1,37 @@
+fullnameOverride: credit-service
+
+annotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "4004"
+  prometheus.io/scheme: http
+  prometheus.io/path: "/actuator/prometheus"
+
+image:
+  name: credit-service
+
+# Environment variables from docker-compose
+env:
+  SPRING_PROFILES_ACTIVE: "docker"
+  # Points to application.yml and credit.yml
+  SPRING_CONFIG_LOCATION: "file:/config-repo-easy-apply/application.yml,file:/config-repo-easy-apply/credit.yml"
+  SPRING_DATASOURCE_USERNAME: ${POSTGRES_USR}
+  SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PWD}
+
+# Using your product-style pattern for mounting config files
+configmap:
+  enabled: true
+  volumeMounts:
+    mountPath: /config-repo-easy-apply
+
+resources:
+  limits:
+    memory: 512Mi
+
+# Standard Spring Boot Probes
+livenessProbe_enabled: true
+readinessProbe_enabled: true
+
+service:
+  ports:
+    - name: http
+      port: 8080 # Default Spring Boot port

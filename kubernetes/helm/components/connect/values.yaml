@@ -1,0 +1,32 @@
+fullnameOverride: connect
+
+annotations:
+  sidecar.istio.io/inject: "false"
+
+image:
+  repository: debezium
+  name: connect
+  tag: 2.5
+  pullPolicy: IfNotPresent
+
+env:
+  BOOTSTRAP_SERVERS: "kafka:29092"
+  GROUP_ID: "1"
+  CONFIG_STORAGE_TOPIC: "my_connect_configs"
+  OFFSET_STORAGE_TOPIC: "my_connect_offsets"
+  STATUS_STORAGE_TOPIC: "my_connect_statuses"
+  # Converter settings for JSON format
+  CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+  CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+
+ports:
+  - containerPort: 8083
+
+service:
+  ports:
+    - name: api
+      port: 8083
+
+resources:
+  limits:
+    memory: 1024Mi

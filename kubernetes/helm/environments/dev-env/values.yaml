@@ -1,64 +1,54 @@
 secrets:
+  # DB Server Admin Credentials (shared across all 4 DBs for simplicity in dev)
+  postgres-server-credentials:
+    POSTGRES_USR: home-user-prod
+    POSTGRES_PWD: home-pwd-prod
 
-  rabbitmq-server-credentials:
-    RABBITMQ_DEFAULT_USER: rabbit-user-dev
-    RABBITMQ_DEFAULT_PASS: rabbit-pwd-dev
+  # Application DB Connection Credentials
+  postgres-credentials:
+    SPRING_DATASOURCE_USERNAME: home-user-prod
+    SPRING_DATASOURCE_PASSWORD: home-pwd-prod
 
-  rabbitmq-credentials:
-    SPRING_RABBITMQ_USERNAME: rabbit-user-dev
-    SPRING_RABBITMQ_PASSWORD: rabbit-pwd-dev
+  # AI Integration
+  ai-credentials:
+    GEMINI_API_KEY: "AIzaSyA53KrtM7iN0L0-SIVyFPoaU_9zZHAjK58"
 
-  mongodb-server-credentials:
-    MONGO_INITDB_ROOT_USERNAME: mongodb-user-dev
-    MONGO_INITDB_ROOT_PASSWORD: mongodb-pwd-dev
-
-  mongodb-credentials:
-    SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
-    SPRING_DATA_MONGODB_USERNAME: mongodb-user-dev
-    SPRING_DATA_MONGODB_PASSWORD: mongodb-pwd-dev
-
-  mysql-server-credentials:
-    MYSQL_ROOT_PASSWORD: rootpwd
-    MYSQL_DATABASE: review-db
-    MYSQL_USER: mysql-user-dev
-    MYSQL_PASSWORD: mysql-pwd-dev
-
-  mysql-credentials:
-    SPRING_DATASOURCE_USERNAME: mysql-user-dev
-    SPRING_DATASOURCE_PASSWORD: mysql-pwd-dev
-
-rabbitmq:
+# Infrastructure Configuration
+postgres:
   envFromSecretRefs:
-    - rabbitmq-server-credentials
+    - postgres-server-credentials
 
-mongodb:
+app-db:
   envFromSecretRefs:
-    - mongodb-server-credentials
+    - postgres-server-credentials
 
-mysql:
+credit-db:
   envFromSecretRefs:
-    - mysql-server-credentials
+    - postgres-server-credentials
 
-auth-server:
+notify-db:
   envFromSecretRefs:
-    - rabbitmq-credentials
+    - postgres-server-credentials
 
-product:
+# Microservices Configuration
+home-service:
   envFromSecretRefs:
-    - rabbitmq-credentials
-    - mongodb-credentials
+    - postgres-credentials
+    - ai-credentials
 
-rating:
+app-service:
   envFromSecretRefs:
-    - rabbitmq-credentials
-    - mongodb-credentials
+    - postgres-credentials
 
-review:
+credit-service:
   envFromSecretRefs:
-    - rabbitmq-credentials
-    - mysql-credentials
+    - postgres-credentials
 
-product-composite:
+notification-service:
   envFromSecretRefs:
-    - rabbitmq-credentials
+    - postgres-credentials
 
+# Frontend
+app-ui:
+  service:
+    type: LoadBalancer # Expose UI for dev access

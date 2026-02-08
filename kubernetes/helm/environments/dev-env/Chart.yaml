@@ -1,44 +1,60 @@
 apiVersion: v2
 appVersion: "1.0"
-description: A Helm chart for LOAN-ORIGINATION-SYSTEM MICROSERVICES WITH SPRING BOOT AND SPRING CLOUD running in a Dev and Test Environment
+description: Dev Environment for Loan Origination System
 name: dev-env
 version: 1.0.0
 
 dependencies:
-
   - name: common
     version: 1.0.0
     repository: file://../../common
 
-  - name: rabbitmq
+  # Infrastructure
+  - name: postgres
     version: 1.0.0
-    repository: file://../../components/rabbitmq
-
-  - name: mongodb
+    repository: file://../../components/postgres
+  - name: app-db
     version: 1.0.0
-    repository: file://../../components/mongodb
-
-  - name: mysql
+    repository: file://../../components/app-db
+  - name: credit-db
     version: 1.0.0
-    repository: file://../../components/mysql
+    repository: file://../../components/credit-db
+  - name: notify-db
+    version: 1.0.0
+    repository: file://../../components/notify-db
+  - name: kafka
+    version: 1.0.0
+    repository: file://../../components/kafka
+  - name: connect
+    version: 1.0.0
+    repository: file://../../components/connect
+  - name: connector-init
+    version: 1.0.0
+    repository: file://../../components/connector-init
 
+  # Spring Cloud Core
   - name: auth-server
     version: 1.0.0
     repository: file://../../components/auth-server
-
-  - name: product
+  - name: gateway
     version: 1.0.0
-    repository: file://../../components/product
+    repository: file://../../components/gateway
 
-  - name: rating
+  # Microservices
+  - name: home-service
     version: 1.0.0
-    repository: file://../../components/rating
-
-  - name: review
+    repository: file://../../components/home-service
+  - name: app-service
     version: 1.0.0
-    repository: file://../../components/review
-
-  - name: product-composite
+    repository: file://../../components/app-service
+  - name: credit-service
     version: 1.0.0
-    repository: file://../../components/product-composite
+    repository: file://../../components/credit-service
+  - name: notification-service
+    version: 1.0.0
+    repository: file://../../components/notification-service
 
+  # Frontend
+  - name: app-ui
+    version: 1.0.0
+    repository: file://../../components/app-ui

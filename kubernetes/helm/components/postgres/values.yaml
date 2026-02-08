@@ -1,0 +1,36 @@
+fullnameOverride: postgres
+
+annotations:
+  sidecar.istio.io/inject: "false"
+
+image:
+  repository: pgvector
+  name: pgvector
+  tag: pg16
+  pullPolicy: IfNotPresent
+
+# Maps to the 'environment' section in docker-compose
+env:
+  POSTGRES_DB: home-db
+  # We use references to secrets or environment variables for credentials
+  POSTGRES_USER: ${POSTGRES_USR}
+  POSTGRES_PASSWORD: ${POSTGRES_PWD}
+
+# Maps to the 'volumes' section in docker-compose
+persistence:
+  enabled: true
+  mountPath: /docker-entrypoint-initdb.d
+  # In K8s, we usually use a ConfigMap or InitContainer to load the init scripts
+  # for the /database/init folder.
+
+ports:
+  - containerPort: 5432
+
+service:
+  ports:
+    - name: postgres
+      port: 5432
+
+resources:
+  limits:
+    memory: 512Mi

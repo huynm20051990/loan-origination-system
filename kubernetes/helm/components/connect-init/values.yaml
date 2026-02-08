@@ -1,0 +1,48 @@
+fullnameOverride: connector-init
+
+annotations:
+  sidecar.istio.io/inject: "false"
+
+image:
+  repository: curlimages
+  name: curl
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Overriding the entrypoint to run our script from the ConfigMap
+command: ["/bin/sh", "/scripts/register-connectors.sh"]
+
+configmap:
+  enabled: true
+  mountPath: /scripts
+  files:
+    register-connectors.sh: |
+      #!/bin/sh
+      # 1. Wait for Kafka Connect API to be healthy
+      echo "Waiting for Kafka Connect (http://connect:8083) to be ready..."
+      until curl -s -f http://connect:8083/connectors > /dev/null; do
+        echo "Connect not ready yet... sleeping 5s"
+        sleep 5
+      done
+
+      echo "Kafka Connect is UP! Registering connectors..."
+
+      # 2. Register Connectors (Example logic)
+      # In a real scenario, you can iterate through files in a directory 
+      # or hardcode the curl commands here.
+      for file in /connectors/*.json; do
+        if [ -f "$file" ]; then
+          echo "Registering $file..."
+          curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" \
+               -d @"$file" http://connect:8083/connectors
+        fi
+      done
+      
+      echo "Registration process completed."
+
+# This section assumes you will put your connector .json files into a ConfigMap
+# called 'connectors-config-files' manually or via a different template.
+extraVolumes:
+  - name: connectors-storage
+    configMap:
+      name: connectors-config-files

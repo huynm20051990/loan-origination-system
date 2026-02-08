@@ -1,0 +1,29 @@
+fullnameOverride: app-ui
+
+annotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "4004"
+  prometheus.io/scheme: http
+  prometheus.io/path: "/actuator/prometheus"
+
+image:
+  name: app-ui
+
+# Frontend often uses a smaller memory footprint than Spring Boot
+resources:
+  limits:
+    memory: 512Mi
+  requests:
+    memory: 256Mi
+
+# If your common template supports Ingress, you would define it here
+# to make the UI accessible via a browser.
+ingress:
+  enabled: false
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80 # Standard web port
+      targetPort: 80
