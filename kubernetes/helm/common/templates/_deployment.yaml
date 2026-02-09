@@ -30,6 +30,10 @@ spec:
         app: {{ include "common.name" . }}
         version: {{ .Values.image.tag }}
     spec:
+      hostAliases:
+        - ip: "172.19.0.1"  # This is your Docker Gateway IP
+          hostnames:
+          - "host.minikube.internal"
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"

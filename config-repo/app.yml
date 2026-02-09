@@ -71,11 +71,9 @@ spring.config.activate.on-profile: docker
 server.port: 80
 spring.datasource.url: jdbc:postgresql://app-db/app-db
 
-# Override Kafka broker for Docker network
-spring.cloud.stream.kafka.binder.brokers: kafka:29092
-
 ---
 spring.config.activate.on-profile: prod
 
-spring.datasource.url: jdbc:postgresql://172.17.0.1:5432/app-db
+server.port: 80
+spring.datasource.url: jdbc:postgresql://host.minikube.internal:5433/app-db
 logging.level.org.hibernate.SQL: WARN

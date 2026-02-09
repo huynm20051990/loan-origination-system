@@ -22,13 +22,15 @@ spring.config.activate.on-profile: docker
 app:
   auth-server: auth-server
 
+# Override Kafka broker for Docker network
+spring.cloud.stream.kafka.binder.brokers: kafka:29092
+
 ---
 spring.config.activate.on-profile: prod
 
-spring.datasource.url: jdbc:postgresql://172.17.0.1:5432/app-db
 logging.level.org.hibernate.SQL: WARN
 
 # Override Kafka broker for Prod
-spring.cloud.stream.kafka.binder.brokers: kafka-prod-broker:9092
+spring.cloud.stream.kafka.binder.brokers: host.minikube.internal:9092
 
 management.endpoints.web.exposure.include: health,info,circuitbreakerevents,prometheus

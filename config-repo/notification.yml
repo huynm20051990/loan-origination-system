@@ -61,14 +61,10 @@ spring.config.activate.on-profile: docker
 server.port: 80
 spring.datasource.url: jdbc:postgresql://notify-db/notification-db
 
-# Override Kafka broker for Docker network
-spring.cloud.stream.kafka.binder.brokers: kafka:29092
 
 ---
 spring.config.activate.on-profile: prod
 
-spring.datasource.url: jdbc:postgresql://172.17.0.1:5432/notification-db
+server.port: 80
+spring.datasource.url: jdbc:postgresql://host.minikube.internal:5435/notification-db
 logging.level.org.hibernate.SQL: WARN
-
-# Override Kafka broker for Prod
-spring.cloud.stream.kafka.binder.brokers: kafka-prod-broker:9092

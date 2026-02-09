@@ -176,7 +176,7 @@ kubectl get nodes
 kubectl get pods --all-namespaces
 
 kubectl create namespace first-attempts
-kubectl config set-context $(kubectl config current-context) --namespace=first attempts
+kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
 
 kubectl apply -f kubernetes/first-attempts/nginx-deployment.yaml
 
@@ -233,6 +233,9 @@ minikube start --profile=loan-origination-system
 
 helm install --dry-run --debug loan-origination-system-dev-env \
 kubernetes/helm/environments/dev-env
+
+helm install --dry-run --debug loan-origination-system-prod-env \
+kubernetes/helm/environments/prod-env
 
 helm install loan-origination-system-dev-env \
 kubernetes/helm/environments/dev-env \
@@ -558,6 +561,58 @@ docker exec easy-apply-kafka /opt/kafka/bin/kafka-topics.sh \
 --bootstrap-server localhost:9092 \
 --delete \
 --topic outbox.event.loan-requests
+
+./gradlew clean build
+eval $(minikube docker-env)
+docker-compose down -v --remove-orphans
+docker-compose build --no-cache
+# Core Services
+# Core Services
+docker tag loan-origination-system/app-service:latest loan-origination-system/app-service:v1
+docker tag loan-origination-system/app-ui:latest loan-origination-system/app-ui:v1
+docker tag loan-origination-system/auth-server:latest loan-origination-system/auth-server:v1
+
+# Microservices
+docker tag loan-origination-system/credit-service:latest loan-origination-system/credit-service:v1
+docker tag loan-origination-system/home-service:latest loan-origination-system/home-service:v1
+docker tag loan-origination-system/notification-service:latest loan-origination-system/notification-service:v1
+
+# Gateway
+docker tag loan-origination-system/gateway:latest loan-origination-system/gateway:v1
+
+for f in kubernetes/helm/components/*; do helm dep up $f; done
+for f in kubernetes/helm/environments/*; do helm dep up $f; done
+
+helm dep ls kubernetes/helm/environments/prod-env/
+helm template kubernetes/helm/environments/prod-env
+
+minikube start
+minikube tunnel
+
+eval $(minikube docker-env)
+
+docker-compose up -d postgres app-db credit-db notify-db kafka connect connector-init
+
+kubectl create namespace loan-origination-system || true
+
+# Map names so K8s pods can find Compose containers
+kubectl create service externalname app-db --external-name easy-apply-app-db -n loan-origination-system
+kubectl create service externalname credit-db --external-name easy-apply-credit-db -n loan-origination-system
+kubectl create service externalname notify-db --external-name easy-apply-notification-db -n loan-origination-system
+
+# Kafka Bridge (Check your docker ps for the exact Kafka container name, usually easy-apply-kafka)
+kubectl create service externalname kafka --external-name easy-apply-kafka -n loan-origination-system
+
+helm uninstall loan-origination-system-prod-env -n loan-origination-system
+docker-compose down -v --remove-orphans
+
+helm install loan-origination-system-prod-env kubernetes/helm/environments/prod-env \
+-n loan-origination-system \
+--create-namespace
+
+kubectl config set-context $(kubectl config current-context) --namespace=loan-origination-system
+
+kubectl get pods
 
 
 

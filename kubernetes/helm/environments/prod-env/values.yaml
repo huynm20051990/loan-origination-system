@@ -10,7 +10,7 @@ secrets:
   image:
     tag: v1
   env:
-    SPRING_PROFILES_ACTIVE: "docker,prod"
+    SPRING_PROFILES_ACTIVE: "prod"
   envFromSecretRefs:
     - postgres-credentials
   resources:
@@ -47,13 +47,11 @@ kafka:
 
 # Istio Service Mesh Configuration
 virtualServices:
-  - gateway
   - app-ui
   - home-service
   - app-service
 
 destinationRules:
-  - name: gateway
   - name: auth-server
   - name: home-service
     subsets:

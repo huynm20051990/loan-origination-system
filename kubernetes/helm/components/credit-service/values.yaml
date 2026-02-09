@@ -5,6 +5,7 @@ annotations:
   prometheus.io/port: "4004"
   prometheus.io/scheme: http
   prometheus.io/path: "/actuator/prometheus"
+  traffic.sidecar.istio.io/excludeOutboundIPRanges: "172.19.0.1/32"
 
 image:
   name: credit-service

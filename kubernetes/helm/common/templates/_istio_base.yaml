@@ -2,14 +2,14 @@
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: product-composite-require-jwt
+  name: app-service-require-jwt
 spec:
   action: ALLOW
   rules:
     - {}
   selector:
     matchLabels:
-      app.kubernetes.io/name: product-composite
+      app.kubernetes.io/name: app-service
 ---
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
@@ -22,7 +22,7 @@ spec:
 apiVersion: security.istio.io/v1beta1
 kind: RequestAuthentication
 metadata:
-  name: product-composite-request-authentication
+  name: app-service-request-authentication
 spec:
   jwtRules:
     - forwardOriginalToken: true
@@ -30,7 +30,7 @@ spec:
       jwksUri: http://auth-server.loan-origination-system.svc.cluster.local/oauth2/jwks
   selector:
     matchLabels:
-      app.kubernetes.io/name: product-composite
+      app.kubernetes.io/name: app-service
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
@@ -80,10 +80,10 @@ spec:
             host: auth-server
     - match:
         - uri:
-            prefix: /product-composite
+            prefix: /api/v1/applications
       route:
         - destination:
-            host: product-composite
+            host: app-service
             port:
               number: 80
     - match:
@@ -91,7 +91,7 @@ spec:
             prefix: /openapi
       route:
         - destination:
-            host: product-composite
+            host: app-service
             port:
               number: 80
     - match:
@@ -99,9 +99,24 @@ spec:
             prefix: /webjars
       route:
         - destination:
-            host: product-composite
+            host: app-service
             port:
               number: 80
+    - match:
+        - uri:
+            prefix: /api/v1/homes
+      route:
+        - destination:
+            host: home-service
+            port:
+              number: 8080
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: app-ui
+            port: { number: 80 }
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
@@ -133,7 +148,7 @@ spec:
   http:
     - route:
         - destination:
-            host: product-composite
+            host: app-service
             port:
               number: 4004
 {{- end -}}
