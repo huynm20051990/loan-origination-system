@@ -13,6 +13,7 @@ image:
 # Environment variables from docker-compose
 env:
   SPRING_PROFILES_ACTIVE: "docker"
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: "host.minikube.internal:9092"
   # Points to application.yml and notification.yml
   SPRING_CONFIG_LOCATION: "file:/config-repo/application.yml,file:/config-repo/notification.yml"
 

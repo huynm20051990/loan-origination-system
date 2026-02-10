@@ -562,6 +562,9 @@ docker exec easy-apply-kafka /opt/kafka/bin/kafka-topics.sh \
 --delete \
 --topic outbox.event.loan-requests
 
+minikube start
+minikube tunnel
+
 ./gradlew clean build
 eval $(minikube docker-env)
 docker-compose down -v --remove-orphans
@@ -586,22 +589,9 @@ for f in kubernetes/helm/environments/*; do helm dep up $f; done
 helm dep ls kubernetes/helm/environments/prod-env/
 helm template kubernetes/helm/environments/prod-env
 
-minikube start
-minikube tunnel
-
 eval $(minikube docker-env)
 
 docker-compose up -d postgres app-db credit-db notify-db kafka connect connector-init
-
-kubectl create namespace loan-origination-system || true
-
-# Map names so K8s pods can find Compose containers
-kubectl create service externalname app-db --external-name easy-apply-app-db -n loan-origination-system
-kubectl create service externalname credit-db --external-name easy-apply-credit-db -n loan-origination-system
-kubectl create service externalname notify-db --external-name easy-apply-notification-db -n loan-origination-system
-
-# Kafka Bridge (Check your docker ps for the exact Kafka container name, usually easy-apply-kafka)
-kubectl create service externalname kafka --external-name easy-apply-kafka -n loan-origination-system
 
 helm uninstall loan-origination-system-prod-env -n loan-origination-system
 docker-compose down -v --remove-orphans
@@ -614,7 +604,9 @@ kubectl config set-context $(kubectl config current-context) --namespace=loan-or
 
 kubectl get pods
 
-
+docker exec -it easy-apply-credit-db psql -U home-user-prod -d credit-db -c "SELECT * FROM credit_reports;"
+docker exec -it easy-apply-app-db psql -U home-user-prod -d app-db -c "SELECT * FROM applications;"
+docker exec -it easy-apply-notification-db psql -U home-user-prod -d notification-db -c "SELECT * FROM notifications;"
 
 
 
