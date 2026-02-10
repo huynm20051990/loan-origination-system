@@ -1,0 +1,17 @@
+FROM alpine:3.18
+
+# Install tools
+RUN apk add --no-cache bash curl postgresql-client
+
+# Create directories
+RUN mkdir -p /scripts /database /connectors
+
+# COPY the files from your host into the image
+COPY ./scripts/ /scripts/
+COPY ./database/ /database/
+COPY ./connectors/ /connectors/
+
+# Make scripts executable
+RUN chmod +x /scripts/*.sh
+
+ENTRYPOINT ["/bin/bash", "/scripts/bootstrap.sh"]

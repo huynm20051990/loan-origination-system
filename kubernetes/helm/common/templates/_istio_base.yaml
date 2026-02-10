@@ -109,7 +109,7 @@ spec:
         - destination:
             host: home-service
             port:
-              number: 8080
+              number: 80
     - match:
         - uri:
             prefix: /

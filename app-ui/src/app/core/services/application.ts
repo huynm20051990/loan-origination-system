@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationService {
-  private readonly API_URL = 'https://localhost:8443/api/v1/applications';
+  private readonly API_URL = 'https://minikube.me/api/v1/applications';
 
   constructor(private http: HttpClient) {}
 

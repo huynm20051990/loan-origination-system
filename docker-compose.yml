@@ -105,7 +105,7 @@ services:
       # PLAINTEXT: Internal traffic between Docker containers
       # EXTERNAL: Traffic coming from your laptop (localhost)
       - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9092
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:29092,EXTERNAL://172.19.0.1:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:29092,EXTERNAL://localhost:9092
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
@@ -120,6 +120,12 @@ services:
   connect:
     image: debezium/connect:2.5
     container_name: easy-apply-connect
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8083/connectors" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     mem_limit: 1024m
     ports:
       - "8083:8083" # REST API for managing connectors
@@ -129,6 +135,9 @@ services:
       - CONFIG_STORAGE_TOPIC=my_connect_configs
       - OFFSET_STORAGE_TOPIC=my_connect_offsets
       - STATUS_STORAGE_TOPIC=my_connect_statuses
+      - CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR=1
+      - CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR=1
+      - CONNECT_STATUS_STORAGE_REPLICATION_FACTOR=1
       # These ensure Debezium can find your Kafka cluster inside the Docker network
       - CONNECT_KEY_CONVERTER=org.apache.kafka.connect.json.JsonConverter
       - CONNECT_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
@@ -143,14 +152,15 @@ services:
         condition: service_healthy
 
   connector-init:
-    image: curlimages/curl:latest
+    build:
+      context: .
+      dockerfile: scripts/Dockerfile.init
     container_name: easy-apply-connector-init
-    volumes:
-      - ./connectors:/connectors
-      - ./register-connectors.sh:/register-connectors.sh
-    entrypoint: [ "/bin/sh", "/register-connectors.sh" ]
+    environment:
+      - POSTGRES_PWD=${POSTGRES_PWD}
+    # Keep depends_on to ensure DBs are ready before we try to inject SQL
     depends_on:
-      - connect
+      connect: { condition: service_started }
 
   home-service:
     build: microservices/home-service
@@ -199,6 +209,8 @@ services:
       - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/credit.yml
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:29092
     volumes:
       - $PWD/config-repo:/config-repo
     depends_on:
@@ -217,6 +229,8 @@ services:
       - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/notification.yml
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:29092
     volumes:
       - $PWD/config-repo:/config-repo
     depends_on:
