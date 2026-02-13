@@ -11,4 +11,5 @@ public record HomeResponseDTO(
     Integer sqft,
     String imageUrl,
     AddressDTO address,
-    String status) {}
+    String status,
+    String description) {}
