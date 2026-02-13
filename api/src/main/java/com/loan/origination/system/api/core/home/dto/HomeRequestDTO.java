@@ -8,4 +8,5 @@ public record HomeRequestDTO(
     Double baths,
     Integer sqft,
     String imageUrl,
-    AddressDTO address) {}
+    AddressDTO address,
+    String description) {}

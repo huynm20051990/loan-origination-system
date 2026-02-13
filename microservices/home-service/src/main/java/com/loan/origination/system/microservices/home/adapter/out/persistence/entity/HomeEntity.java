@@ -34,6 +34,8 @@ public class HomeEntity {
 
   @Embedded private AddressEmbeddable address;
 
+  private String description;
+
   @Column(columnDefinition = "vector(768)")
   private float[] embedding;
 
@@ -47,7 +49,9 @@ public class HomeEntity {
       Integer sqft,
       String imageUrl,
       String status,
-      AddressEmbeddable address) {
+      AddressEmbeddable address,
+      String description,
+      float[] embedding) {
     this.id = id;
     this.price = price;
     this.beds = beds;
@@ -56,6 +60,8 @@ public class HomeEntity {
     this.imageUrl = imageUrl;
     this.status = status;
     this.address = address;
+    this.description = description;
+    this.embedding = embedding;
   }
 
   public UUID getId() {
@@ -120,6 +126,14 @@ public class HomeEntity {
 
   public void setAddress(AddressEmbeddable address) {
     this.address = address;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public float[] getEmbedding() {

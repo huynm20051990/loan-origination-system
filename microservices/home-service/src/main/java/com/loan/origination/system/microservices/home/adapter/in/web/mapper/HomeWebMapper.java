@@ -34,6 +34,7 @@ public class HomeWebMapper {
         dto.sqft(),
         dto.imageUrl(),
         HomeStatus.AVAILABLE,
+        dto.description(),
         null);
   }
 
@@ -58,6 +59,7 @@ public class HomeWebMapper {
         home.getSqft(),
         home.getImageUrl(),
         addressDto,
-        home.getStatus().name());
+        home.getStatus().name(),
+        home.getDescription());
   }
 }

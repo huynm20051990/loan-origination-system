@@ -46,6 +46,7 @@ public class HomePersistenceMapper {
         entity.getSqft(),
         entity.getImageUrl(),
         HomeStatus.valueOf(entity.getStatus()),
+        entity.getDescription(),
         entity.getEmbedding());
   }
 }

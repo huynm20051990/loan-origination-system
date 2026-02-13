@@ -12,6 +12,7 @@ public class Home {
   private final Integer sqft;
   private final String imageUrl;
   private HomeStatus status;
+  private String description;
   private float[] embedding;
 
   public Home(
@@ -23,6 +24,7 @@ public class Home {
       Integer sqft,
       String imageUrl,
       HomeStatus status,
+      String description,
       float[] embedding) {
     this.id = id;
     this.address = address;
@@ -32,6 +34,7 @@ public class Home {
     this.sqft = sqft;
     this.imageUrl = imageUrl;
     this.status = status;
+    this.description = description;
     this.embedding = embedding;
   }
 
@@ -76,6 +79,10 @@ public class Home {
 
   public HomeStatus getStatus() {
     return status;
+  }
+
+  public String getDescription() {
+    return description;
   }
 
   public void updateEmbedding(float[] newEmbedding) {
