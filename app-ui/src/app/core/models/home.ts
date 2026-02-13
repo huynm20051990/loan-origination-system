@@ -15,5 +15,6 @@ export interface Home {
   sqft: number;
   imageUrl: string;
   status: 'AVAILABLE' | 'SOLD' | 'PENDING'; // Using a Union Type for better safety
-  address: Address;  // Nested object
+  address: Address;
+  description: string;// Nested object
 }

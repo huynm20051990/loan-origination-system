@@ -1,12 +1,13 @@
 export interface Home {
-  id: string;        // UUID from Java translates to string in TS
+  id: string;
   price: number;
   beds: number;
   baths: number;
   sqft: number;
   imageUrl: string;
   status: string;
-  address: Address;  // Notice we use a nested interface for the address object
+  address: Address;
+  description: string;
 }
 
 export interface Address {

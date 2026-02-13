@@ -15,6 +15,7 @@ export const MOCK_HOMES: Home[] = [
       stateCode: 'IL',
       zipCode: '62704',
       country: 'USA'
-    }
+    },
+    description: 'A beautiful modern home with a spacious backyard.'
   }
 ];
