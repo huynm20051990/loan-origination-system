@@ -74,6 +74,7 @@ public class HomeApplicationService
 
     // 1️⃣ Ask AI adapter for relevant IDs
     List<UUID> matchingIds = homeSearchPort.search(query);
+    LOG.info("AI Search Result: " + matchingIds.toString());
 
     // 2️⃣ Load full domain objects
     return matchingIds.stream()

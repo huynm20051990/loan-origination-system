@@ -6,6 +6,7 @@ import com.loan.origination.system.microservices.home.application.service.HomeAp
 import com.loan.origination.system.microservices.home.application.service.HomeSyncService;
 import com.loan.origination.system.microservices.home.domain.port.out.HomeRepositoryPort;
 import com.loan.origination.system.microservices.home.domain.port.out.HomeSearchPort;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,5 +33,10 @@ public class BeanConfiguration {
   public HomeSyncService homeSyncService(
       HomeRepositoryPort repositoryPort, HomeSearchPort homeSearchPort) {
     return new HomeSyncService(repositoryPort, homeSearchPort);
+  }
+
+  @Bean
+  public ChatClient chatClient(ChatClient.Builder builder) {
+    return builder.build();
   }
 }

@@ -10,7 +10,8 @@ spring:
   ai:
     model:
       embedding:
-        text: google-genai   # explicitly choose Google embedding model
+        text: google-genai
+      chat: google-genai
 
     google:
       genai:
@@ -21,6 +22,9 @@ spring:
             options:
               model: gemini-embedding-001
               dimensions: 768
+        chat:
+          options:
+            model: gemini-2.5-flash
 
     vectorstore:
       pgvector:
