@@ -44,7 +44,7 @@ public class HomeWebAdapterController implements HomeAPI {
   @Override
   public HomeResponseDTO addHome(HomeRequestDTO request) {
     LOG.info(request.toString());
-    var homeDomain = addHomeUseCase.execute(mapper.toDomain(request));
+    var homeDomain = addHomeUseCase.addHome(mapper.toDomain(request));
     return mapper.toResponse(homeDomain);
   }
 

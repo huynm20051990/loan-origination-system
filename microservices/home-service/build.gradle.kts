@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.5.10"
+    id("org.springframework.boot") version "3.5.9"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
@@ -14,23 +14,10 @@ java {
 }
 
 val mapstructVersion = "1.6.3"
-var springCloudVersion = "2025.0.0"
 val springAiVersion = "1.1.2"
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://repo.spring.io/milestone")
-    }
-
-    maven {
-        url = uri("https://repo.spring.io/snapshot")
-    }
-
-    maven {
-        name = "Central Portal Snapshots"
-        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
-    }
 }
 
 tasks.named<Jar>("jar") {
@@ -47,8 +34,8 @@ dependencies {
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
     implementation("io.zipkin.reporter2:zipkin-reporter-brave")
     implementation("org.postgresql:postgresql")
-    implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
-    implementation("org.springframework.ai:spring-ai-pgvector-store")
+    implementation("org.springframework.ai:spring-ai-starter-model-google-genai-embedding")
+    implementation("org.springframework.ai:spring-ai-starter-vector-store-pgvector")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("com.pgvector:pgvector:0.1.6")
@@ -59,7 +46,6 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
         mavenBom("org.springframework.ai:spring-ai-bom:$springAiVersion")
     }
 }

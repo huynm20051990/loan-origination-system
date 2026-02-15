@@ -183,6 +183,10 @@ Explicit wiring of dependencies to preserve clean architecture boundaries.
 
 
 ## Sample Command
+unset ACCESS_TOKEN
+ACCESS_TOKEN=$(curl -k https://writer:secret-writer@localhost:8443/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -s | jq -r .access_token)
+echo $ACCESS_TOKEN
+
 curl -X POST https://localhost:8443/api/v1/homes \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer $ACCESS_TOKEN" \
@@ -204,9 +208,12 @@ curl -X POST https://localhost:8443/api/v1/homes \
 
 curl -k -X GET https://localhost:8443/api/v1/homes   -H "Authorization: Bearer $ACCESS_TOKEN"   -H "Accept: application/json"
 
-# Search for "a peaceful place surrounded by trees"
-curl -G "http://localhost:8080/api/v1/homes/search" \
---data-urlencode "query=a peaceful place surrounded by trees"
+curl -k -X GET "https://localhost:8443/api/v1/homes/search?query=Quiet%20house%20with%20a%20large%20backyard" \
+-H "Authorization: Bearer $ACCESS_TOKEN" \
+-H "Accept: application/json"
+
+docker exec -it easy-apply-postgres psql -U home-user-prod -d home-db
+
 
 
 

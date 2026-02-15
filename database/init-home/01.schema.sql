@@ -19,9 +19,20 @@ CREATE TABLE IF NOT EXISTS homes (
     state_code CHAR(2) NOT NULL,
     zip_code VARCHAR(20),
     country VARCHAR(100) NOT NULL,
-    description TEXT,
+    description TEXT
+);
+
+CREATE TABLE home_embeddings (
+    id UUID PRIMARY KEY,
+    content TEXT,
+    metadata JSONB,
     embedding vector(768)
 );
+
+CREATE INDEX IF NOT EXISTS home_embeddings_embedding_idx
+ON home_embeddings
+USING hnsw (embedding vector_cosine_ops);
+
 
 -- Optional: indexes for faster queries
 CREATE INDEX IF NOT EXISTS idx_home_status ON homes(status);

@@ -46,11 +46,4 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
   public void deleteById(UUID id) {
     homeRepository.deleteById(id);
   }
-
-  @Override
-  public List<Home> findSimilar(float[] embedding, int limit) {
-    List<HomeEntity> entities = homeRepository.findNearestNeighbors(embedding, limit);
-
-    return entities.stream().map(mapper::toDomain).collect(Collectors.toList());
-  }
 }

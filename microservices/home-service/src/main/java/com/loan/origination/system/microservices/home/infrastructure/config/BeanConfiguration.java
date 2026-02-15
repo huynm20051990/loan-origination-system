@@ -3,9 +3,9 @@ package com.loan.origination.system.microservices.home.infrastructure.config;
 import com.loan.origination.system.microservices.home.adapter.in.web.mapper.HomeWebMapper;
 import com.loan.origination.system.microservices.home.adapter.out.persistence.mapper.HomePersistenceMapper;
 import com.loan.origination.system.microservices.home.application.service.HomeApplicationService;
+import com.loan.origination.system.microservices.home.application.service.HomeSyncService;
 import com.loan.origination.system.microservices.home.domain.port.out.HomeRepositoryPort;
-import org.springframework.ai.embedding.EmbeddingModel;
-import org.springframework.beans.factory.ObjectProvider;
+import com.loan.origination.system.microservices.home.domain.port.out.HomeSearchPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,11 +24,13 @@ public class BeanConfiguration {
 
   @Bean
   public HomeApplicationService homeApplicationService(
-      HomeRepositoryPort repositoryPort, ObjectProvider<EmbeddingModel> embeddingModelProvider) {
+      HomeRepositoryPort repositoryPort, HomeSearchPort homeSearchPort) {
+    return new HomeApplicationService(repositoryPort, homeSearchPort);
+  }
 
-    // This will NOT crash if the bean is missing
-    EmbeddingModel model = embeddingModelProvider.getIfAvailable();
-
-    return new HomeApplicationService(repositoryPort, model);
+  @Bean
+  public HomeSyncService homeSyncService(
+      HomeRepositoryPort repositoryPort, HomeSearchPort homeSearchPort) {
+    return new HomeSyncService(repositoryPort, homeSearchPort);
   }
 }

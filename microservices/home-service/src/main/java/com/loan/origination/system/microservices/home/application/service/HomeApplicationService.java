@@ -6,12 +6,10 @@ import com.loan.origination.system.microservices.home.domain.port.in.DeleteHomeU
 import com.loan.origination.system.microservices.home.domain.port.in.GetHomeUseCase;
 import com.loan.origination.system.microservices.home.domain.port.in.SearchHomeUseCase;
 import com.loan.origination.system.microservices.home.domain.port.out.HomeRepositoryPort;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import com.loan.origination.system.microservices.home.domain.port.out.HomeSearchPort;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ai.embedding.EmbeddingModel;
 
 public class HomeApplicationService
     implements AddHomeUseCase, GetHomeUseCase, DeleteHomeUseCase, SearchHomeUseCase {
@@ -19,17 +17,36 @@ public class HomeApplicationService
   private static final Logger LOG = LoggerFactory.getLogger(HomeApplicationService.class);
 
   private final HomeRepositoryPort repositoryPort;
-  private final EmbeddingModel embeddingModel;
+  private final HomeSearchPort homeSearchPort;
 
-  public HomeApplicationService(HomeRepositoryPort repositoryPort, EmbeddingModel embeddingModel) {
+  public HomeApplicationService(HomeRepositoryPort repositoryPort, HomeSearchPort homeSearchPort) {
     this.repositoryPort = repositoryPort;
-    this.embeddingModel = embeddingModel;
+    this.homeSearchPort = homeSearchPort;
   }
 
   @Override
-  public Home execute(Home home) {
-    LOG.info(home.toString());
-    return repositoryPort.save(home);
+  public Home addHome(Home home) {
+    LOG.info("Saving home and generating embeddings: {}", home);
+
+    // 1. Save to the standard relational database
+    Home savedHome = repositoryPort.save(home);
+
+    // 2. Prepare the text for embedding.
+    // The more descriptive this string, the better the AI search results!
+    String searchContent =
+        String.format(
+            "A home located at %s, %s, %s. Features: %d bedrooms, %.1f bathrooms, %d square feet. Description: %s",
+            savedHome.getAddress().street(),
+            savedHome.getAddress().city(),
+            savedHome.getAddress().state(),
+            savedHome.getBeds(),
+            savedHome.getBaths(),
+            savedHome.getSqft(),
+            savedHome.getDescription());
+
+    homeSearchPort.indexHome(savedHome);
+
+    return savedHome;
   }
 
   @Override
@@ -53,12 +70,16 @@ public class HomeApplicationService
 
   @Override
   public List<Home> search(String query) {
-    LOG.info("Searching for homes with query: {}", query);
+    LOG.info("Searching homes using semantic search: {}", query);
 
-    // Convert the user's natural language question into a vector
-    float[] queryVector = embeddingModel.embed(query);
+    // 1️⃣ Ask AI adapter for relevant IDs
+    List<UUID> matchingIds = homeSearchPort.search(query);
 
-    // Pass the vector to the repository to find the top 5 closest matches
-    return repositoryPort.findSimilar(queryVector, 5);
+    // 2️⃣ Load full domain objects
+    return matchingIds.stream()
+        .map(repositoryPort::findById)
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .toList();
   }
 }
