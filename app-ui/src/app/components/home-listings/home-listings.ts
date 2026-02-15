@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,7 +29,7 @@ import { Home } from '../../core/models/home';
   styleUrls: ['./home-listings.scss']
 })
 export class HomeListingsComponent implements OnInit {
-  // Observable to hold the stream of home data
+  @ViewChild('searchInput') searchInput!: ElementRef;
   homes$: Observable<Home[]> | undefined;
 
   constructor(
@@ -40,6 +40,17 @@ export class HomeListingsComponent implements OnInit {
   ngOnInit(): void {
     // Assign the observable from the service
     this.homes$ = this.homeService.getHomes();
+  }
+
+  onAiSearch() {
+    const query = this.searchInput.nativeElement.value;
+    if (query && query.trim() !== '') {
+      // We assume your homeService has a searchHomes(query) method
+      this.homes$ = this.homeService.searchHomes(query);
+    } else {
+      // If empty, revert to showing all homes
+      this.homes$ = this.homeService.getHomes();
+    }
   }
 
   applyForLoan(home: Home) {

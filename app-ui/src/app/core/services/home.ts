@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Home } from '../models/home'; // Import the model we made in Step 1
 
@@ -24,5 +24,10 @@ export class HomeService {
    */
   getHomeById(id: string): Observable<Home> {
     return this.http.get<Home>(`${this.API_URL}/${id}`);
+  }
+
+  searchHomes(query: string): Observable<Home[]> {
+    const params = new HttpParams().set('query', query);
+    return this.http.get<Home[]>(`${this.API_URL}/search`, { params });
   }
 }
