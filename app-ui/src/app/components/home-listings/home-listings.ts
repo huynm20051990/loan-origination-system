@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,10 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-// Import the service and model we created in previous steps
+import { finalize, catchError } from 'rxjs/operators';
 import { HomeService } from '../../core/services/home';
 import { Home } from '../../core/models/home';
 
@@ -30,31 +29,58 @@ import { Home } from '../../core/models/home';
 })
 export class HomeListingsComponent implements OnInit {
   @ViewChild('searchInput') searchInput!: ElementRef;
-  homes$: Observable<Home[]> | undefined;
+
+  // Use a plain array instead of an Observable to prevent async pipe race conditions
+  homes: Home[] = [];
+  loading = false;
 
   constructor(
     private homeService: HomeService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // Assign the observable from the service
-    this.homes$ = this.homeService.getHomes();
+    this.loadAllHomes();
+  }
+
+  private loadAllHomes() {
+    this.executeSearch('all');
   }
 
   onAiSearch() {
-    const query = this.searchInput.nativeElement.value;
+    const query = this.searchInput?.nativeElement?.value;
     if (query && query.trim() !== '') {
-      // We assume your homeService has a searchHomes(query) method
-      this.homes$ = this.homeService.searchHomes(query);
+      this.executeSearch(query);
     } else {
-      // If empty, revert to showing all homes
-      this.homes$ = this.homeService.getHomes();
+      this.loadAllHomes();
     }
   }
 
+  private executeSearch(query: string) {
+    this.loading = true;
+    this.cdr.markForCheck();
+
+    const request$ = query === 'all'
+      ? this.homeService.getHomes()
+      : this.homeService.searchHomes(query);
+
+    request$.pipe(
+      catchError(error => {
+        console.error('Search failed', error);
+        return of([]);
+      }),
+      finalize(() => {
+        this.loading = false;
+        // Forces Angular to recognize the loading state change and the new data
+        this.cdr.detectChanges();
+      })
+    ).subscribe(data => {
+      this.homes = data;
+    });
+  }
+
   applyForLoan(home: Home) {
-    // Navigates using the real ID from the backend
     this.router.navigate(['/apply', home.id], {
       queryParams: { price: home.price }
     });

@@ -5,6 +5,7 @@
         <mat-icon matPrefix class="ai-sparkle">auto_awesome</mat-icon>
         <input matInput
                #searchInput
+               (keyup.enter)="onAiSearch()"
                class="ai-input"
                placeholder="Ask me anything: 'Modern 3-bed in Austin under $500k'...">
         <div matSuffix class="button-wrapper">
@@ -16,8 +17,14 @@
     </div>
   </div>
 
+  @if (loading) {
+  <div class="status-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>AI is finding the perfect homes for you...</p>
+  </div>
+  } @else {
   <div class="listings-grid">
-    @for (home of (homes$ | async); track home.id) {
+    @for (home of homes; track home.id) {
     <mat-card class="home-card" appearance="outlined">
       <div class="image-wrapper">
         <div class="price-tag">{{ home.price | currency:'USD':'symbol':'1.0-0' }}</div>
@@ -37,7 +44,7 @@
           </div>
 
           <div class="ai-description">
-            <p>{{ home.description }}
+            <p>{{ home.description }}</p>
           </div>
         </div>
       </mat-card-content>
@@ -50,10 +57,12 @@
       </mat-card-actions>
     </mat-card>
     } @empty {
-    <div class="loading-placeholder">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p>Finding the perfect homes for you...</p>
+    <div class="no-results-message">
+      <mat-icon>search_off</mat-icon>
+      <h3>No homes found</h3>
+      <p>We couldn't find any homes matching your specific criteria. Try adjusting your search vibe or price range.</p>
     </div>
     }
   </div>
+  }
 </div>
