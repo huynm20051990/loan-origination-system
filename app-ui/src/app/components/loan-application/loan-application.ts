@@ -108,7 +108,7 @@ export class LoanApplicationComponent implements OnInit {
     this.stepper.previous(); // Takes user back to the Review step
   }
 
-  goToDashboard() {
-    this.router.navigate(['/user-dashboard']);
+  goToCheckStatus() {
+    this.router.navigate(['/check-status']);
   }
 }
