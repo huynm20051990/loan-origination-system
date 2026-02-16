@@ -59,3 +59,11 @@ docker exec -it easy-apply-kafka \
 
 # Check the Kafka topic for the application event
 docker exec -it easy-apply-kafka /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic application.loan_application --from-beginning --max-messages 2
+
+unset ACCESS_TOKEN
+ACCESS_TOKEN=$(curl -k https://writer:secret-writer@localhost:8443/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -s | jq -r .access_token)
+echo $ACCESS_TOKEN
+
+curl -X GET "https://localhost:8443/api/v1/applications?email=test@example.com" \
+-H "Authorization: Bearer $ACCESS_TOKEN" \
+-H "Accept: application/json"

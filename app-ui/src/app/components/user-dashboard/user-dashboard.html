@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <header class="dashboard-header">
     <div class="header-content">
-      <h1>Welcome back, John</h1>
+      <h1>Welcome back, {{ userName }}</h1>
       <p>Manage your properties and track application statuses.</p>
     </div>
   </header>
@@ -9,19 +9,27 @@
   <div class="dashboard-content">
     <div class="main-column">
       <div class="section-title">
-        <h3>Active Applications</h3>
+        <h3>Active Applications ({{ applications.length }})</h3>
       </div>
+
+      @if (applications.length === 0) {
+      <mat-card class="loan-card">
+        <mat-card-content>No applications found.</mat-card-content>
+      </mat-card>
+      }
 
       <mat-card *ngFor="let app of applications" class="loan-card" appearance="outlined">
         <mat-card-header>
           <div mat-card-avatar class="loan-icon-container">
             <mat-icon>account_balance</mat-icon>
           </div>
-          <mat-card-title>{{app.type}}</mat-card-title>
-          <mat-card-subtitle>Ref ID: {{app.id}} • {{app.date | date:'mediumDate'}}</mat-card-subtitle>
+          <mat-card-title>{{app.loanPurpose}}</mat-card-title>
+          <mat-card-subtitle>
+            Ref ID: {{app.applicationNumber}} • {{app.createdAt | date:'mediumDate'}}
+          </mat-card-subtitle>
           <span class="spacer"></span>
 
-          <span class="status-indicator" [ngClass]="app.status.toLowerCase().replace(' ', '-')">
+          <span class="status-indicator" [ngClass]="app.status.toLowerCase()">
             {{app.status}}
           </span>
         </mat-card-header>
@@ -30,21 +38,23 @@
           <div class="loan-body">
             <div class="data-point">
               <span class="data-label">Requested Amount</span>
-              <span class="data-value">{{app.amount | currency:'USD':'symbol':'1.0-0'}}</span>
+              <span class="data-value">{{app.loanAmount | currency}}</span>
             </div>
 
             <div class="data-point progress">
               <div class="progress-info">
-                <span>Completion Status</span>
-                <span class="percentage">{{app.progress}}%</span>
+                <span>Underwriting Status</span>
+                <span class="percentage">{{ getProgress(app.status) }}%</span>
               </div>
-              <mat-progress-bar mode="determinate" [value]="app.progress"></mat-progress-bar>
+              <mat-progress-bar mode="determinate" [value]="getProgress(app.status)"></mat-progress-bar>
             </div>
           </div>
         </mat-card-content>
 
         <mat-card-actions align="end">
-          <button mat-button class="cancel-btn" *ngIf="app.status !== 'Approved'">CANCEL</button>
+          <button mat-button class="cancel-btn" *ngIf="app.status !== 'Approved' && app.status !== 'Rejected'">
+            CANCEL
+          </button>
           <button mat-flat-button color="primary" [routerLink]="['/loan-details', app.id]">
             VIEW DETAILS
           </button>
