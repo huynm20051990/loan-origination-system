@@ -1,0 +1,16 @@
+.status-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh; /* Centers the card on the screen */
+}
+
+.status-card {
+  width: 400px;
+  padding: 20px;
+}
+
+.full-width {
+  width: 100%;
+  margin-top: 20px;
+}

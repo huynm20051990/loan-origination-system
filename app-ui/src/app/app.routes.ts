@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeListingsComponent } from './components/home-listings/home-listings';
+import { CheckStatusComponent } from './components/check-status/check-status';
 import { LoanApplicationComponent } from './components/loan-application/loan-application';
 import { LoginComponent } from './components/login/login';
 import { RegisterComponent } from './components/register/register';
@@ -11,6 +12,7 @@ import { OfficerReviewComponent } from './components/officer-review/officer-revi
 export const routes: Routes = [
   { path: '', redirectTo: 'listings', pathMatch: 'full' }, // Default to listings
   { path: 'listings', component: HomeListingsComponent },
+  { path: 'check-status', component: CheckStatusComponent },
   { path: 'apply/:id', component: LoanApplicationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },

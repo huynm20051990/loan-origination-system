@@ -17,7 +17,11 @@
          routerLinkActive="active"
          [routerLinkActiveOptions]="{exact: true}">Home</a>
 
-      @if ((authService.isLoggedIn$ | async) === false) {
+      <a routerLink="/check-status"
+         class="nav-item"
+         routerLinkActive="active">Check Status</a>
+
+      @if ((authService.isLoggedIn$ | async) === true) {
       <div class="auth-group">
         <a routerLink="/login"
            class="login-link"
