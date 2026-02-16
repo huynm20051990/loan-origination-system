@@ -25,6 +25,7 @@ public class ApplicationWebMapper {
         domain.getStatus().name(),
         domain.getCreatedAt(),
         domain.getBorrower().fullName(),
-        domain.getLoanAmount());
+        domain.getLoanAmount(),
+        domain.getLoanPurpose());
   }
 }

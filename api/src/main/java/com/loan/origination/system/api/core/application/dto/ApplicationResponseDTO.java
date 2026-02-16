@@ -11,4 +11,5 @@ public record ApplicationResponseDTO(
     LocalDateTime createdAt,
     // Include minimal home/personal info for the "Review/Finish" screens
     String fullName,
-    BigDecimal loanAmount) {}
+    BigDecimal loanAmount,
+    String loanPurpose) {}

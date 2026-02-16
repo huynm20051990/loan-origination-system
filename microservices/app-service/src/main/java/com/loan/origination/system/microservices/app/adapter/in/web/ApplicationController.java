@@ -66,8 +66,6 @@ public class ApplicationController implements ApplicationAPI {
 
   @Override
   public List<ApplicationResponseDTO> getApplicationsByEmail(@RequestParam String email) {
-    // Implementation for listing could be added to the Repository Port later
-    // For now, this is a placeholder for the API contract
-    throw new UnsupportedOperationException("Search by email not yet implemented");
+    return loanRepositoryPort.findByEmail(email).stream().map(mapper::toResponse).toList();
   }
 }
