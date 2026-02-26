@@ -1,4 +1,4 @@
-package com.loan.origination.system.microservices.app.domain.port.out;
+package com.loan.origination.system.microservices.app.application.port.output;
 
 import com.loan.origination.system.microservices.app.domain.model.Application;
 import java.util.List;

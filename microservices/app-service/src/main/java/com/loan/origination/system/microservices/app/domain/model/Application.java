@@ -1,5 +1,6 @@
 package com.loan.origination.system.microservices.app.domain.model;
 
+import com.loan.origination.system.microservices.app.domain.vo.ApplicationStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;

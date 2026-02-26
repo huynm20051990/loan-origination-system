@@ -1,6 +1,6 @@
 package com.loan.origination.system.microservices.app.infrastructure.config;
 
-import com.loan.origination.system.microservices.app.domain.service.ApplicationDomainService;
+import com.loan.origination.system.microservices.app.domain.service.DomainApplicationService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
   @Bean
-  public ApplicationDomainService loanDomainService() {
-    return new ApplicationDomainService();
+  public DomainApplicationService loanDomainService() {
+    return new DomainApplicationService();
   }
 }

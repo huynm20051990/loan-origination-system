@@ -1,8 +1,7 @@
-package com.loan.origination.system.microservices.app.adapter.in.messaging;
+package com.loan.origination.system.microservices.app.infrastructure.input.messaging;
 
 import com.loan.origination.system.contracts.domain.events.*;
-import com.loan.origination.system.microservices.app.domain.port.in.ProcessUnderwritingUseCase;
-import com.loan.origination.system.microservices.app.domain.port.in.UpdateNotificationStatusUseCase;
+import com.loan.origination.system.microservices.app.application.port.input.LoanApplicationUseCase;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +13,10 @@ public class ApplicationConsumer {
 
   private static final Logger log = LoggerFactory.getLogger(ApplicationConsumer.class);
 
-  // UseCases to handle the business logic after receiving events
-  private final ProcessUnderwritingUseCase underwritingUseCase;
-  private final UpdateNotificationStatusUseCase notificationStatusUseCase;
+  private final LoanApplicationUseCase loanApplicationUseCase;
 
-  public ApplicationConsumer(
-      ProcessUnderwritingUseCase underwritingUseCase,
-      UpdateNotificationStatusUseCase notificationStatusUseCase) {
-    this.underwritingUseCase = underwritingUseCase;
-    this.notificationStatusUseCase = notificationStatusUseCase;
+  public ApplicationConsumer(LoanApplicationUseCase loanApplicationUseCase) {
+    this.loanApplicationUseCase = loanApplicationUseCase;
   }
 
   /**
@@ -48,7 +42,7 @@ public class ApplicationConsumer {
         DomainEvent underwritingCompletedEvent =
             UnderwritingCompletedEvent.of(
                 event.aggregateId(), event.applicationNumber(), null, null, null);
-        underwritingUseCase.execute(underwritingCompletedEvent);
+        loanApplicationUseCase.execute(underwritingCompletedEvent);
 
         log.info("Successfully processed credit result for {}", event.applicationNumber());
       } catch (Exception e) {
@@ -75,7 +69,7 @@ public class ApplicationConsumer {
 
       try {
         // Marks the application in the DB as "Customer Notified"
-        notificationStatusUseCase.markAsNotified(event);
+        loanApplicationUseCase.markAsNotified(event);
 
         log.info("Application {} status updated to NOTIFIED", event.applicationNumber());
       } catch (Exception e) {

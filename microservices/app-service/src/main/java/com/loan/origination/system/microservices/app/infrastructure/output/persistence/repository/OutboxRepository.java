@@ -1,6 +1,6 @@
-package com.loan.origination.system.microservices.app.adapter.out.persistence.repository;
+package com.loan.origination.system.microservices.app.infrastructure.output.persistence.repository;
 
-import com.loan.origination.system.microservices.app.adapter.out.persistence.entity.OutboxEntity;
+import com.loan.origination.system.microservices.app.infrastructure.output.persistence.entity.OutboxEntity;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.loan.origination.system.microservices.app.domain.model;
+package com.loan.origination.system.microservices.app.domain.vo;
 
 public enum ApplicationStatus {
   DRAFT,

@@ -23,7 +23,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USR}
       - POSTGRES_PASSWORD=${POSTGRES_PWD}
     volumes:
-      - ./database/init:/docker-entrypoint-initdb.d
+      - ./database/init-home:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     healthcheck:
@@ -42,7 +42,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USR}
       - POSTGRES_PASSWORD=${POSTGRES_PWD}
     volumes:
-      - ./database/app-init:/docker-entrypoint-initdb.d
+      - ./database/init-app:/docker-entrypoint-initdb.d
     ports:
       - "5433:5432"
     healthcheck:
@@ -59,7 +59,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USR}
       - POSTGRES_PASSWORD=${POSTGRES_PWD}
     volumes:
-      - ./database/credit-init:/docker-entrypoint-initdb.d
+      - ./database/init-credit:/docker-entrypoint-initdb.d
     ports:
       - "5434:5432"
     healthcheck:
@@ -76,7 +76,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USR}
       - POSTGRES_PASSWORD=${POSTGRES_PWD}
     volumes:
-      - ./database/notify-init:/docker-entrypoint-initdb.d
+      - ./database/init-notify:/docker-entrypoint-initdb.d
     ports:
       - "5435:5432"
     healthcheck:
@@ -152,13 +152,12 @@ services:
         condition: service_healthy
 
   connector-init:
-    build:
-      context: .
-      dockerfile: scripts/Dockerfile.init
+    image: curlimages/curl:latest
     container_name: easy-apply-connector-init
-    environment:
-      - POSTGRES_PWD=${POSTGRES_PWD}
-    # Keep depends_on to ensure DBs are ready before we try to inject SQL
+    volumes:
+      - ./connectors:/connectors
+      - ./register-connectors.sh:/register-connectors.sh
+    entrypoint: [ "/bin/sh", "/register-connectors.sh" ]
     depends_on:
       connect: { condition: service_started }
 

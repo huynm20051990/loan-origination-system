@@ -1,4 +1,4 @@
-package com.loan.origination.system.microservices.app.adapter.out.persistence.entity;
+package com.loan.origination.system.microservices.app.infrastructure.output.persistence.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

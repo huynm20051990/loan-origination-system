@@ -1,9 +1,9 @@
-package com.loan.origination.system.microservices.app.adapter.out.persistence;
+package com.loan.origination.system.microservices.app.infrastructure.output.persistence;
 
-import com.loan.origination.system.microservices.app.adapter.out.persistence.mapper.ApplicationPersistenceMapper;
-import com.loan.origination.system.microservices.app.adapter.out.persistence.repository.ApplicationRepository;
+import com.loan.origination.system.microservices.app.application.port.output.ApplicationRepositoryPort;
 import com.loan.origination.system.microservices.app.domain.model.Application;
-import com.loan.origination.system.microservices.app.domain.port.out.ApplicationRepositoryPort;
+import com.loan.origination.system.microservices.app.infrastructure.output.persistence.mapper.ApplicationPersistenceMapper;
+import com.loan.origination.system.microservices.app.infrastructure.output.persistence.repository.ApplicationRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

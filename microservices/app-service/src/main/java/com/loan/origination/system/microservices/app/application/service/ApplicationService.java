@@ -3,31 +3,26 @@ package com.loan.origination.system.microservices.app.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loan.origination.system.contracts.domain.events.ApplicationSubmittedEvent;
 import com.loan.origination.system.contracts.domain.events.DomainEvent;
+import com.loan.origination.system.microservices.app.application.port.input.LoanApplicationUseCase;
+import com.loan.origination.system.microservices.app.application.port.output.ApplicationRepositoryPort;
+import com.loan.origination.system.microservices.app.application.port.output.OutboxRepositoryPort;
 import com.loan.origination.system.microservices.app.domain.model.Application;
 import com.loan.origination.system.microservices.app.domain.model.Borrower;
-import com.loan.origination.system.microservices.app.domain.port.in.ProcessUnderwritingUseCase;
-import com.loan.origination.system.microservices.app.domain.port.in.SubmitApplicationUseCase;
-import com.loan.origination.system.microservices.app.domain.port.in.UpdateNotificationStatusUseCase;
-import com.loan.origination.system.microservices.app.domain.port.out.ApplicationRepositoryPort;
-import com.loan.origination.system.microservices.app.domain.port.out.OutboxRepositoryPort;
-import com.loan.origination.system.microservices.app.domain.service.ApplicationDomainService;
+import com.loan.origination.system.microservices.app.domain.service.DomainApplicationService;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ApplicationService
-    implements SubmitApplicationUseCase,
-        ProcessUnderwritingUseCase,
-        UpdateNotificationStatusUseCase {
+public class ApplicationService implements LoanApplicationUseCase {
 
-  private final ApplicationDomainService loanDomainService;
+  private final DomainApplicationService loanDomainService;
   private final ApplicationRepositoryPort applicationRepository;
   private final OutboxRepositoryPort outboxRepository;
 
   public ApplicationService(
-      ApplicationDomainService loanDomainService,
+      DomainApplicationService loanDomainService,
       ApplicationRepositoryPort applicationRepository,
       OutboxRepositoryPort outboxRepository,
       ObjectMapper objectMapper) {

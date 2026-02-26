@@ -1,4 +1,4 @@
-package com.loan.origination.system.microservices.app.adapter.in.web.mapper;
+package com.loan.origination.system.microservices.app.infrastructure.input.rest.mapper;
 
 import com.loan.origination.system.api.core.application.dto.ApplicationResponseDTO;
 import com.loan.origination.system.api.core.application.dto.ApplicationSubmissionRequestDTO;

@@ -1,13 +1,13 @@
-package com.loan.origination.system.microservices.app.adapter.in.web;
+package com.loan.origination.system.microservices.app.infrastructure.input.rest;
 
 import com.loan.origination.system.api.core.application.dto.ApplicationResponseDTO;
 import com.loan.origination.system.api.core.application.dto.ApplicationSubmissionRequestDTO;
 import com.loan.origination.system.api.core.application.v1.ApplicationAPI;
-import com.loan.origination.system.microservices.app.adapter.in.web.mapper.ApplicationWebMapper;
+import com.loan.origination.system.microservices.app.application.port.input.LoanApplicationUseCase;
+import com.loan.origination.system.microservices.app.application.port.output.ApplicationRepositoryPort;
 import com.loan.origination.system.microservices.app.domain.model.Application;
 import com.loan.origination.system.microservices.app.domain.model.Borrower;
-import com.loan.origination.system.microservices.app.domain.port.in.SubmitApplicationUseCase;
-import com.loan.origination.system.microservices.app.domain.port.out.ApplicationRepositoryPort;
+import com.loan.origination.system.microservices.app.infrastructure.input.rest.mapper.ApplicationWebMapper;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -18,15 +18,15 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class ApplicationController implements ApplicationAPI {
 
-  private final SubmitApplicationUseCase submitLoanUseCase;
+  private final LoanApplicationUseCase loanApplicationUseCase;
   private final ApplicationRepositoryPort loanRepositoryPort; // For read operations
   private final ApplicationWebMapper mapper;
 
   public ApplicationController(
-      SubmitApplicationUseCase submitLoanUseCase,
+      LoanApplicationUseCase loanApplicationUseCase,
       ApplicationRepositoryPort loanRepositoryPort,
       ApplicationWebMapper mapper) {
-    this.submitLoanUseCase = submitLoanUseCase;
+    this.loanApplicationUseCase = loanApplicationUseCase;
     this.loanRepositoryPort = loanRepositoryPort;
     this.mapper = mapper;
   }
@@ -37,7 +37,7 @@ public class ApplicationController implements ApplicationAPI {
     Borrower borrower = mapper.toBorrowerDomain(request);
 
     Application application =
-        submitLoanUseCase.submit(
+        loanApplicationUseCase.submit(
             request.homeId(),
             borrower,
             request.request().loanAmount(),

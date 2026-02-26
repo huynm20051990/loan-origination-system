@@ -40,8 +40,3 @@ CREATE INDEX IF NOT EXISTS idx_home_price ON homes(price);
 CREATE INDEX IF NOT EXISTS idx_home_city ON homes(city);
 CREATE INDEX IF NOT EXISTS idx_home_zip ON homes(zip_code);
 CREATE INDEX IF NOT EXISTS idx_homes_price_beds ON homes(price, beds);
-
--- 3. Create an HNSW index for high-performance semantic search
--- This allows the database to perform similarity searches significantly faster than a flat scan.
-CREATE INDEX IF NOT EXISTS idx_homes_embedding
-ON homes USING hnsw (embedding vector_cosine_ops);

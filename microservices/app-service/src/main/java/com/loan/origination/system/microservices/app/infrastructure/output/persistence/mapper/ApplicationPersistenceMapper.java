@@ -1,13 +1,13 @@
-package com.loan.origination.system.microservices.app.adapter.out.persistence.mapper;
+package com.loan.origination.system.microservices.app.infrastructure.output.persistence.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loan.origination.system.contracts.domain.events.DomainEvent;
-import com.loan.origination.system.microservices.app.adapter.out.persistence.entity.ApplicationEntity;
-import com.loan.origination.system.microservices.app.adapter.out.persistence.entity.OutboxEntity;
 import com.loan.origination.system.microservices.app.domain.model.Application;
-import com.loan.origination.system.microservices.app.domain.model.ApplicationStatus;
 import com.loan.origination.system.microservices.app.domain.model.Borrower;
+import com.loan.origination.system.microservices.app.domain.vo.ApplicationStatus;
+import com.loan.origination.system.microservices.app.infrastructure.output.persistence.entity.ApplicationEntity;
+import com.loan.origination.system.microservices.app.infrastructure.output.persistence.entity.OutboxEntity;
 import org.springframework.stereotype.Component;
 
 @Component
