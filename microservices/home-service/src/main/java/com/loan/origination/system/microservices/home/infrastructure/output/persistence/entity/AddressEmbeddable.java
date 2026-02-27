@@ -1,4 +1,4 @@
-package com.loan.origination.system.microservices.home.adapter.out.persistence.entity;
+package com.loan.origination.system.microservices.home.infrastructure.output.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

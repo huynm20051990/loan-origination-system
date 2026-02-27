@@ -1,10 +1,10 @@
-package com.loan.origination.system.microservices.home.adapter.out.persistence.mapper;
+package com.loan.origination.system.microservices.home.infrastructure.output.persistence.mapper;
 
-import com.loan.origination.system.microservices.home.adapter.out.persistence.entity.AddressEmbeddable;
-import com.loan.origination.system.microservices.home.adapter.out.persistence.entity.HomeEntity;
 import com.loan.origination.system.microservices.home.domain.model.Address;
 import com.loan.origination.system.microservices.home.domain.model.Home;
-import com.loan.origination.system.microservices.home.domain.model.HomeStatus;
+import com.loan.origination.system.microservices.home.domain.vo.HomeStatus;
+import com.loan.origination.system.microservices.home.infrastructure.output.persistence.entity.AddressEmbeddable;
+import com.loan.origination.system.microservices.home.infrastructure.output.persistence.entity.HomeEntity;
 
 public class HomePersistenceMapper {
 

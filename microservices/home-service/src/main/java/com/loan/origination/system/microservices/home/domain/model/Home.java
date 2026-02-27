@@ -1,5 +1,7 @@
 package com.loan.origination.system.microservices.home.domain.model;
 
+import com.loan.origination.system.microservices.home.domain.vo.HomeStatus;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 

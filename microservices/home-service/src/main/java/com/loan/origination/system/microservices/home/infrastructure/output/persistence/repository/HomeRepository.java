@@ -1,6 +1,6 @@
-package com.loan.origination.system.microservices.home.adapter.out.persistence.repository;
+package com.loan.origination.system.microservices.home.infrastructure.output.persistence.repository;
 
-import com.loan.origination.system.microservices.home.adapter.out.persistence.entity.HomeEntity;
+import com.loan.origination.system.microservices.home.infrastructure.output.persistence.entity.HomeEntity;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

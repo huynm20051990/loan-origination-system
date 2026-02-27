@@ -1,11 +1,11 @@
-package com.loan.origination.system.microservices.home.adapter.in.web.mapper;
+package com.loan.origination.system.microservices.home.infrastructure.input.rest.mapper;
 
 import com.loan.origination.system.api.core.home.dto.AddressDTO;
 import com.loan.origination.system.api.core.home.dto.HomeRequestDTO;
 import com.loan.origination.system.api.core.home.dto.HomeResponseDTO;
 import com.loan.origination.system.microservices.home.domain.model.Address;
 import com.loan.origination.system.microservices.home.domain.model.Home;
-import com.loan.origination.system.microservices.home.domain.model.HomeStatus;
+import com.loan.origination.system.microservices.home.domain.vo.HomeStatus;
 import java.util.UUID;
 
 /**

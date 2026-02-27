@@ -1,27 +1,22 @@
 package com.loan.origination.system.microservices.home.application.service;
 
+import com.loan.origination.system.microservices.home.application.port.input.HomeUseCase;
+import com.loan.origination.system.microservices.home.application.port.output.HomeRepositoryPort;
 import com.loan.origination.system.microservices.home.domain.model.Home;
-import com.loan.origination.system.microservices.home.domain.port.in.AddHomeUseCase;
-import com.loan.origination.system.microservices.home.domain.port.in.DeleteHomeUseCase;
-import com.loan.origination.system.microservices.home.domain.port.in.GetHomeUseCase;
-import com.loan.origination.system.microservices.home.domain.port.in.SearchHomeUseCase;
-import com.loan.origination.system.microservices.home.domain.port.out.HomeRepositoryPort;
-import com.loan.origination.system.microservices.home.domain.port.out.HomeSearchPort;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
-public class HomeApplicationService
-    implements AddHomeUseCase, GetHomeUseCase, DeleteHomeUseCase, SearchHomeUseCase {
+public class HomeApplicationService implements HomeUseCase {
 
   private static final Logger LOG = LoggerFactory.getLogger(HomeApplicationService.class);
 
-  private final HomeRepositoryPort repositoryPort;
-  private final HomeSearchPort homeSearchPort;
+  private final HomeRepositoryPort homeRepositoryPort;
 
-  public HomeApplicationService(HomeRepositoryPort repositoryPort, HomeSearchPort homeSearchPort) {
-    this.repositoryPort = repositoryPort;
-    this.homeSearchPort = homeSearchPort;
+  public HomeApplicationService(HomeRepositoryPort repositoryPort) {
+    this.homeRepositoryPort = repositoryPort;
   }
 
   @Override
@@ -29,7 +24,7 @@ public class HomeApplicationService
     LOG.info("Saving home and generating embeddings: {}", home);
 
     // 1. Save to the standard relational database
-    Home savedHome = repositoryPort.save(home);
+    Home savedHome = homeRepositoryPort.save(home);
 
     // 2. Prepare the text for embedding.
     // The more descriptive this string, the better the AI search results!
@@ -44,28 +39,28 @@ public class HomeApplicationService
             savedHome.getSqft(),
             savedHome.getDescription());
 
-    homeSearchPort.indexHome(savedHome);
+    homeRepositoryPort.indexHome(savedHome);
 
     return savedHome;
   }
 
   @Override
   public Optional<Home> getById(UUID id) {
-    return repositoryPort.findById(id);
+    return homeRepositoryPort.findById(id);
   }
 
   @Override
   public List<Home> getAll() {
-    return repositoryPort.findAll();
+    return homeRepositoryPort.findAll();
   }
 
   @Override
-  public void execute(UUID id) {
+  public void deleteHome(UUID id) {
     // Standard check-then-act pattern
-    if (repositoryPort.findById(id).isEmpty()) {
+    if (homeRepositoryPort.findById(id).isEmpty()) {
       throw new RuntimeException("Cannot delete: Home not found with ID: " + id);
     }
-    repositoryPort.deleteById(id);
+    homeRepositoryPort.deleteById(id);
   }
 
   @Override
@@ -73,14 +68,37 @@ public class HomeApplicationService
     LOG.info("Searching homes using semantic search: {}", query);
 
     // 1️⃣ Ask AI adapter for relevant IDs
-    List<UUID> matchingIds = homeSearchPort.search(query);
+    List<UUID> matchingIds = homeRepositoryPort.search(query);
     LOG.info("AI Search Result: " + matchingIds.toString());
 
     // 2️⃣ Load full domain objects
     return matchingIds.stream()
-        .map(repositoryPort::findById)
+        .map(homeRepositoryPort::findById)
         .filter(Optional::isPresent)
         .map(Optional::get)
         .toList();
+  }
+
+  @EventListener(ApplicationReadyEvent.class)
+  public void onApplicationReady() {
+    System.out.println("🚀 Database is ready. Starting home vector sync...");
+    try {
+      syncAllHomes();
+      System.out.println("✅ Sync complete!");
+    } catch (Exception e) {
+      System.err.println("❌ Sync failed: " + e.getMessage());
+    }
+  }
+
+  @Override
+  public void syncAllHomes() {
+    // 1. EXTRACTION: Fetch all existing homes from your relational database
+    List<Home> allHomes = homeRepositoryPort.findAll();
+
+    if (allHomes.isEmpty()) {
+      return;
+    }
+
+    allHomes.forEach(homeRepositoryPort::indexHome);
   }
 }

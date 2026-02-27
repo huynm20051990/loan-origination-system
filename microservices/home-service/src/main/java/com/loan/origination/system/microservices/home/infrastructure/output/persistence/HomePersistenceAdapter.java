@@ -1,10 +1,13 @@
-package com.loan.origination.system.microservices.home.adapter.out.persistence;
+package com.loan.origination.system.microservices.home.infrastructure.output.persistence;
 
+import com.loan.origination.system.microservices.home.application.port.output.HomeRepositoryPort;
 import com.loan.origination.system.microservices.home.domain.model.FilterItem;
 import com.loan.origination.system.microservices.home.domain.model.Home;
 import com.loan.origination.system.microservices.home.domain.model.SearchIntent;
-import com.loan.origination.system.microservices.home.domain.port.out.HomeSearchPort;
-import java.lang.reflect.*;
+import com.loan.origination.system.microservices.home.infrastructure.output.persistence.entity.HomeEntity;
+import com.loan.origination.system.microservices.home.infrastructure.output.persistence.mapper.HomePersistenceMapper;
+import com.loan.origination.system.microservices.home.infrastructure.output.persistence.repository.HomeRepository;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -16,34 +19,86 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.Filter;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class PgVectorHomeSearchAdapter implements HomeSearchPort {
+public class HomePersistenceAdapter implements HomeRepositoryPort {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PgVectorHomeSearchAdapter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(HomePersistenceAdapter.class);
+
+  private final HomeRepository homeRepository;
+  private final HomePersistenceMapper mapper;
   private final VectorStore vectorStore;
   private final ChatClient chatClient;
 
-  public PgVectorHomeSearchAdapter(VectorStore vectorStore, ChatClient chatClient) {
+  public HomePersistenceAdapter(
+      HomeRepository homeRepository,
+      HomePersistenceMapper mapper,
+      VectorStore vectorStore,
+      ChatClient chatClient) {
+    this.homeRepository = homeRepository;
+    this.mapper = mapper;
     this.vectorStore = vectorStore;
     this.chatClient = chatClient;
   }
 
   @Override
+  @Transactional
+  public Home save(Home home) {
+    HomeEntity entity = mapper.toEntity(home);
+    HomeEntity saved = homeRepository.save(entity);
+    return mapper.toDomain(saved);
+  }
+
+  @Override
+  public Optional<Home> findById(UUID id) {
+    return homeRepository.findById(id).map(mapper::toDomain);
+  }
+
+  @Override
+  public List<Home> findAll() {
+    return homeRepository.findAll().stream().map(mapper::toDomain).collect(Collectors.toList());
+  }
+
+  @Override
+  @Transactional
+  public void deleteById(UUID id) {
+    homeRepository.deleteById(id);
+  }
+
+  @Override
+  @Transactional // Ensure atomicity
   public void indexHome(Home home) {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("homeId", home.getId().toString());
     metadata.put("city", home.getAddress().city());
     metadata.put("state", home.getAddress().state());
-    metadata.put("price", home.getPrice());
+
+    // Convert price to string to ensure compatibility with JSONB storage
+    metadata.put("price", home.getPrice().toString());
+
     metadata.put("beds", home.getBeds());
     metadata.put("baths", home.getBaths());
     metadata.put("sqft", home.getSqft());
-    metadata.put("status", home.getStatus().name()); // Store as String (e.g., "AVAILABLE")
+    metadata.put("status", home.getStatus().name());
 
-    // 2. Create the document using the description as the search text
-    Document document = new Document(home.getDescription(), metadata);
+    // Create a descriptive string for semantic search
+    String searchContent =
+            String.format(
+                    "Home in %s, %s. Price: %s. %d beds and %.1f baths. %s",
+                    home.getAddress().city(),
+                    home.getAddress().state(),
+                    home.getPrice(),
+                    home.getBeds(),
+                    home.getBaths(),
+                    home.getDescription() == null ? "" : home.getDescription());
 
+    // Create the document using the ID explicitly to enable UPSERT behavior
+    Document document = new Document(home.getId().toString(), searchContent, metadata);
+
+    // NOTE: For this to work without 'price' null errors,
+    // the row with this ID must already exist in the SQL table,
+    // or your PgVectorStore must be configured for true UPSERT behavior.
     vectorStore.add(List.of(document));
   }
 
@@ -54,14 +109,14 @@ public class PgVectorHomeSearchAdapter implements HomeSearchPort {
     // When building your prompt
     String systemPrompt =
         """
-    You are a real estate assistant. Extract 'vibe' and 'filters'.
-    VALID FILTER COLUMNS: %s
+        You are a real estate assistant. Extract 'vibe' and 'filters'.
+        VALID FILTER COLUMNS: %s
 
-    Instructions:
-    1. If a detail matches a VALID FILTER COLUMN, create a FilterItem.
-    2. Everything else (style, materials, feelings) MUST go into the 'vibe'.
-    3. If 'vibe' would be empty, set it to 'neutral'.
-    """
+        Instructions:
+        1. If a detail matches a VALID FILTER COLUMN, create a FilterItem.
+        2. Everything else (style, materials, feelings) MUST go into the 'vibe'.
+        3. If 'vibe' would be empty, set it to 'neutral'.
+        """
             .formatted(getValidColumns());
 
     SearchIntent intent;

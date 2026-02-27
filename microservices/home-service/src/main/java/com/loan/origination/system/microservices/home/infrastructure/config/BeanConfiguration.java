@@ -1,11 +1,9 @@
 package com.loan.origination.system.microservices.home.infrastructure.config;
 
-import com.loan.origination.system.microservices.home.adapter.in.web.mapper.HomeWebMapper;
-import com.loan.origination.system.microservices.home.adapter.out.persistence.mapper.HomePersistenceMapper;
+import com.loan.origination.system.microservices.home.application.port.output.HomeRepositoryPort;
 import com.loan.origination.system.microservices.home.application.service.HomeApplicationService;
-import com.loan.origination.system.microservices.home.application.service.HomeSyncService;
-import com.loan.origination.system.microservices.home.domain.port.out.HomeRepositoryPort;
-import com.loan.origination.system.microservices.home.domain.port.out.HomeSearchPort;
+import com.loan.origination.system.microservices.home.infrastructure.input.rest.mapper.HomeWebMapper;
+import com.loan.origination.system.microservices.home.infrastructure.output.persistence.mapper.HomePersistenceMapper;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,15 +22,8 @@ public class BeanConfiguration {
   }
 
   @Bean
-  public HomeApplicationService homeApplicationService(
-      HomeRepositoryPort repositoryPort, HomeSearchPort homeSearchPort) {
-    return new HomeApplicationService(repositoryPort, homeSearchPort);
-  }
-
-  @Bean
-  public HomeSyncService homeSyncService(
-      HomeRepositoryPort repositoryPort, HomeSearchPort homeSearchPort) {
-    return new HomeSyncService(repositoryPort, homeSearchPort);
+  public HomeApplicationService homeApplicationService(HomeRepositoryPort repositoryPort) {
+    return new HomeApplicationService(repositoryPort);
   }
 
   @Bean
