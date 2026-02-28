@@ -1,8 +1,26 @@
-# 📌 Requirement: Loan Origination System
+# 📌 Requirement: EasyApply
 
-The Loan Origination System allows users to browse loan products (e.g., personal loans, mortgages, auto loans) with details such as interest rates, terms, and eligibility criteria.
+EasyApply is a digital platform designed to streamline the home buying and loan application process.
 
-Users can then submit a loan application by providing identity and contact information. Supporting financial documents are pulled automatically through third-party services. Credit checks and verifications are performed without manual intervention.
+## 🏠 Core Capabilities
 
-Once all verifications and underwriting are complete, the system makes a decision automatically and notifies the borrower via email. Borrowers can log in at any time to track their application status.
+### 1️⃣ Home Listing
+- Home Sellers can post properties they wish to sell.
+- Listings are made available for browsing by potential buyers.
 
+### 2️⃣ Home Browsing
+- Borrowers / Home Buyers can explore available properties.
+- Property details are accessible to support informed purchasing decisions.
+
+### 3️⃣ Loan Application
+- Borrowers can submit a loan application online.
+- Applicants provide identity and contact information.
+- Financial documents are retrieved automatically through integrated third-party services.
+- Credit checks and verification processes are executed automatically without manual intervention.
+
+### 4️⃣ Automated Decisioning
+- After completing verification and underwriting processes, the system automatically determines the loan outcome.
+- Borrowers are notified of the decision via email.
+
+### 5️⃣ Application Tracking
+- Borrowers can log in at any time to monitor the status of their loan application.
