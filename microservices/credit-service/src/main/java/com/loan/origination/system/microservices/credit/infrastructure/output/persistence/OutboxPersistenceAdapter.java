@@ -1,9 +1,9 @@
-package com.loan.origination.system.microservices.credit.adapter.out.persistence;
+package com.loan.origination.system.microservices.credit.infrastructure.output.persistence;
 
 import com.loan.origination.system.contracts.domain.events.DomainEvent;
-import com.loan.origination.system.microservices.credit.adapter.out.persistence.mapper.CreditPersistenceMapper;
-import com.loan.origination.system.microservices.credit.adapter.out.persistence.repository.OutboxRepository;
-import com.loan.origination.system.microservices.credit.domain.port.out.OutboxRepositoryPort;
+import com.loan.origination.system.microservices.credit.application.port.output.OutboxRepositoryPort;
+import com.loan.origination.system.microservices.credit.infrastructure.output.persistence.mapper.CreditPersistenceMapper;
+import com.loan.origination.system.microservices.credit.infrastructure.output.persistence.repository.OutboxRepository;
 import org.springframework.stereotype.Component;
 
 @Component

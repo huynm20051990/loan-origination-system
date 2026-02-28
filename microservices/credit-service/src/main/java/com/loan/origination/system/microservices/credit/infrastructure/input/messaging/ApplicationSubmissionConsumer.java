@@ -1,7 +1,7 @@
-package com.loan.origination.system.microservices.credit.adapter.in.kafka;
+package com.loan.origination.system.microservices.credit.infrastructure.input.messaging;
 
 import com.loan.origination.system.contracts.domain.events.ApplicationSubmittedEvent;
-import com.loan.origination.system.microservices.credit.domain.port.in.PerformCreditCheckUseCase;
+import com.loan.origination.system.microservices.credit.application.port.input.PerformCreditCheckUseCase;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

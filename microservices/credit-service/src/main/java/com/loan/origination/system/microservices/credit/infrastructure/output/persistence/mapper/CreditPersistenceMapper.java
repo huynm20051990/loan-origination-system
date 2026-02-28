@@ -1,11 +1,11 @@
-package com.loan.origination.system.microservices.credit.adapter.out.persistence.mapper;
+package com.loan.origination.system.microservices.credit.infrastructure.output.persistence.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loan.origination.system.contracts.domain.events.DomainEvent;
-import com.loan.origination.system.microservices.credit.adapter.out.persistence.entity.CreditReportEntity;
-import com.loan.origination.system.microservices.credit.adapter.out.persistence.entity.OutboxEntity;
 import com.loan.origination.system.microservices.credit.domain.model.CreditReport;
+import com.loan.origination.system.microservices.credit.infrastructure.output.persistence.entity.CreditReportEntity;
+import com.loan.origination.system.microservices.credit.infrastructure.output.persistence.entity.OutboxEntity;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.loan.origination.system.microservices.credit.adapter.out.persistence.entity;
+package com.loan.origination.system.microservices.credit.infrastructure.output.persistence.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.Column;

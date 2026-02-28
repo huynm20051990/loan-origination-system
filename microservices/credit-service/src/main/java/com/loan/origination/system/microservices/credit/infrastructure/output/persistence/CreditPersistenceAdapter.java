@@ -1,10 +1,10 @@
-package com.loan.origination.system.microservices.credit.adapter.out.persistence;
+package com.loan.origination.system.microservices.credit.infrastructure.output.persistence;
 
-import com.loan.origination.system.microservices.credit.adapter.out.persistence.entity.CreditReportEntity;
-import com.loan.origination.system.microservices.credit.adapter.out.persistence.mapper.CreditPersistenceMapper;
-import com.loan.origination.system.microservices.credit.adapter.out.persistence.repository.CreditReportRepository;
+import com.loan.origination.system.microservices.credit.application.port.output.CreditRepositoryPort;
 import com.loan.origination.system.microservices.credit.domain.model.CreditReport;
-import com.loan.origination.system.microservices.credit.domain.port.out.CreditRepositoryPort;
+import com.loan.origination.system.microservices.credit.infrastructure.output.persistence.entity.CreditReportEntity;
+import com.loan.origination.system.microservices.credit.infrastructure.output.persistence.mapper.CreditPersistenceMapper;
+import com.loan.origination.system.microservices.credit.infrastructure.output.persistence.repository.CreditReportRepository;
 import org.springframework.stereotype.Component;
 
 @Component

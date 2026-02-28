@@ -1,4 +1,4 @@
-package com.loan.origination.system.microservices.credit.domain.port.in;
+package com.loan.origination.system.microservices.credit.application.port.input;
 
 import com.loan.origination.system.contracts.domain.events.ApplicationSubmittedEvent;
 

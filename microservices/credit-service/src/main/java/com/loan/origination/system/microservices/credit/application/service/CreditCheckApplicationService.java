@@ -2,11 +2,11 @@ package com.loan.origination.system.microservices.credit.application.service;
 
 import com.loan.origination.system.contracts.domain.events.ApplicationSubmittedEvent;
 import com.loan.origination.system.contracts.domain.events.CreditAccessedEvent;
+import com.loan.origination.system.microservices.credit.application.port.input.PerformCreditCheckUseCase;
+import com.loan.origination.system.microservices.credit.application.port.output.CreditBureauPort;
+import com.loan.origination.system.microservices.credit.application.port.output.CreditRepositoryPort;
+import com.loan.origination.system.microservices.credit.application.port.output.OutboxRepositoryPort;
 import com.loan.origination.system.microservices.credit.domain.model.CreditReport;
-import com.loan.origination.system.microservices.credit.domain.port.in.PerformCreditCheckUseCase;
-import com.loan.origination.system.microservices.credit.domain.port.out.CreditBureauPort;
-import com.loan.origination.system.microservices.credit.domain.port.out.CreditRepositoryPort;
-import com.loan.origination.system.microservices.credit.domain.port.out.OutboxRepositoryPort;
 import com.loan.origination.system.microservices.credit.domain.service.ScoringDomainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

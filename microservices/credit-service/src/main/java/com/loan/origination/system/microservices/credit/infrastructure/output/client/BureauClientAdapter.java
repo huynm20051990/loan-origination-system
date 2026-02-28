@@ -1,6 +1,6 @@
-package com.loan.origination.system.microservices.credit.adapter.out.external;
+package com.loan.origination.system.microservices.credit.infrastructure.output.client;
 
-import com.loan.origination.system.microservices.credit.domain.port.out.CreditBureauPort;
+import com.loan.origination.system.microservices.credit.application.port.output.CreditBureauPort;
 import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
