@@ -3,7 +3,7 @@ package com.loan.origination.system.microservices.credit.domain.service;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ScoringDomainService {
+public class DomainScoringService {
 
   /**
    * Determines the risk tier based on the numerical credit score. These are internal business

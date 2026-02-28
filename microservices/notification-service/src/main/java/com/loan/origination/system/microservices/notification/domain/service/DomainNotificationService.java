@@ -5,7 +5,7 @@ import com.loan.origination.system.microservices.notification.domain.model.Notif
 import org.springframework.stereotype.Service;
 
 @Service
-public class NotificationDomainService {
+public class DomainNotificationService {
 
   public Notification prepareCreditCheckNotification(String appNumber, String email) {
 

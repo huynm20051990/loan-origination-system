@@ -7,7 +7,7 @@ import com.loan.origination.system.microservices.credit.application.port.output.
 import com.loan.origination.system.microservices.credit.application.port.output.CreditRepositoryPort;
 import com.loan.origination.system.microservices.credit.application.port.output.OutboxRepositoryPort;
 import com.loan.origination.system.microservices.credit.domain.model.CreditReport;
-import com.loan.origination.system.microservices.credit.domain.service.ScoringDomainService;
+import com.loan.origination.system.microservices.credit.domain.service.DomainScoringService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,18 +22,18 @@ public class CreditCheckApplicationService implements PerformCreditCheckUseCase 
   private final CreditBureauPort creditBureauPort;
   private final CreditRepositoryPort creditRepositoryPort;
   private final OutboxRepositoryPort outboxRepositoryPort;
-  private final ScoringDomainService scoringDomainService;
+  private final DomainScoringService domainScoringService;
 
   // 2. Manual Constructor for Spring Injection
   public CreditCheckApplicationService(
       CreditBureauPort creditBureauPort,
       CreditRepositoryPort creditRepositoryPort,
       OutboxRepositoryPort outboxRepositoryPort,
-      ScoringDomainService scoringDomainService) {
+      DomainScoringService domainScoringService) {
     this.creditBureauPort = creditBureauPort;
     this.creditRepositoryPort = creditRepositoryPort;
     this.outboxRepositoryPort = outboxRepositoryPort;
-    this.scoringDomainService = scoringDomainService;
+    this.domainScoringService = domainScoringService;
   }
 
   @Override
@@ -45,7 +45,7 @@ public class CreditCheckApplicationService implements PerformCreditCheckUseCase 
     int score = creditBureauPort.getCreditScore(event.ssn());
 
     // 2. Determine Risk Tier using pure Domain Logic (Domain Service)
-    String tier = scoringDomainService.determineRiskTier(score);
+    String tier = domainScoringService.determineRiskTier(score);
 
     // 3. Create Domain Model
     CreditReport report = CreditReport.create(event.applicationNumber(), event.ssn(), score, tier);

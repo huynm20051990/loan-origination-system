@@ -6,7 +6,7 @@ import com.loan.origination.system.microservices.notification.application.port.o
 import com.loan.origination.system.microservices.notification.application.port.output.NotificationSenderPort;
 import com.loan.origination.system.microservices.notification.application.port.output.OutboxRepositoryPort;
 import com.loan.origination.system.microservices.notification.domain.model.Notification;
-import com.loan.origination.system.microservices.notification.domain.service.NotificationDomainService;
+import com.loan.origination.system.microservices.notification.domain.service.DomainNotificationService;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class NotificationApplicationService implements SendNotificationUseCase {
 
-  private final NotificationDomainService domainService;
+  private final DomainNotificationService domainService;
   private final NotificationRepositoryPort repositoryPort;
   private final NotificationSenderPort senderPort;
   private final OutboxRepositoryPort outboxRepositoryPort;
 
   public NotificationApplicationService(
-      NotificationDomainService domainService,
+      DomainNotificationService domainService,
       NotificationRepositoryPort repositoryPort,
       NotificationSenderPort senderPort,
       OutboxRepositoryPort outboxRepositoryPort) {
