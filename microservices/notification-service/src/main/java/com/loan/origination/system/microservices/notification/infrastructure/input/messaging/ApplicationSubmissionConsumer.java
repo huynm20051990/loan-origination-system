@@ -1,8 +1,8 @@
-package com.loan.origination.system.microservices.notification.adapter.in.messaging;
+package com.loan.origination.system.microservices.notification.infrastructure.input.messaging;
 
 import com.loan.origination.system.contracts.domain.events.EventType;
 import com.loan.origination.system.contracts.domain.events.UnderwritingCompletedEvent;
-import com.loan.origination.system.microservices.notification.domain.port.in.SendNotificationUseCase;
+import com.loan.origination.system.microservices.notification.application.port.input.SendNotificationUseCase;
 import java.util.UUID;
 import java.util.function.Consumer;
 import org.slf4j.Logger;

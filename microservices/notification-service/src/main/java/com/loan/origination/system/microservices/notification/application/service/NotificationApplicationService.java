@@ -1,11 +1,11 @@
 package com.loan.origination.system.microservices.notification.application.service;
 
 import com.loan.origination.system.contracts.domain.events.NotificationSentEvent;
+import com.loan.origination.system.microservices.notification.application.port.input.SendNotificationUseCase;
+import com.loan.origination.system.microservices.notification.application.port.output.NotificationRepositoryPort;
+import com.loan.origination.system.microservices.notification.application.port.output.NotificationSenderPort;
+import com.loan.origination.system.microservices.notification.application.port.output.OutboxRepositoryPort;
 import com.loan.origination.system.microservices.notification.domain.model.Notification;
-import com.loan.origination.system.microservices.notification.domain.port.in.SendNotificationUseCase;
-import com.loan.origination.system.microservices.notification.domain.port.out.NotificationRepositoryPort;
-import com.loan.origination.system.microservices.notification.domain.port.out.NotificationSenderPort;
-import com.loan.origination.system.microservices.notification.domain.port.out.OutboxRepositoryPort;
 import com.loan.origination.system.microservices.notification.domain.service.NotificationDomainService;
 import java.util.UUID;
 import org.springframework.stereotype.Service;

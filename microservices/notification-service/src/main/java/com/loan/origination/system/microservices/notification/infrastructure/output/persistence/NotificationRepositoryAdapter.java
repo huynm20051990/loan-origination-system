@@ -1,9 +1,9 @@
-package com.loan.origination.system.microservices.notification.adapter.out.persistence;
+package com.loan.origination.system.microservices.notification.infrastructure.output.persistence;
 
-import com.loan.origination.system.microservices.notification.adapter.out.persistence.mapper.NotificationPersistenceMapper;
-import com.loan.origination.system.microservices.notification.adapter.out.persistence.repository.NotificationRepository;
+import com.loan.origination.system.microservices.notification.application.port.output.NotificationRepositoryPort;
 import com.loan.origination.system.microservices.notification.domain.model.Notification;
-import com.loan.origination.system.microservices.notification.domain.port.out.NotificationRepositoryPort;
+import com.loan.origination.system.microservices.notification.infrastructure.output.persistence.mapper.NotificationPersistenceMapper;
+import com.loan.origination.system.microservices.notification.infrastructure.output.persistence.repository.NotificationRepository;
 import org.springframework.stereotype.Component;
 
 @Component

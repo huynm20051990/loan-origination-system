@@ -1,11 +1,11 @@
-package com.loan.origination.system.microservices.notification.adapter.out.persistence.mapper;
+package com.loan.origination.system.microservices.notification.infrastructure.output.persistence.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loan.origination.system.contracts.domain.events.DomainEvent;
-import com.loan.origination.system.microservices.notification.adapter.out.persistence.entity.NotificationEntity;
-import com.loan.origination.system.microservices.notification.adapter.out.persistence.entity.OutboxEntity;
 import com.loan.origination.system.microservices.notification.domain.model.Notification;
+import com.loan.origination.system.microservices.notification.infrastructure.output.persistence.entity.NotificationEntity;
+import com.loan.origination.system.microservices.notification.infrastructure.output.persistence.entity.OutboxEntity;
 import org.springframework.stereotype.Component;
 
 @Component

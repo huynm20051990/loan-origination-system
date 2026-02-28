@@ -1,7 +1,7 @@
-package com.loan.origination.system.microservices.notification.adapter.out.external;
+package com.loan.origination.system.microservices.notification.infrastructure.output.client;
 
+import com.loan.origination.system.microservices.notification.application.port.output.NotificationSenderPort;
 import com.loan.origination.system.microservices.notification.domain.model.Notification;
-import com.loan.origination.system.microservices.notification.domain.port.out.NotificationSenderPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

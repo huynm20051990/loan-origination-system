@@ -1,9 +1,9 @@
-package com.loan.origination.system.microservices.notification.adapter.out.persistence;
+package com.loan.origination.system.microservices.notification.infrastructure.output.persistence;
 
 import com.loan.origination.system.contracts.domain.events.DomainEvent;
-import com.loan.origination.system.microservices.notification.adapter.out.persistence.entity.OutboxEntity;
-import com.loan.origination.system.microservices.notification.adapter.out.persistence.mapper.NotificationPersistenceMapper;
-import com.loan.origination.system.microservices.notification.domain.port.out.OutboxRepositoryPort;
+import com.loan.origination.system.microservices.notification.application.port.output.OutboxRepositoryPort;
+import com.loan.origination.system.microservices.notification.infrastructure.output.persistence.entity.OutboxEntity;
+import com.loan.origination.system.microservices.notification.infrastructure.output.persistence.mapper.NotificationPersistenceMapper;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Component;
 

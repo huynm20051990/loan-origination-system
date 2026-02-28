@@ -1,4 +1,4 @@
-package com.loan.origination.system.microservices.notification.domain.port.out;
+package com.loan.origination.system.microservices.notification.application.port.output;
 
 import com.loan.origination.system.contracts.domain.events.DomainEvent;
 
