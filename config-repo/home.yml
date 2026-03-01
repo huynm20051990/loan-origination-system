@@ -76,6 +76,13 @@ server.port: 80
 spring.datasource.url: jdbc:postgresql://home-pg/home-db
 
 ---
+spring.config.activate.on-profile: demo
+
+server.port: 80
+spring.datasource.url: jdbc:postgresql://demo-pg/demo-db
+management.tracing.enabled: false
+
+---
 spring.config.activate.on-profile: prod
 
 server.port: 80

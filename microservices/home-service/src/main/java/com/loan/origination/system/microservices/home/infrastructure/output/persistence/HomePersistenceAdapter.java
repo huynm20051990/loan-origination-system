@@ -75,7 +75,7 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
     metadata.put("state", home.getAddress().state());
 
     // Convert price to string to ensure compatibility with JSONB storage
-    metadata.put("price", home.getPrice().toString());
+    metadata.put("price", home.getPrice());
 
     metadata.put("beds", home.getBeds());
     metadata.put("baths", home.getBaths());
@@ -84,14 +84,14 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
 
     // Create a descriptive string for semantic search
     String searchContent =
-            String.format(
-                    "Home in %s, %s. Price: %s. %d beds and %.1f baths. %s",
-                    home.getAddress().city(),
-                    home.getAddress().state(),
-                    home.getPrice(),
-                    home.getBeds(),
-                    home.getBaths(),
-                    home.getDescription() == null ? "" : home.getDescription());
+        String.format(
+            "Home in %s, %s. Price: %s. %d beds and %.1f baths. %s",
+            home.getAddress().city(),
+            home.getAddress().state(),
+            home.getPrice(),
+            home.getBeds(),
+            home.getBaths(),
+            home.getDescription() == null ? "" : home.getDescription());
 
     // Create the document using the ID explicitly to enable UPSERT behavior
     Document document = new Document(home.getId().toString(), searchContent, metadata);
