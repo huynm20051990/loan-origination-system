@@ -37,7 +37,7 @@ spring.jpa:
     hibernate.format_sql: true
 
 spring.datasource:
-  url: jdbc:postgresql://app-db:5432/app-db
+  url: jdbc:postgresql://app-pg:5432/app-db
   username: ${POSTGRES_USR}
   password: ${POSTGRES_PWD}
   driver-class-name: org.postgresql.Driver
@@ -67,7 +67,7 @@ logging:
 spring.config.activate.on-profile: docker
 
 server.port: 80
-spring.datasource.url: jdbc:postgresql://app-db/app-db
+spring.datasource.url: jdbc:postgresql://app-pg/app-db
 
 ---
 spring.config.activate.on-profile: prod

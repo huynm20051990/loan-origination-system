@@ -14,7 +14,7 @@ spring.jpa:
     hibernate.format_sql: true
 
 spring.datasource:
-  url: jdbc:postgresql://notify-db:5432/notification-db
+  url: jdbc:postgresql://notification-pg:5432/notification-db
   username: ${POSTGRES_USR}
   password: ${POSTGRES_PWD}
   driver-class-name: org.postgresql.Driver
@@ -59,7 +59,7 @@ logging:
 spring.config.activate.on-profile: docker
 
 server.port: 80
-spring.datasource.url: jdbc:postgresql://notify-db/notification-db
+spring.datasource.url: jdbc:postgresql://notification-pg/notification-db
 
 
 ---

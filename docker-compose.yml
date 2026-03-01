@@ -14,9 +14,9 @@ services:
       auth-server:
         condition: service_healthy
 
-  postgres:
+  home-pg:
     image: pgvector/pgvector:pg16
-    container_name: easy-apply-postgres
+    container_name: easy-apply-home-pg
     mem_limit: 512m
     environment:
       - POSTGRES_DB=home-db
@@ -32,9 +32,9 @@ services:
       timeout: 5s
       retries: 5
 
-  app-db:
+  app-pg:
     image: pgvector/pgvector:pg16
-    container_name: easy-apply-app-db
+    container_name: easy-apply-app-pg
     command: [ "postgres", "-c", "wal_level=logical" ] # Required for CDC
     mem_limit: 512m
     environment:
@@ -66,9 +66,9 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d assessment-db" ]
 
   # 4. NEW NOTIFICATION SERVICE DATABASE
-  notify-db:
+  notification-pg:
     image: pgvector/pgvector:pg16
-    container_name: easy-apply-notification-db
+    container_name: easy-apply-notification-pg
     command: [ "postgres", "-c", "wal_level=logical" ]
     mem_limit: 512m
     environment:
@@ -117,9 +117,9 @@ services:
       - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
 
   # --- DEBEZIUM (KAFKA CONNECT) ---
-  connect:
+  debezium:
     image: debezium/connect:2.5
-    container_name: easy-apply-connect
+    container_name: easy-apply-debezium
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8083/connectors" ]
       interval: 10s
@@ -144,11 +144,11 @@ services:
     depends_on:
       kafka:
         condition: service_healthy # Wait for Kafka to be ready
-      app-db:
+      app-pg:
         condition: service_healthy
       assessment-pg:
         condition: service_healthy
-      notify-db:
+      notification-pg:
         condition: service_healthy
 
   connector-init:
@@ -159,7 +159,7 @@ services:
       - ./scripts/register-connectors.sh:/register-connectors.sh
     entrypoint: [ "/bin/sh", "/register-connectors.sh" ]
     depends_on:
-      connect: { condition: service_started }
+      debezium: { condition: service_started }
 
   home-service:
     build: microservices/home-service
@@ -175,7 +175,7 @@ services:
     volumes:
       - $PWD/config-repo:/config-repo
     depends_on:
-      postgres:
+      home-pg:
         condition: service_healthy
       auth-server:
         condition: service_healthy
@@ -195,7 +195,7 @@ services:
     volumes:
       - $PWD/config-repo:/config-repo
     depends_on:
-      app-db:
+      app-pg:
         condition: service_healthy
       auth-server:
         condition: service_healthy
@@ -235,7 +235,7 @@ services:
     volumes:
       - $PWD/config-repo:/config-repo
     depends_on:
-      notify-db:
+      notification-pg:
         condition: service_healthy
       auth-server:
         condition: service_healthy

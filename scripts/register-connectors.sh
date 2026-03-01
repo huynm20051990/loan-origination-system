@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Waiting for Kafka Connect to start..."
-while [ $(curl -s -o /dev/null -w "%{http_code}" http://connect:8083/connectors) -ne 200 ]; do
+while [ $(curl -s -o /dev/null -w "%{http_code}" http://debezium:8083/connectors) -ne 200 ]; do
   sleep 2
 done
 
@@ -14,11 +14,11 @@ register_connector() {
 
   echo "Registering $CONNECTOR_NAME..."
   # Delete existing connector if it exists to avoid 409 Conflict
-  curl -s -X DELETE http://connect:8083/connectors/$CONNECTOR_NAME
+  curl -s -X DELETE http://debezium:8083/connectors/$CONNECTOR_NAME
 
   # POST the full JSON file
   curl -i -X POST -H "Content-Type:application/json" \
-    http://connect:8083/connectors \
+    http://debezium:8083/connectors \
     -d @$FILE_PATH
 }
 
