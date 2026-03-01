@@ -6,7 +6,7 @@ services:
   app-ui:
     build: app-ui
     image: loan-origination-system/app-ui
-    mem_limit: 512m
+    mem_limit: 128m
     container_name: easy-apply-app-ui
     hostname: app-ui
     restart: always
@@ -18,7 +18,7 @@ services:
     image: pgvector/pgvector:pg16
     container_name: easy-apply-demo-pg
     command: [ "postgres", "-c", "wal_level=logical" ] # Required for CDC
-    mem_limit: 512m
+    mem_limit: 256m
     environment:
       - POSTGRES_DB=demo-db
       - POSTGRES_USER=${POSTGRES_USR}
@@ -33,7 +33,7 @@ services:
   home-service:
     build: microservices/home-service
     image: loan-origination-system/home-service
-    mem_limit: 512m
+    mem_limit: 256m
     container_name: easy-apply-home-service
     environment:
       - SPRING_PROFILES_ACTIVE=demo
@@ -52,7 +52,7 @@ services:
   app-service:
     build: microservices/app-service
     image: loan-origination-system/app-service
-    mem_limit: 512m
+    mem_limit: 256m
     container_name: easy-apply-app-service
     environment:
       - SPRING_PROFILES_ACTIVE=demo
@@ -70,7 +70,7 @@ services:
   gateway:
     build: spring-cloud/gateway
     image: loan-origination-system/gateway
-    mem_limit: 512m
+    mem_limit: 128m
     container_name: easy-apply-gateway
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -89,7 +89,7 @@ services:
   auth-server:
     build: spring-cloud/authorization-server
     image: loan-origination-system/auth-server
-    mem_limit: 512m
+    mem_limit: 256m
     container_name: easy-apply-auth-server
     environment:
       - SPRING_PROFILES_ACTIVE=docker
