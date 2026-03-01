@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record AssessmentNotificationEvent(
+public record AssessmentNotifiedEvent(
     UUID eventId,
     String aggregateType,
     String aggregateId, // Application UUID
@@ -15,15 +15,15 @@ public record AssessmentNotificationEvent(
     LocalDateTime createdAt)
     implements DomainEvent {
 
-  public static AssessmentNotificationEvent of(
+  public static AssessmentNotifiedEvent of(
       String aggregateId,
       String applicationNumber,
       String decision,
       String reason,
       BigDecimal amount) {
-    return new AssessmentNotificationEvent(
+    return new AssessmentNotifiedEvent(
         UUID.randomUUID(),
-        EventType.ASSESSMENT_NOTIFICATION.getTopicSuffix(), // Aggregate Type
+        EventType.ASSESSMENT_NOTIFIED.getTopicSuffix(), // Aggregate Type
         aggregateId,
         applicationNumber,
         decision,
@@ -34,6 +34,6 @@ public record AssessmentNotificationEvent(
 
   @Override
   public EventType eventType() {
-    return EventType.ASSESSMENT_NOTIFICATION; // Ensure this exists in your EventType enum
+    return EventType.ASSESSMENT_NOTIFIED; // Ensure this exists in your EventType enum
   }
 }

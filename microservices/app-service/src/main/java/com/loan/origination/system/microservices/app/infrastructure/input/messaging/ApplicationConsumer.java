@@ -28,11 +28,11 @@ public class ApplicationConsumer {
         return;
       }
 
-      AssessmentNotificationEvent assessmentNotificationEvent =
-          AssessmentNotificationEvent.of(
+      AssessmentNotifiedEvent assessmentNotifiedEvent =
+          AssessmentNotifiedEvent.of(
               event.aggregateId(), event.aggregateType(), event.decision(), event.remarks(), null);
       try {
-        loanApplicationUseCase.execute(assessmentNotificationEvent);
+        loanApplicationUseCase.execute(assessmentNotifiedEvent);
         log.info("Successfully processed assessment result for {}", event.applicationNumber());
       } catch (Exception e) {
         log.error(

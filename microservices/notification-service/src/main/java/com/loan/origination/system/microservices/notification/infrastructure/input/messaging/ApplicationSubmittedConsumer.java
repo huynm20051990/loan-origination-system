@@ -1,6 +1,6 @@
 package com.loan.origination.system.microservices.notification.infrastructure.input.messaging;
 
-import com.loan.origination.system.contracts.domain.events.AssessmentNotificationEvent;
+import com.loan.origination.system.contracts.domain.events.AssessmentNotifiedEvent;
 import com.loan.origination.system.contracts.domain.events.EventType;
 import com.loan.origination.system.microservices.notification.application.port.input.SendNotificationUseCase;
 import java.util.UUID;
@@ -21,9 +21,9 @@ public class ApplicationSubmittedConsumer {
   }
 
   @Bean
-  public Consumer<AssessmentNotificationEvent> consumeAssessmentNotificationEvent() {
+  public Consumer<AssessmentNotifiedEvent> consumeAssessmentNotifiedEvent() {
     return event -> {
-      if (!EventType.ASSESSMENT_NOTIFICATION.equals(event.eventType())) {
+      if (!EventType.ASSESSMENT_NOTIFIED.equals(event.eventType())) {
         log.debug("Skipping event type: {}", event.eventType());
         return;
       }
