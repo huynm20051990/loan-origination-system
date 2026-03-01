@@ -156,7 +156,7 @@ services:
     container_name: easy-apply-connector-init
     volumes:
       - ./connectors:/connectors
-      - ./register-connectors.sh:/register-connectors.sh
+      - ./scripts/register-connectors.sh:/register-connectors.sh
     entrypoint: [ "/bin/sh", "/register-connectors.sh" ]
     depends_on:
       connect: { condition: service_started }
@@ -190,6 +190,8 @@ services:
       - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/app.yml
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:29092
     volumes:
       - $PWD/config-repo:/config-repo
     depends_on:

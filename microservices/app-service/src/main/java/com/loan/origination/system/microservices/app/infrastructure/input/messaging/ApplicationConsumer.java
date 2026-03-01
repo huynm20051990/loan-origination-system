@@ -20,7 +20,7 @@ public class ApplicationConsumer {
   }
 
   @Bean
-  public Consumer<AssessmentCompletedEvent> consumeAssessmentCompleted() {
+  public Consumer<AssessmentCompletedEvent> consumeAssessmentCompletedEvent() {
     return event -> {
       log.info("App Service received AssessmentCompletedEvent: " + event);
 
@@ -28,8 +28,11 @@ public class ApplicationConsumer {
         return;
       }
 
+      AssessmentNotificationEvent assessmentNotificationEvent =
+          AssessmentNotificationEvent.of(
+              event.aggregateId(), event.aggregateType(), event.decision(), event.remarks(), null);
       try {
-        loanApplicationUseCase.execute(event);
+        loanApplicationUseCase.execute(assessmentNotificationEvent);
         log.info("Successfully processed assessment result for {}", event.applicationNumber());
       } catch (Exception e) {
         log.error(

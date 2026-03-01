@@ -4,7 +4,9 @@ import com.loan.origination.system.microservices.assessment.application.port.out
 import com.loan.origination.system.microservices.assessment.domain.model.Assessment;
 import com.loan.origination.system.microservices.assessment.infrastructure.output.persistence.mapper.AssessmentMapper;
 import com.loan.origination.system.microservices.assessment.infrastructure.output.persistence.repository.AssessmentRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AssessmentPersistenceAdapter implements AssessmentRepositoryPort {
 
   private final AssessmentRepository assessmentRepository;

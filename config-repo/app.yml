@@ -9,11 +9,11 @@ spring.threads.virtual.enabled: true
 spring.cloud:
   function:
     # Use a semicolon to define multiple functions
-    definition: consumeAssessmentCompleted;consumeNotificationSentEvent
+    definition: consumeAssessmentCompletedEvent;consumeNotificationSentEvent
   stream:
     bindings:
-      consumeAssessmentCompleted-in-0:
-        destination: assessment.assessment_completed
+      consumeAssessmentCompletedEvent-in-0:
+        destination: application.assessment_completed
         group: application-service-group
         content-type: application/json
 

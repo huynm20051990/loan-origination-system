@@ -20,14 +20,13 @@ curl -H "Authorization: Bearer $ACCESS_TOKEN" -k -X POST https://localhost:8443/
 # Check the applications table
 docker exec -it easy-apply-app-db psql -U home-user-prod -d app-db -c "SELECT id, application_number, status FROM applications"
 # Check if the credit report was generated
-docker exec -it easy-apply-credit-db psql -U home-user-prod -d credit-db -c "SELECT application_number, credit_score, risk_tier FROM credit_reports"
+docker exec -it easy-apply-assessment-pg psql -U home-user-prod -d assessment-db -c "SELECT * FROM assessments"
 
 docker exec -it easy-apply-notification-db psql -U home-user-prod -d notification-db -c "SELECT * FROM notifications"
 
 # Check the outbox table for the trigger event
 docker exec -it easy-apply-app-db psql -U home-user-prod -d app-db -c "SELECT type, aggregate_id FROM outbox ORDER BY created_at DESC LIMIT 1;"
 
-docker exec -it easy-apply-credit-db psql -U home-user-prod -d credit-db -c "SELECT type, aggregate_id FROM outbox ORDER BY created_at DESC LIMIT 1;"
 
 # List all active connectors (should see app-service, credit-service, and notification-service connectors)
 curl -s localhost:8083/connectors
