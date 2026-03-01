@@ -14,3 +14,9 @@
   width: 100%;
   margin-top: 20px;
 }
+
+.status-card mat-card-actions {
+  display: flex;
+  justify-content: flex-end; /* Pushes content to the right */
+  padding: 16px; /* Optional: matches default angular material padding */
+}
