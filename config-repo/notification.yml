@@ -26,11 +26,11 @@ spring.datasource.hikari:
 # --- Spring Cloud Stream & Kafka Configuration ---
 spring.cloud:
   function:
-    definition: consumeUnderwritingCompleted
+    definition: consumeAssessmentNotificationEvent
   stream:
     bindings:
-      consumeUnderwritingCompleted-in-0:
-        destination: application.underwriting_completed
+      consumeAssessmentNotificationEvent-in-0:
+        destination: application.assessment_notification
         group: notification-service-group
         content-type: application/json
     kafka:

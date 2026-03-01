@@ -21,9 +21,9 @@ dependencies:
   - name: app-service
     version: 1.0.0
     repository: file://../../components/app-service
-  - name: credit-service
+  - name: assessment-service
     version: 1.0.0
-    repository: file://../../components/credit-service
+    repository: file://../../components/assessment-service
   - name: notification-service
     version: 1.0.0
     repository: file://../../components/notification-service

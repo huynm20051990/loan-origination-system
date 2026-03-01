@@ -19,35 +19,23 @@ public class ApplicationConsumer {
     this.loanApplicationUseCase = loanApplicationUseCase;
   }
 
-  /**
-   * 1. Consumes results from the Credit Service. Logic: Credit Result -> Run Underwriting -> Save
-   * to Outbox.
-   */
   @Bean
-  public Consumer<CreditAccessedEvent> consumeCreditAssessed() {
+  public Consumer<AssessmentCompletedEvent> consumeAssessmentCompleted() {
     return event -> {
-      log.info(
-          "App Service received Credit Result for App: {} | Score: {}",
-          event.applicationNumber(),
-          event.creditScore());
+      log.info("App Service received AssessmentCompletedEvent: " + event);
 
-      if (!EventType.CREDIT_ACCESSED.equals(event.eventType())) {
+      if (!EventType.ASSESSMENT_COMPLETED.equals(event.eventType())) {
         return;
       }
 
       try {
-        // This UseCase should handle the logic for "What happens next?"
-        // Usually: Update DB status and determine if it moves to Underwriting.
-
-        DomainEvent underwritingCompletedEvent =
-            UnderwritingCompletedEvent.of(
-                event.aggregateId(), event.applicationNumber(), null, null, null);
-        loanApplicationUseCase.execute(underwritingCompletedEvent);
-
-        log.info("Successfully processed credit result for {}", event.applicationNumber());
+        loanApplicationUseCase.execute(event);
+        log.info("Successfully processed assessment result for {}", event.applicationNumber());
       } catch (Exception e) {
         log.error(
-            "Error processing credit result for {}: {}", event.applicationNumber(), e.getMessage());
+            "Error processing assessment result for {}: {}",
+            event.applicationNumber(),
+            e.getMessage());
         throw e;
       }
     };
@@ -58,7 +46,7 @@ public class ApplicationConsumer {
    * Application record to 'Contacted'.
    */
   @Bean
-  public Consumer<NotificationSentEvent> consumeNotificationSent() {
+  public Consumer<NotificationSentEvent> consumeNotificationSentEvent() {
     return event -> {
       log.info(
           "App Service received Notification Confirmation for App: {}", event.applicationNumber());

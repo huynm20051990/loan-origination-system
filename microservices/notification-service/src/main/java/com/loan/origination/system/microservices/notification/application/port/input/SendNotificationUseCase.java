@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface SendNotificationUseCase {
 
-  void sendCreditCheckNotification(UUID applicationId, String applicationNumber, String email);
+  void sendNotification(UUID applicationId, String applicationNumber, String email);
 }

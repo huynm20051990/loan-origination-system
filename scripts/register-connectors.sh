@@ -24,7 +24,7 @@ register_connector() {
 
 # Register each service
 register_connector "app-service-connector" "/connectors/app-service-connector.json"
-register_connector "credit-service-connector" "/connectors/credit-service-connector.json"
+register_connector "assessment-service-connector" "/connectors/assessment-service-connector.json"
 register_connector "notification-service-connector" "/connectors/notification-service-connector.json"
 
 echo "All connectors registered successfully!"

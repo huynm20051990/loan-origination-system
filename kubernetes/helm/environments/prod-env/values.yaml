@@ -23,7 +23,7 @@ secrets:
 app-service:
   <<: *microservice_defaults
 
-credit-service:
+assessment-service:
   <<: *microservice_defaults
 
 notification-service:

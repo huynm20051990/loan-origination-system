@@ -1,0 +1,28 @@
+fullnameOverride: assessment-service
+
+annotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "4004"
+  prometheus.io/scheme: http
+  prometheus.io/path: "/actuator/prometheus"
+  traffic.sidecar.istio.io/excludeOutboundIPRanges: "172.19.0.1/32"
+
+image:
+  name: assessment-service
+
+# Environment variables from docker-compose
+env:
+  SPRING_PROFILES_ACTIVE: "docker"
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: "host.minikube.internal:9092"
+  # Points to application.yml and assessment.yml
+  SPRING_CONFIG_LOCATION: "file:/config-repo/application.yml,file:/config-repo/assessment.yml"
+
+# Using your product-style pattern for mounting config files
+configmap:
+  enabled: true
+  volumeMounts:
+    mountPath: /config-repo
+
+# Standard Spring Boot Probes
+livenessProbe_enabled: true
+readinessProbe_enabled: true

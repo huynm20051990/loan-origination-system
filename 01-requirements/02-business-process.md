@@ -92,3 +92,23 @@ Ongoing administration of the mortgage.
     - Initiate foreclosure if loan is in default.
 - **Investor reporting:**
     - Provide remittance and reporting to Fannie Mae, Freddie Mac, Ginnie Mae, or private investors.
+
+🏦 1️⃣ What Is Underwriting?
+
+Underwriting is the risk assessment process where the lender evaluates whether the borrower qualifies for a loan.
+
+It includes:
+
+- Credit score evaluation
+
+- Income verification
+
+- Employment verification
+
+- Debt-to-Income (DTI) calculation
+
+- Asset verification
+
+- Property appraisal (for mortgages)
+
+- Compliance checks

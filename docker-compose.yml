@@ -49,21 +49,21 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d app-db" ]
 
   # 3. NEW CREDIT SERVICE DATABASE
-  credit-db:
+  assessment-pg:
     image: pgvector/pgvector:pg16
-    container_name: easy-apply-credit-db
+    container_name: easy-apply-assessment-pg
     command: [ "postgres", "-c", "wal_level=logical" ]
     mem_limit: 512m
     environment:
-      - POSTGRES_DB=credit-db
+      - POSTGRES_DB=assessment-db
       - POSTGRES_USER=${POSTGRES_USR}
       - POSTGRES_PASSWORD=${POSTGRES_PWD}
     volumes:
-      - ./database/init-credit:/docker-entrypoint-initdb.d
+      - ./database/init-assessment:/docker-entrypoint-initdb.d
     ports:
       - "5434:5432"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d credit-db" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d assessment-db" ]
 
   # 4. NEW NOTIFICATION SERVICE DATABASE
   notify-db:
@@ -146,7 +146,7 @@ services:
         condition: service_healthy # Wait for Kafka to be ready
       app-db:
         condition: service_healthy
-      credit-db:
+      assessment-pg:
         condition: service_healthy
       notify-db:
         condition: service_healthy
@@ -198,14 +198,14 @@ services:
       auth-server:
         condition: service_healthy
 
-  credit-service:
-    build: microservices/credit-service
-    image: loan-origination-system/credit-service
+  assessment-service:
+    build: microservices/assessment-service
+    image: loan-origination-system/assessment-service
     mem_limit: 512m
-    container_name: easy-apply-credit-service
+    container_name: easy-apply-assessment-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/credit.yml
+      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/assessment.yml
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
@@ -213,7 +213,7 @@ services:
     volumes:
       - $PWD/config-repo:/config-repo
     depends_on:
-      credit-db:
+      assessment-pg:
         condition: service_healthy
       auth-server:
         condition: service_healthy

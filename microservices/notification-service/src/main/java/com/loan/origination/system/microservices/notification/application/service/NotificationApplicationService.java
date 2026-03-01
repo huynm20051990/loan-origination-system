@@ -32,8 +32,7 @@ public class NotificationApplicationService implements SendNotificationUseCase {
 
   @Override
   @Transactional
-  public void sendCreditCheckNotification(
-      UUID applicationId, String applicationNumber, String email) {
+  public void sendNotification(UUID applicationId, String applicationNumber, String email) {
 
     // 1. Logic: Prepare the notification content
     Notification notification =

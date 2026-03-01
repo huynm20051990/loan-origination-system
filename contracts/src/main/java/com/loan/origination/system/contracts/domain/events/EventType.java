@@ -2,8 +2,8 @@ package com.loan.origination.system.contracts.domain.events;
 
 public enum EventType {
   APPLICATION_SUBMITTED("application_submitted"),
-  CREDIT_ACCESSED("credit_assessed"),
-  UNDERWRITING_COMPLETED("underwriting_completed"),
+  ASSESSMENT_COMPLETED("assessment_completed"),
+  ASSESSMENT_NOTIFICATION("assessment_notification"),
   NOTIFICATION_SENT("notification_sent");
 
   private final String topicSuffix;
