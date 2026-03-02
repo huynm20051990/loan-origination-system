@@ -1,0 +1,288 @@
+networks:
+  default:
+    name: easy-apply
+
+services:
+  app-ui:
+    build: app-ui
+    image: loan-origination-system/app-ui
+    mem_limit: 512m
+    container_name: easy-apply-app-ui
+    hostname: app-ui
+    restart: always
+    depends_on:
+      auth-server:
+        condition: service_healthy
+
+  home-pg:
+    image: pgvector/pgvector:pg16
+    container_name: easy-apply-home-pg
+    mem_limit: 512m
+    environment:
+      - POSTGRES_DB=home-db
+      - POSTGRES_USER=${POSTGRES_USR}
+      - POSTGRES_PASSWORD=${POSTGRES_PWD}
+    volumes:
+      - ./database/init-home:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d home-db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app-pg:
+    image: pgvector/pgvector:pg16
+    container_name: easy-apply-app-pg
+    command: [ "postgres", "-c", "wal_level=logical" ] # Required for CDC
+    mem_limit: 512m
+    environment:
+      - POSTGRES_DB=app-db
+      - POSTGRES_USER=${POSTGRES_USR}
+      - POSTGRES_PASSWORD=${POSTGRES_PWD}
+    volumes:
+      - ./database/init-app:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d app-db" ]
+
+  # 3. NEW CREDIT SERVICE DATABASE
+  assessment-pg:
+    image: pgvector/pgvector:pg16
+    container_name: easy-apply-assessment-pg
+    command: [ "postgres", "-c", "wal_level=logical" ]
+    mem_limit: 512m
+    environment:
+      - POSTGRES_DB=assessment-db
+      - POSTGRES_USER=${POSTGRES_USR}
+      - POSTGRES_PASSWORD=${POSTGRES_PWD}
+    volumes:
+      - ./database/init-assessment:/docker-entrypoint-initdb.d
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d assessment-db" ]
+
+  # 4. NEW NOTIFICATION SERVICE DATABASE
+  notification-pg:
+    image: pgvector/pgvector:pg16
+    container_name: easy-apply-notification-pg
+    command: [ "postgres", "-c", "wal_level=logical" ]
+    mem_limit: 512m
+    environment:
+      - POSTGRES_DB=notification-db
+      - POSTGRES_USER=${POSTGRES_USR}
+      - POSTGRES_PASSWORD=${POSTGRES_PWD}
+    volumes:
+      - ./database/init-notify:/docker-entrypoint-initdb.d
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d notification-db" ]
+
+  # --- KAFKA BROKER (KRaft Mode) ---
+  kafka:
+    image: apache/kafka:latest
+    container_name: easy-apply-kafka
+    ports:
+      - "9092:9092" # External access (for your IDE/Host)
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 9092 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    environment:
+      # 1. Basic node configuration
+      - KAFKA_NODE_ID=1
+      - KAFKA_PROCESS_ROLES=broker,controller
+      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+
+      # 2. Networking & Listeners
+      # CONTROLLER: Internal coordination
+      # PLAINTEXT: Internal traffic between Docker containers
+      # EXTERNAL: Traffic coming from your laptop (localhost)
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:29092,EXTERNAL://host.minikube.internal:9092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+
+      # 3. Development tweaks (faster restarts/auto-topic creation)
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS=0
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+
+  # --- DEBEZIUM (KAFKA CONNECT) ---
+  debezium:
+    image: debezium/connect:2.5
+    container_name: easy-apply-debezium
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8083/connectors" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    mem_limit: 1024m
+    ports:
+      - "8083:8083" # REST API for managing connectors
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:29092
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - STATUS_STORAGE_TOPIC=my_connect_statuses
+      - CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR=1
+      - CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR=1
+      - CONNECT_STATUS_STORAGE_REPLICATION_FACTOR=1
+      # These ensure Debezium can find your Kafka cluster inside the Docker network
+      - CONNECT_KEY_CONVERTER=org.apache.kafka.connect.json.JsonConverter
+      - CONNECT_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
+    depends_on:
+      kafka:
+        condition: service_healthy # Wait for Kafka to be ready
+      app-pg:
+        condition: service_healthy
+      assessment-pg:
+        condition: service_healthy
+      notification-pg:
+        condition: service_healthy
+
+  connector-init:
+    image: curlimages/curl:latest
+    container_name: easy-apply-connector-init
+    volumes:
+      - ./connectors:/connectors
+      - ./scripts/register-connectors.sh:/register-connectors.sh
+    entrypoint: [ "/bin/sh", "/register-connectors.sh" ]
+    depends_on:
+      debezium: { condition: service_started }
+
+  home-service:
+    build: microservices/home-service
+    image: loan-origination-system/home-service
+    mem_limit: 512m
+    container_name: easy-apply-home-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/home.yml
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
+      - SPRING_AI_GOOGLE_GENAI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - $PWD/config-repo:/config-repo
+    depends_on:
+      home-pg:
+        condition: service_healthy
+      auth-server:
+        condition: service_healthy
+
+  app-service:
+    build: microservices/app-service
+    image: loan-origination-system/app-service
+    mem_limit: 512m
+    container_name: easy-apply-app-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/app.yml
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:29092
+    volumes:
+      - $PWD/config-repo:/config-repo
+    depends_on:
+      app-pg:
+        condition: service_healthy
+      auth-server:
+        condition: service_healthy
+
+  assessment-service:
+    build: microservices/assessment-service
+    image: loan-origination-system/assessment-service
+    mem_limit: 512m
+    container_name: easy-apply-assessment-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/assessment.yml
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:29092
+    volumes:
+      - $PWD/config-repo:/config-repo
+    depends_on:
+      assessment-pg:
+        condition: service_healthy
+      auth-server:
+        condition: service_healthy
+
+  notification-service:
+    build: microservices/notification-service
+    image: loan-origination-system/notification-service
+    mem_limit: 512m
+    container_name: easy-apply-notification-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/notification.yml
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:29092
+    volumes:
+      - $PWD/config-repo:/config-repo
+    depends_on:
+      notification-pg:
+        condition: service_healthy
+      auth-server:
+        condition: service_healthy
+
+  gateway:
+    build: spring-cloud/gateway
+    image: loan-origination-system/gateway
+    mem_limit: 512m
+    container_name: easy-apply-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/gateway.yml
+      - SERVER_SSL_KEY_STORE_PASSWORD=${GATEWAY_TLS_PWD}
+      - SPRING_RABBITMQ_USERNAME=${RABBITMQ_USR}
+      - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_PWD}
+    volumes:
+      - $PWD/config-repo:/config-repo
+    ports:
+      - "8443:8443"
+    depends_on:
+      auth-server:
+        condition: service_healthy
+
+  auth-server:
+    build: spring-cloud/authorization-server
+    image: loan-origination-system/auth-server
+    mem_limit: 512m
+    container_name: easy-apply-auth-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/auth-server.yml
+      - SPRING_RABBITMQ_USERNAME=${RABBITMQ_USR}
+      - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_PWD}
+    volumes:
+      - $PWD/config-repo:/config-repo
+    healthcheck:
+      test: [ "CMD", "curl", "-fs", "http://localhost:4004/actuator/health" ]
+      interval: 5s
+      timeout: 2s
+      retries: 60
+
+  jaeger-collector.istio-system:
+    image: openzipkin/zipkin:3.5.1
+    restart: always
+    mem_limit: 1024m
+    container_name: easy-apply-zipkin
+    environment:
+      - STORAGE_TYPE=mem
+    ports:
+      - 9411:9411
