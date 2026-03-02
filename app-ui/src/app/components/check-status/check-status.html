@@ -1,28 +1,39 @@
-<div class="status-container">
-  <mat-card class="status-card">
+<div class="auth-wrapper">
+  <mat-card class="status-card" appearance="outlined">
     <mat-card-header>
-      <mat-card-title>Enter Your Email</mat-card-title>
+      <mat-card-title>Check Your Application Status</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Enter your email</mat-label>
-        <input matInput type="email" placeholder="email@example.com" [(ngModel)]="email" [disabled]="isLoading">
+        <mat-label>Email Address</mat-label>
+        <input matInput
+               type="email"
+               placeholder="name@company.com"
+               [(ngModel)]="email"
+               [disabled]="isLoading"
+               (keyup.enter)="email && !isLoading ? goToUserDashboard() : null">
+        <mat-icon matPrefix style="margin-right: 8px;">email</mat-icon>
       </mat-form-field>
 
       @if (errorMessage) {
-      <p class="error-text">{{ errorMessage }}</p>
+      <div class="error-container">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
       }
     </mat-card-content>
 
-    <mat-card-actions>
-      <button mat-flat-button color="primary"
+    <mat-card-actions align="end">
+      <button mat-flat-button
+              color="primary"
+              class="action-button"
               (click)="goToUserDashboard()"
               [disabled]="isLoading || !email">
         @if (isLoading) {
-        <mat-spinner diameter="20"></mat-spinner>
+        <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
         } @else {
-        Check Status
+        Continue
         }
       </button>
     </mat-card-actions>

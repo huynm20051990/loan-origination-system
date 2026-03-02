@@ -1,22 +1,56 @@
-.status-container {
+/* Centering the card on the viewport */
+.auth-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh; /* Centers the card on the screen */
+  min-height: 80vh;
+  padding: 20px;
+  background-color: #ffffff; /* Subtle background contrast */
 }
 
 .status-card {
-  width: 400px;
-  padding: 20px;
+  max-width: 450px;
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.mat-card-header {
+  margin-bottom: 24px;
+}
+
+.mat-card-title {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.5px;
 }
 
 .full-width {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 8px;
 }
 
-.status-card mat-card-actions {
+/* Professional Error State */
+.error-container {
   display: flex;
-  justify-content: flex-end; /* Pushes content to the right */
-  padding: 16px; /* Optional: matches default angular material padding */
+  align-items: center;
+  gap: 8px;
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  margin-top: 8px;
+}
+
+/* Button & Spinner alignment */
+.action-button {
+  min-width: 120px;
+  height: 44px;
+  font-weight: 500;
+}
+
+.button-spinner {
+  margin: 0 auto;
 }
