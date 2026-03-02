@@ -8,7 +8,7 @@ import { Home } from '../models/home'; // Import the model we made in Step 1
 })
 export class HomeService {
   // Use the Gateway URL. It handles the routing to the microservice.
-  private readonly API_URL = 'https://localhost:8443/api/v1/homes';
+  private readonly API_URL = 'https://minikube.me/api/v1/homes';
 
   constructor(private http: HttpClient) {}
 
