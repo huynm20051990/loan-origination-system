@@ -4,7 +4,7 @@ import { Observable, tap, map, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private tokenUrl = 'https://minikube.me/oauth2/token';
+  private tokenUrl = 'https://easy-apply.pro/oauth2/token';
   private cachedToken: string | null = null;
 
   constructor(private http: HttpClient) {}

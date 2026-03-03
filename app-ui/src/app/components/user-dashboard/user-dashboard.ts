@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Application } from '../../core/models/application';
 
 @Component({
@@ -19,9 +20,9 @@ import { Application } from '../../core/models/application';
     MatIconModule,
     MatProgressBarModule,
     MatChipsModule,
-    MatListModule,
-    RouterLink
+    MatListModule
   ],
+  providers: [MatSnackBar],
   templateUrl: './user-dashboard.html',
   styleUrl: './user-dashboard.scss'
 })
@@ -31,15 +32,23 @@ export class UserDashboardComponent implements OnInit {
   applications: Application[] = [];
   userName: string = 'User';
 
-  constructor() {
+  constructor(private snackBar: MatSnackBar) {
     const navigation = this.router.getCurrentNavigation();
-    // FIX: Proper type casting for state
+    // Proper type casting for state
     const state = navigation?.extras.state as { applications: Application[] } | undefined;
 
     if (state?.applications) {
       this.applications = state.applications;
       this.userName = this.applications[0]?.fullName || 'User';
     }
+  }
+
+  openFeatureNotAvailable() {
+    this.snackBar.open('This feature is currently under development.', 'Close', {
+      duration: 3000, // 3 seconds
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
   }
 
   ngOnInit(): void {

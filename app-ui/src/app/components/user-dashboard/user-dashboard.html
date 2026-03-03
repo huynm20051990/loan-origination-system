@@ -55,7 +55,7 @@
           <button mat-button class="cancel-btn" *ngIf="app.status !== 'Approved' && app.status !== 'Rejected'">
             CANCEL
           </button>
-          <button mat-flat-button color="primary" [routerLink]="['/loan-details', app.id]">
+          <button mat-flat-button color="primary" (click)="openFeatureNotAvailable()">
             VIEW DETAILS
           </button>
         </mat-card-actions>
