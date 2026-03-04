@@ -5,29 +5,6 @@ spring.application.name: app
 
 spring.threads.virtual.enabled: true
 
-# --- Spring Cloud Stream & Kafka Configuration ---
-spring.cloud:
-  function:
-    # Use a semicolon to define multiple functions
-    definition: consumeAssessmentCompletedEvent;consumeNotificationSentEvent
-  stream:
-    bindings:
-      consumeAssessmentCompletedEvent-in-0:
-        destination: application.assessment_completed
-        group: application-service-group
-        content-type: application/json
-
-      consumeNotificationSentEvent-in-0:
-        destination: notification.notification_sent
-        group: application-service-group
-        content-type: application/json
-
-    kafka:
-      binder:
-        brokers: localhost:9092
-        auto-create-topics: true
-# --- Spring Cloud Stream & Kafka Configuration ---
-
 # --- ADDED DB CONFIGURATION START ---
 spring.jpa:
   hibernate.ddl-auto: update
