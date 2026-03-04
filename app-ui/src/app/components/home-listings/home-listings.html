@@ -7,14 +7,22 @@
                #searchInput
                (keyup.enter)="onAiSearch()"
                class="ai-input"
-               placeholder="Ask me anything: 'Modern house greater 2-bed upper $500k in Austin'...">
+               placeholder="AI Search: 'Modern house greater 2-bed upper $500k in Austin'...">
         <div matSuffix class="button-wrapper">
           <button mat-flat-button class="ai-search-btn" (click)="onAiSearch()">
-            AI Search
+            Search
           </button>
         </div>
       </mat-form-field>
+      <div class="ai-limit-note">
+        <mat-icon>info_outline</mat-icon>
+        <span>
+          Powered by Gemini 2.5 Flash Free Tier (20 req/day limit).<br>
+          Complex Vibe + Criteria searches may be less accurate once the daily limit is exceeded.
+        </span>
+      </div>
     </div>
+
   </div>
 
   @if (loading) {
