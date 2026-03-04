@@ -18,4 +18,8 @@ export class ApplicationService {
     const params = new HttpParams().set('email', email);
     return this.http.get<Application[]>(this.API_URL, { params });
   }
+
+  deleteApplication(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/applications/${id}`);
+  }
 }
