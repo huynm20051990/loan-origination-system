@@ -1,6 +1,10 @@
-# 🏦 EasyApply - https://easy-apply.pro/
+# 🏦 EasyApply
 
-EasyApply is a microservices-based loan origination system. 
+EasyApply is a microservices-based loan origination system.
+
+# Demo
+
+https://easy-apply.pro/
 
 ---
 ## 🛠️ Tech Stack
