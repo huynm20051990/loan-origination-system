@@ -7,7 +7,6 @@ import com.loan.origination.system.microservices.home.domain.model.SearchIntent;
 import com.loan.origination.system.microservices.home.infrastructure.output.persistence.entity.HomeEntity;
 import com.loan.origination.system.microservices.home.infrastructure.output.persistence.mapper.HomePersistenceMapper;
 import com.loan.origination.system.microservices.home.infrastructure.output.persistence.repository.HomeRepository;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -71,34 +70,34 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
   public void indexHome(Home home) {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("homeId", home.getId().toString());
-    metadata.put("city", home.getAddress().city());
-    metadata.put("state", home.getAddress().state());
 
-    // Convert price to string to ensure compatibility with JSONB storage
-    metadata.put("price", home.getPrice());
+    // Address Fields (Normalized to lowercase for case-insensitivity)
+    metadata.put("street", home.getAddress().street().toLowerCase());
+    metadata.put("city", home.getAddress().city().toLowerCase());
+    metadata.put("state", home.getAddress().state().toLowerCase());
+    metadata.put("country", home.getAddress().country().toLowerCase());
 
+    // Numeric Fields (Stored as Numbers to prevent SQL Grammar/&& errors)
+    metadata.put("price", home.getPrice().doubleValue());
     metadata.put("beds", home.getBeds());
     metadata.put("baths", home.getBaths());
     metadata.put("sqft", home.getSqft());
-    metadata.put("status", home.getStatus().name());
+    metadata.put("status", home.getStatus().name().toLowerCase());
 
-    // Create a descriptive string for semantic search
+    // Updated descriptive string for semantic search
     String searchContent =
         String.format(
-            "Home in %s, %s. Price: %s. %d beds and %.1f baths. %s",
+            "Home at %s, %s, %s, %s. Price: %s. %d beds and %.1f baths. %s",
+            home.getAddress().street(),
             home.getAddress().city(),
             home.getAddress().state(),
+            home.getAddress().country(),
             home.getPrice(),
             home.getBeds(),
             home.getBaths(),
             home.getDescription() == null ? "" : home.getDescription());
 
-    // Create the document using the ID explicitly to enable UPSERT behavior
     Document document = new Document(home.getId().toString(), searchContent, metadata);
-
-    // NOTE: For this to work without 'price' null errors,
-    // the row with this ID must already exist in the SQL table,
-    // or your PgVectorStore must be configured for true UPSERT behavior.
     vectorStore.add(List.of(document));
   }
 
@@ -173,21 +172,40 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
   }
 
   private String getValidColumns() {
-    return Arrays.stream(Home.class.getDeclaredFields())
-        .map(Field::getName)
-        .collect(Collectors.joining(", "));
+    // Explicitly listing columns to ensure the AI knows about nested address fields
+    return "street, city, state, country, price, beds, baths, sqft, status";
   }
 
   private Filter.Expression mapToExpression(FilterExpressionBuilder b, FilterItem f) {
-    if (f.column() == null || f.operator() == null) return null;
+    if (f.column() == null || f.operator() == null || f.value() == null) return null;
+
+    String col = f.column().toLowerCase();
+    Object val = f.value();
+
+    // 1. Identify Numeric Columns
+    List<String> numericColumns = List.of("price", "beds", "baths", "sqft");
+
+    if (numericColumns.contains(col)) {
+      if (val instanceof String s) {
+        // Remove '$', 'k', and commas, then convert to Double
+        try {
+          val = Double.parseDouble(s.replaceAll("[^\\d.]", ""));
+        } catch (NumberFormatException e) {
+          LOG.error("Could not parse numeric filter for {}: {}", col, s);
+          return null; // Skip invalid numeric filters
+        }
+      }
+    } else if (val instanceof String s) {
+      // 2. Handle Text Columns (city, state, etc.)
+      val = s.toLowerCase().trim();
+    }
 
     return switch (f.operator().toUpperCase()) {
-      case "GT", ">" -> b.gt(f.column(), f.value()).build();
-      case "LT", "<" -> b.lt(f.column(), f.value()).build();
-      case "GTE", ">=" -> b.gte(f.column(), f.value()).build();
-      case "LTE", "<=" -> b.lte(f.column(), f.value()).build();
-      case "EQ", "==" -> b.eq(f.column(), f.value()).build();
-      default -> b.eq(f.column(), f.value()).build();
+      case "GT", ">" -> b.gt(f.column(), val).build();
+      case "LT", "<" -> b.lt(f.column(), val).build();
+      case "GTE", ">=" -> b.gte(f.column(), val).build();
+      case "LTE", "<=" -> b.lte(f.column(), val).build();
+      default -> b.eq(f.column(), val).build();
     };
   }
 }

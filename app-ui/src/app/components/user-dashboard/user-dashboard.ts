@@ -60,8 +60,8 @@ export class UserDashboardComponent implements OnInit {
   getProgress(status: string): number {
     const s = status ? status.toUpperCase() : '';
     switch (s) {
-      case 'SUBMITTED': return 25;
-      case 'IN_REVIEW': return 65;
+      case 'SUBMITTED': return 0;
+      case 'IN_REVIEW': return 45;
       case 'APPROVED': return 100;
       case 'REJECTED': return 100;
       default: return 10;

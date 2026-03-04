@@ -43,7 +43,7 @@
 
             <div class="data-point progress">
               <div class="progress-info">
-                <span>Underwriting Status</span>
+                <span>Assessment Status</span>
                 <span class="percentage">{{ getProgress(app.status) }}%</span>
               </div>
               <mat-progress-bar mode="determinate" [value]="getProgress(app.status)"></mat-progress-bar>
@@ -56,7 +56,7 @@
             CANCEL
           </button>
           <button mat-flat-button color="primary" (click)="openFeatureNotAvailable()">
-            VIEW DETAILS
+            START ASSESSMENT
           </button>
         </mat-card-actions>
       </mat-card>
