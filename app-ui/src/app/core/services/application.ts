@@ -20,6 +20,6 @@ export class ApplicationService {
   }
 
   deleteApplication(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}/applications/${id}`);
+    return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 }
