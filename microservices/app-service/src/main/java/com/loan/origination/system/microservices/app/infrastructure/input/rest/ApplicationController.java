@@ -3,7 +3,7 @@ package com.loan.origination.system.microservices.app.infrastructure.input.rest;
 import com.loan.origination.system.api.core.application.dto.ApplicationResponseDTO;
 import com.loan.origination.system.api.core.application.dto.ApplicationSubmissionRequestDTO;
 import com.loan.origination.system.api.core.application.v1.ApplicationAPI;
-import com.loan.origination.system.microservices.app.application.port.input.LoanApplicationUseCase;
+import com.loan.origination.system.microservices.app.application.port.input.ApplicationUseCase;
 import com.loan.origination.system.microservices.app.application.port.output.ApplicationRepositoryPort;
 import com.loan.origination.system.microservices.app.domain.model.Application;
 import com.loan.origination.system.microservices.app.domain.model.Borrower;
@@ -18,12 +18,12 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class ApplicationController implements ApplicationAPI {
 
-  private final LoanApplicationUseCase loanApplicationUseCase;
+  private final ApplicationUseCase loanApplicationUseCase;
   private final ApplicationRepositoryPort loanRepositoryPort; // For read operations
   private final ApplicationWebMapper mapper;
 
   public ApplicationController(
-      LoanApplicationUseCase loanApplicationUseCase,
+      ApplicationUseCase loanApplicationUseCase,
       ApplicationRepositoryPort loanRepositoryPort,
       ApplicationWebMapper mapper) {
     this.loanApplicationUseCase = loanApplicationUseCase;
@@ -67,5 +67,15 @@ public class ApplicationController implements ApplicationAPI {
   @Override
   public List<ApplicationResponseDTO> getApplicationsByEmail(@RequestParam String email) {
     return loanRepositoryPort.findByEmail(email).stream().map(mapper::toResponse).toList();
+  }
+
+  @Override
+  public void deleteApplication(UUID id) {
+    if (!loanRepositoryPort.existsById(id)) {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, "Application not found with ID: " + id);
+    }
+
+    loanApplicationUseCase.delete(id);
   }
 }

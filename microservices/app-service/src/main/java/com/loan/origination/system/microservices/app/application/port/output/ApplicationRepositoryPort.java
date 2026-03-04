@@ -13,4 +13,8 @@ public interface ApplicationRepositoryPort {
   Optional<Application> findByApplicationNumber(String applicationNumber);
 
   List<Application> findByEmail(String email);
+
+  boolean existsById(UUID id);
+
+  void deleteById(UUID id);
 }

@@ -2,7 +2,6 @@
   <header class="dashboard-header">
     <div class="header-content">
       <h1>Welcome back, {{ userName }}</h1>
-      <p>Manage your properties and track application statuses.</p>
     </div>
   </header>
 
@@ -52,7 +51,9 @@
         </mat-card-content>
 
         <mat-card-actions align="end">
-          <button mat-button class="cancel-btn" *ngIf="app.status !== 'Approved' && app.status !== 'Rejected'">
+          <button mat-button class="cancel-btn"
+                  *ngIf="app.status !== 'Approved' && app.status !== 'Rejected'"
+                  (click)="cancelApplication(app)">
             CANCEL
           </button>
           <button mat-flat-button color="primary" (click)="openFeatureNotAvailable()">

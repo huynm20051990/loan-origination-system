@@ -1,7 +1,7 @@
 package com.loan.origination.system.microservices.app.infrastructure.input.messaging;
 
 import com.loan.origination.system.contracts.domain.events.*;
-import com.loan.origination.system.microservices.app.application.port.input.LoanApplicationUseCase;
+import com.loan.origination.system.microservices.app.application.port.input.ApplicationUseCase;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +13,9 @@ public class ApplicationConsumer {
 
   private static final Logger log = LoggerFactory.getLogger(ApplicationConsumer.class);
 
-  private final LoanApplicationUseCase loanApplicationUseCase;
+  private final ApplicationUseCase loanApplicationUseCase;
 
-  public ApplicationConsumer(LoanApplicationUseCase loanApplicationUseCase) {
+  public ApplicationConsumer(ApplicationUseCase loanApplicationUseCase) {
     this.loanApplicationUseCase = loanApplicationUseCase;
   }
 
