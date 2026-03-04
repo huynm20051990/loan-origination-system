@@ -29,4 +29,9 @@ public interface ApplicationAPI {
    */
   @GetMapping(produces = "application/json")
   List<ApplicationResponseDTO> getApplicationsByEmail(@RequestParam String email);
+
+  /** * Deletes an application by its internal UUID. Returns 204 No Content on success. */
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  void deleteApplication(@PathVariable UUID id);
 }

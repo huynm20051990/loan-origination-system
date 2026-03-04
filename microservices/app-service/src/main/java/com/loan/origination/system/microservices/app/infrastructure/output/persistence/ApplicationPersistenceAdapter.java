@@ -40,4 +40,14 @@ public class ApplicationPersistenceAdapter implements ApplicationRepositoryPort 
   public List<Application> findByEmail(String email) {
     return repository.findByEmail(email).stream().map(mapper::toDomain).toList();
   }
+
+  @Override
+  public boolean existsById(UUID id) {
+    return repository.existsById(id);
+  }
+
+  @Override
+  public void deleteById(UUID id) {
+    repository.deleteById(id);
+  }
 }

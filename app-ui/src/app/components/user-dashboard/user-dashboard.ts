@@ -7,8 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Application } from '../../core/models/application';
+import { ApplicationService } from '../../core/services/application';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +23,9 @@ import { Application } from '../../core/models/application';
     MatIconModule,
     MatProgressBarModule,
     MatChipsModule,
-    MatListModule
+    MatListModule,
+    MatSnackBarModule,
+    MatDialogModule
   ],
   providers: [MatSnackBar],
   templateUrl: './user-dashboard.html',
@@ -28,11 +33,14 @@ import { Application } from '../../core/models/application';
 })
 export class UserDashboardComponent implements OnInit {
   private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
+  private applicationService = inject(ApplicationService);
 
   applications: Application[] = [];
   userName: string = 'User';
 
-  constructor(private snackBar: MatSnackBar) {
+  constructor() {
     const navigation = this.router.getCurrentNavigation();
     // Proper type casting for state
     const state = navigation?.extras.state as { applications: Application[] } | undefined;
@@ -44,8 +52,8 @@ export class UserDashboardComponent implements OnInit {
   }
 
   openFeatureNotAvailable() {
-    this.snackBar.open('This feature is currently under development.', 'Close', {
-      duration: 3000, // 3 seconds
+    this.snackBar.open('Under development. Contact Huy Nguyen (huynm20051990@gmail.com)', 'Close', {
+      duration: 6000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
     });
@@ -66,5 +74,31 @@ export class UserDashboardComponent implements OnInit {
       case 'REJECTED': return 100;
       default: return 10;
     }
+  }
+
+  cancelApplication(app: any) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: '350px',
+      maxWidth: '600px',
+      data: { appNumber: app.applicationNumber }
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.executeDelete(app.id);
+      }
+    });
+  }
+
+  private executeDelete(id: string) {
+    this.applicationService.deleteApplication(id).subscribe({
+      next: () => {
+        this.applications = this.applications.filter(a => a.id !== id);
+        this.snackBar.open('Application successfully cancelled.', 'Dismiss', { duration: 3000 });
+      },
+      error: (err: any) => {
+        this.snackBar.open('System error: Could not cancel application.', 'Close');
+      }
+    });
   }
 }

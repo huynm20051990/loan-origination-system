@@ -3,7 +3,7 @@ package com.loan.origination.system.microservices.app.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loan.origination.system.contracts.domain.events.ApplicationSubmittedEvent;
 import com.loan.origination.system.contracts.domain.events.DomainEvent;
-import com.loan.origination.system.microservices.app.application.port.input.LoanApplicationUseCase;
+import com.loan.origination.system.microservices.app.application.port.input.ApplicationUseCase;
 import com.loan.origination.system.microservices.app.application.port.output.ApplicationRepositoryPort;
 import com.loan.origination.system.microservices.app.application.port.output.OutboxRepositoryPort;
 import com.loan.origination.system.microservices.app.domain.model.Application;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ApplicationService implements LoanApplicationUseCase {
+public class ApplicationService implements ApplicationUseCase {
 
   private final DomainApplicationService loanDomainService;
   private final ApplicationRepositoryPort applicationRepository;
@@ -63,4 +63,9 @@ public class ApplicationService implements LoanApplicationUseCase {
 
   @Override
   public void markAsNotified(DomainEvent event) {}
+
+  @Override
+  public void delete(UUID id) {
+    applicationRepository.deleteById(id);
+  }
 }
