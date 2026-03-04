@@ -7,7 +7,7 @@ server.ssl:
   key-store: classpath:keystore/edge.p12
   key-alias: localhost
 
-spring.cloud.gateway.routes:
+spring.cloud.gateway.server.webflux.routes:
 - id: home-service
   uri: http://home-service
   predicates:
