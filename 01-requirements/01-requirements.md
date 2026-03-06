@@ -1,28 +1,45 @@
-# 📌 Requirement: EasyApply
+# [EasyApply](https://easy-apply.pro/)
 
-EasyApply is a digital platform designed to streamline the home buying and loan application process.
+A digital platform designed to streamline the home buying and loan application process.
 
-## 🏠 Core Capabilities
+## Requirement
 
-### 1. Home Listing
+- [Home Listing](#1-home-listing)
+- [Home Browsing](#2-home-browsing)
+- [Loan Application](#3-loan-application)
+- [Automated Decisioning](#4-automated-decisioning)
+- [Notification](#5-notification)
+- [Application Tracking](#6-application-tracking)
+
+---
+
+## Home Listing
+
 - Home Sellers can post properties they wish to sell.
 - Listings are made available for browsing by potential buyers.
 
-### 2. Home Browsing
+## Home Browsing
+
 - Borrowers / Home Buyers can explore available properties.
 - Property details are accessible to support informed purchasing decisions.
 
-### 3. Loan Application
+## Loan Application
+
 - Borrowers can submit a loan application online.
 - Applicants provide identity and contact information.
 - Financial documents are retrieved automatically through integrated third-party services.
 - Credit checks and verification processes are executed automatically without manual intervention.
 
-### 4. Automated Decisioning
+## Automated Decisioning
+
 - After completing verification and underwriting processes, the system automatically determines the loan outcome.
 
-### 5. Notification
+## Notification
+
 - Borrowers are notified of the decision via email or SMS.
 
-### 6. Application Tracking
+## Application Tracking
+
 - Borrowers can log in at any time to monitor the status of their loan application.
+
+---
