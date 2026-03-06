@@ -1,13 +1,17 @@
-# 🏦 EasyApply
+# [EasyApply](https://easy-apply.pro/)
 
-EasyApply is a microservices-based loan origination system.
+A digital platform designed to streamline the home buying and loan application process.
 
-# Demo
-
-https://easy-apply.pro/
+# Contents
+- [Requirement](01-requiment/01-requirement.md)
+- [Architecture]
+  - [Architecture Characteristics] 
+  - [Architecture Decisions]
+  - [Logical Components](02-architecture/02-logical-components.png)
+  - [Architecture Style]
 
 ---
-## 🛠️ Tech Stack
+# Tech Stack
 * **Architecture:** Microservices, Event-Driven
 * **Frontend:** Angular
 * **Backend:** Java, Spring Boot
