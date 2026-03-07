@@ -3,12 +3,19 @@
 A digital platform designed to streamline the home buying and loan application process.
 
 # Contents
-- [Requirement](01-requiment/01-requirement.md)
+- [Requirement](01-requirement/01-requirement.md)
 - [Architecture]
   - [Architecture Characteristics] 
   - [Architecture Decisions]
   - [Logical Components](02-architecture/02-logical-components.png)
   - [Architecture Style]
+- [System Design]
+  - [High Level Design]
+  - [API Design]
+  - [Data Model]
+- [Testing]
+- [Deployment]
+- [Tech Stack](#tech-stack)
 
 ---
 # Tech Stack
