@@ -221,19 +221,19 @@
           <mxGeometry height="415" width="180" x="770" y="299" as="geometry" />
         </mxCell>
         <mxCell id="Wsh56XsvjSv-w13LMPQg-23" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontStyle=1;fontColor=#007FFF;fontSize=13;" value="Third Party APIs" vertex="1">
-          <mxGeometry height="30" width="120" x="800" y="305" as="geometry" />
+          <mxGeometry height="30" width="120" x="800" y="680" as="geometry" />
         </mxCell>
         <mxCell id="Wsh56XsvjSv-w13LMPQg-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#007FFF;fontStyle=1" value="Identity Check" vertex="1">
-          <mxGeometry height="36" width="120" x="800" y="337" as="geometry" />
+          <mxGeometry height="36" width="120" x="800" y="304" as="geometry" />
         </mxCell>
         <mxCell id="Wsh56XsvjSv-w13LMPQg-25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#007FFF;fontStyle=1" value="Credit Report" vertex="1">
-          <mxGeometry height="36" width="120" x="800" y="381" as="geometry" />
+          <mxGeometry height="36" width="120" x="800" y="344" as="geometry" />
         </mxCell>
         <mxCell id="Wsh56XsvjSv-w13LMPQg-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#007FFF;fontStyle=1" value="Property Evaluation" vertex="1">
-          <mxGeometry height="36" width="120" x="800" y="424" as="geometry" />
+          <mxGeometry height="36" width="120" x="800" y="383" as="geometry" />
         </mxCell>
         <mxCell id="Wsh56XsvjSv-w13LMPQg-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#007FFF;fontStyle=1" value="Income&lt;br&gt;Employment History&lt;br&gt;Financial Data" vertex="1">
-          <mxGeometry height="58" width="120" x="800" y="466" as="geometry" />
+          <mxGeometry height="58" width="120" x="800" y="422" as="geometry" />
         </mxCell>
         <mxCell id="Wsh56XsvjSv-w13LMPQg-28" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#007FFF;fontStyle=1" value="Email&lt;br&gt;SMS" vertex="1">
           <mxGeometry height="36" width="120" x="800" y="545" as="geometry" />
@@ -266,6 +266,15 @@
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="720" y="643" as="sourcePoint" />
             <mxPoint x="760" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Wsh56XsvjSv-w13LMPQg-35" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#007FFF;fontStyle=1" value="Rule Engine" vertex="1">
+          <mxGeometry height="36" width="120" x="800" y="487" as="geometry" />
+        </mxCell>
+        <mxCell id="Wsh56XsvjSv-w13LMPQg-36" edge="1" parent="1" source="ZncxfJL6bduVLojWPnwy-46" style="endArrow=classic;html=1;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="Wsh56XsvjSv-w13LMPQg-35" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="660" y="471.25" as="sourcePoint" />
+            <mxPoint x="790" y="488.25" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
