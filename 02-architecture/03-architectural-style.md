@@ -2,10 +2,7 @@
 
 ## **Winning Choice**
 
-Based on our analysis, **Microservices architecture** is selected for the Loan Origination System.
-- It aligns with the **DDD subdomains** and **bounded contexts**.
-- Allows independent scaling of high-volume services (Loan Application, Underwriting, Notification).
-- Supports event-driven workflows where necessary (verification, underwriting, notifications) while keeping synchronous interactions where simpler.
+Based on our analysis, **Event Driven Microservices Architecture** is selected for EasyApply project.
 
 ---
 ## **Monolith Architecture Analysis**
