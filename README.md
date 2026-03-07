@@ -7,7 +7,7 @@ A digital platform designed to streamline the home buying and loan application p
 - Architecture
   - [Architecture Characteristics](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/01-architectural-characteristics.md)
   - Architecture Decisions
-    - [ADR-001](https://github.com/huynm20051990/loan-origination-system/tree/main/02-architecture/04-architectural-decision-records)
+    - [ADR-001](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/04-architectural-decision-records/ADR-001-microservices-architecture.md)
   - [Logical Components](02-architecture/02-logical-components.png)
   - [Architecture Style](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/03-architectural-style.md)
 - System Design
@@ -17,6 +17,10 @@ A digital platform designed to streamline the home buying and loan application p
   - [Hexagonal Architecture](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/04-hexagonal-architecture.md)
   - [Rate Limiting](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/05-rate-limiting.md)
   - [Timeout, Retry, Circuit Breaker](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/06-timeout-retry-circuitbreaker.md)
+  - [Change Data Capture](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/07-change-data-capture.md)
+  - [Vectore Database](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/08-vector-database.md)
+  - [LLM Integration](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/09-LLM-Integration.md)
+  - [RAG vs GAR](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/10-rag-vs-gar.md)
 - Testing
 - Deployment
 
