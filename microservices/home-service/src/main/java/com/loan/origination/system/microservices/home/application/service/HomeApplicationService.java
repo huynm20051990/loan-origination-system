@@ -99,6 +99,6 @@ public class HomeApplicationService implements HomeUseCase {
       return;
     }
 
-    allHomes.forEach(homeRepositoryPort::indexHome);
+    homeRepositoryPort.indexHomes(allHomes);
   }
 }
