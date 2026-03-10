@@ -17,5 +17,7 @@ public interface HomeRepositoryPort {
 
   void indexHome(Home home);
 
+  void indexHomes(List<Home> homes);
+
   List<UUID> search(String query);
 }

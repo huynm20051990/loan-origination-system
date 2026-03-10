@@ -1,22 +1,21 @@
 package com.loan.origination.system.microservices.home.infrastructure.output.persistence;
 
 import com.loan.origination.system.microservices.home.application.port.output.HomeRepositoryPort;
-import com.loan.origination.system.microservices.home.domain.model.FilterItem;
 import com.loan.origination.system.microservices.home.domain.model.Home;
-import com.loan.origination.system.microservices.home.domain.model.SearchIntent;
 import com.loan.origination.system.microservices.home.infrastructure.output.persistence.entity.HomeEntity;
 import com.loan.origination.system.microservices.home.infrastructure.output.persistence.mapper.HomePersistenceMapper;
 import com.loan.origination.system.microservices.home.infrastructure.output.persistence.repository.HomeRepository;
+import com.loan.origination.system.microservices.home.infrastructure.tools.HomeSearchTools;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.ToolCallAdvisor;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.ai.vectorstore.filter.Filter;
-import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +33,16 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
       HomeRepository homeRepository,
       HomePersistenceMapper mapper,
       VectorStore vectorStore,
-      ChatClient chatClient) {
+      ChatClient.Builder builder,
+      HomeSearchTools homeSearchTools) {
     this.homeRepository = homeRepository;
     this.mapper = mapper;
     this.vectorStore = vectorStore;
-    this.chatClient = chatClient;
+    this.chatClient =
+        builder
+            .defaultTools(homeSearchTools)
+            .defaultAdvisors(ToolCallAdvisor.builder().build())
+            .build();
   }
 
   @Override
@@ -68,6 +72,17 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
   @Override
   @Transactional // Ensure atomicity
   public void indexHome(Home home) {
+    vectorStore.add(List.of(mapToDocument(home)));
+  }
+
+  @Override
+  public void indexHomes(List<Home> homes) {
+    if (homes.isEmpty()) return;
+    List<Document> documents = homes.stream().map(this::mapToDocument).toList();
+    vectorStore.add(documents);
+  }
+
+  private Document mapToDocument(Home home) {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("homeId", home.getId().toString());
 
@@ -97,115 +112,32 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
             home.getBaths(),
             home.getDescription() == null ? "" : home.getDescription());
 
-    Document document = new Document(home.getId().toString(), searchContent, metadata);
-    vectorStore.add(List.of(document));
+    return new Document(home.getId().toString(), searchContent, metadata);
   }
 
   @Override
   public List<UUID> search(String query) {
 
-    // STEP 1: AI Extracting intent (Vibe + Structured Filters)
-    // When building your prompt
-    String systemPrompt =
-        """
-        You are a real estate assistant. Extract 'vibe' and 'filters'.
-        VALID FILTER COLUMNS: %s
+    LOG.info("Starting agentic search for query: {}", query);
 
-        Instructions:
-        1. If a detail matches a VALID FILTER COLUMN, create a FilterItem.
-        2. Everything else (style, materials, feelings) MUST go into the 'vibe'.
-        3. If 'vibe' would be empty, set it to 'neutral'.
-        """
-            .formatted(getValidColumns());
-
-    SearchIntent intent;
     try {
-      // Attempt AI Extraction
-      LOG.info("Start chatting using query: " + query);
-      intent =
-          chatClient.prompt().system(systemPrompt).user(query).call().entity(SearchIntent.class);
+      return chatClient
+          .prompt()
+          .system(
+              "You are a data extraction agent. When you receive a list of IDs from a tool, "
+                  + "return ONLY the JSON array of those UUIDs. Do not add any text or explanation.")
+          .user(query)
+          .call()
+          .entity(new ParameterizedTypeReference<List<UUID>>() {});
+
     } catch (Exception e) {
-      // FALLBACK: If AI fails (Quota, Timeout, etc.), use raw query
-      // This ensures the user still gets results!
-      intent = new SearchIntent(query, List.of());
+      LOG.error("Agentic search failed, falling back to basic similarity search", e);
+      // Fallback: simple similarity search without complex filtering
+      return vectorStore
+          .similaritySearch(SearchRequest.builder().query(query).topK(5).build())
+          .stream()
+          .map(doc -> UUID.fromString(doc.getMetadata().get("homeId").toString()))
+          .toList();
     }
-    LOG.info(intent.toString());
-
-    // STEP 2: Build the Metadata Filters
-    FilterExpressionBuilder b = new FilterExpressionBuilder();
-    Filter.Expression finalExpression = null;
-
-    if (intent.filters() != null && !intent.filters().isEmpty()) {
-      for (FilterItem item : intent.filters()) {
-        Filter.Expression current = mapToExpression(b, item);
-        if (current != null) {
-          if (finalExpression == null) {
-            finalExpression = current;
-          } else {
-            // We join them using the builder and immediately build
-            finalExpression =
-                new Filter.Expression(Filter.ExpressionType.AND, finalExpression, current);
-          }
-        }
-      }
-    }
-
-    String searchPath =
-        (intent.vibe() == null || intent.vibe().equalsIgnoreCase("neutral"))
-            ? query // Use original query if vibe is empty
-            : intent.vibe();
-
-    // 3. Configure and Execute Request
-    var request =
-        SearchRequest.builder()
-            .query(searchPath)
-            .topK(5)
-            .similarityThreshold(0.5)
-            .filterExpression(finalExpression)
-            .build();
-    LOG.info(request.toString());
-
-    // STEP 4: Execute using the 'request' object
-    return vectorStore.similaritySearch(request).stream()
-        .map(doc -> UUID.fromString(doc.getMetadata().get("homeId").toString()))
-        .toList();
-  }
-
-  private String getValidColumns() {
-    // Explicitly listing columns to ensure the AI knows about nested address fields
-    return "street, city, state, country, price, beds, baths, sqft, status";
-  }
-
-  private Filter.Expression mapToExpression(FilterExpressionBuilder b, FilterItem f) {
-    if (f.column() == null || f.operator() == null || f.value() == null) return null;
-
-    String col = f.column().toLowerCase();
-    Object val = f.value();
-
-    // 1. Identify Numeric Columns
-    List<String> numericColumns = List.of("price", "beds", "baths", "sqft");
-
-    if (numericColumns.contains(col)) {
-      if (val instanceof String s) {
-        // Remove '$', 'k', and commas, then convert to Double
-        try {
-          val = Double.parseDouble(s.replaceAll("[^\\d.]", ""));
-        } catch (NumberFormatException e) {
-          LOG.error("Could not parse numeric filter for {}: {}", col, s);
-          return null; // Skip invalid numeric filters
-        }
-      }
-    } else if (val instanceof String s) {
-      // 2. Handle Text Columns (city, state, etc.)
-      val = s.toLowerCase().trim();
-    }
-
-    return switch (f.operator().toUpperCase()) {
-      case "GT", ">" -> b.gt(f.column(), val).build();
-      case "LT", "<" -> b.lt(f.column(), val).build();
-      case "GTE", ">=" -> b.gte(f.column(), val).build();
-      case "LTE", "<=" -> b.lte(f.column(), val).build();
-      default -> b.eq(f.column(), val).build();
-    };
   }
 }
