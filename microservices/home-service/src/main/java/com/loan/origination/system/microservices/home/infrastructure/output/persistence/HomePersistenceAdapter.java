@@ -15,7 +15,9 @@ import org.springframework.ai.chat.client.advisor.ToolCallAdvisor;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,9 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
   private final HomePersistenceMapper mapper;
   private final VectorStore vectorStore;
   private final ChatClient chatClient;
+
+  @Value("classpath:/prompts/search-properties.st")
+  private Resource searchResource;
 
   public HomePersistenceAdapter(
       HomeRepository homeRepository,
@@ -116,25 +121,22 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
   }
 
   @Override
-  public List<UUID> search(String query) {
-
-    LOG.info("Starting agentic search for query: {}", query);
+  public List<UUID> search(String userQuery) {
 
     try {
+      LOG.info("Starting agentic search for query: {}", userQuery);
       return chatClient
           .prompt()
-          .system(
-              "You are a data extraction agent. When you receive a list of IDs from a tool, "
-                  + "return ONLY the JSON array of those UUIDs. Do not add any text or explanation.")
-          .user(query)
+          // Instructions go in SYSTEM (Spring AI handles the Resource reading and params)
+          .system(s -> s.text(searchResource).param("userQuery", userQuery))
+          // The actual input goes in USER
+          .user(userQuery)
           .call()
           .entity(new ParameterizedTypeReference<List<UUID>>() {});
-
-    } catch (Exception e) {
+    } catch (RuntimeException e) {
       LOG.error("Agentic search failed, falling back to basic similarity search", e);
-      // Fallback: simple similarity search without complex filtering
       return vectorStore
-          .similaritySearch(SearchRequest.builder().query(query).topK(5).build())
+          .similaritySearch(SearchRequest.builder().query(userQuery).topK(5).build())
           .stream()
           .map(doc -> UUID.fromString(doc.getMetadata().get("homeId").toString()))
           .toList();
