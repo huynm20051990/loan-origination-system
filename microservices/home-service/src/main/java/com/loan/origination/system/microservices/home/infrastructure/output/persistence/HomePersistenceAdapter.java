@@ -146,6 +146,15 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
               // .entity(new ParameterizedTypeReference<List<UUID>>() {})
               .responseEntity(new ParameterizedTypeReference<List<UUID>>() {});
 
+      assert response.getResponse() != null;
+      var metadata = response.getResponse().getMetadata();
+      LOG.info("AI Search complete using model: {}", metadata.getModel());
+      LOG.info(
+          "Token usage: prompt={}, completion={}, total={}",
+          metadata.getUsage().getPromptTokens(),
+          metadata.getUsage().getCompletionTokens(),
+          metadata.getUsage().getTotalTokens());
+
       return response.entity();
     } catch (RuntimeException e) {
       LOG.error("Search failed, falling back to basic similarity search", e);
