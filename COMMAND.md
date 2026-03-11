@@ -60,6 +60,7 @@ curl -X DELETE localhost:8080/product-composite/1
 curl -X DELETE localhost:8080/product-composite/2
 
 export COMPOSE_FILE=docker-compose-kafka.yml
+export COMPOSE_FILE=docker-compose-demo.yml
 docker-compose build && docker-compose up -d
 
 docker-compose exec kafka kafka-topics --bootstrap-server localhost:9092 --list

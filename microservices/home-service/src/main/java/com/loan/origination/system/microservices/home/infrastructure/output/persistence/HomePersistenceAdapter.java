@@ -6,12 +6,15 @@ import com.loan.origination.system.microservices.home.infrastructure.output.pers
 import com.loan.origination.system.microservices.home.infrastructure.output.persistence.mapper.HomePersistenceMapper;
 import com.loan.origination.system.microservices.home.infrastructure.output.persistence.repository.HomeRepository;
 import com.loan.origination.system.microservices.home.infrastructure.tools.HomeSearchTools;
+import jakarta.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.ResponseEntity;
 import org.springframework.ai.chat.client.advisor.ToolCallAdvisor;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -31,8 +34,17 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
   private final VectorStore vectorStore;
   private final ChatClient chatClient;
 
-  @Value("classpath:/prompts/search-properties.st")
+  @Value("file:/prompts/search-properties.st")
   private Resource searchResource;
+
+  @PostConstruct
+  public void verifyPromptExists() {
+    if (!searchResource.exists()) {
+      LOG.warn(
+          "CRITICAL: Prompt file not found at /prompts/search-properties.st. "
+              + "Agentic search will fail and trigger fallback mode.");
+    }
+  }
 
   public HomePersistenceAdapter(
       HomeRepository homeRepository,
@@ -124,17 +136,28 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
   public List<UUID> search(String userQuery) {
 
     try {
-      LOG.info("Starting agentic search for query: {}", userQuery);
-      return chatClient
-          .prompt()
-          // Instructions go in SYSTEM (Spring AI handles the Resource reading and params)
-          .system(s -> s.text(searchResource).param("userQuery", userQuery))
-          // The actual input goes in USER
-          .user(userQuery)
-          .call()
-          .entity(new ParameterizedTypeReference<List<UUID>>() {});
+      LOG.info("Starting search for query: {}", userQuery);
+      ResponseEntity<ChatResponse, List<UUID>> response =
+          chatClient
+              .prompt()
+              .system(s -> s.text(searchResource).param("userQuery", userQuery))
+              .user(userQuery)
+              .call()
+              // .entity(new ParameterizedTypeReference<List<UUID>>() {})
+              .responseEntity(new ParameterizedTypeReference<List<UUID>>() {});
+
+      assert response.getResponse() != null;
+      var metadata = response.getResponse().getMetadata();
+      LOG.info("AI Search complete using model: {}", metadata.getModel());
+      LOG.info(
+          "Token usage: prompt={}, completion={}, total={}",
+          metadata.getUsage().getPromptTokens(),
+          metadata.getUsage().getCompletionTokens(),
+          metadata.getUsage().getTotalTokens());
+
+      return response.entity();
     } catch (RuntimeException e) {
-      LOG.error("Agentic search failed, falling back to basic similarity search", e);
+      LOG.error("Search failed, falling back to basic similarity search", e);
       return vectorStore
           .similaritySearch(SearchRequest.builder().query(userQuery).topK(5).build())
           .stream()
