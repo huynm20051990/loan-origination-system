@@ -159,7 +159,7 @@ services:
       - ./scripts/register-connectors.sh:/register-connectors.sh
     entrypoint: [ "/bin/sh", "/register-connectors.sh" ]
     depends_on:
-      debezium: { condition: service_started }
+      debezium: { condition: service_healthy }
 
   home-service:
     build: microservices/home-service
@@ -174,6 +174,7 @@ services:
       - SPRING_AI_GOOGLE_GENAI_API_KEY=${GEMINI_API_KEY}
     volumes:
       - $PWD/config-repo:/config-repo
+      - $PWD/prompts:/prompts
     depends_on:
       home-pg:
         condition: service_healthy

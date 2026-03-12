@@ -606,7 +606,8 @@ kubectl config set-context $(kubectl config current-context) --namespace=loan-or
 kubectl get pods
 
 docker exec -it easy-apply-credit-db psql -U home-user-prod -d credit-db -c "SELECT * FROM credit_reports;"
-docker exec -it easy-apply-app-db psql -U home-user-prod -d app-db -c "SELECT * FROM applications;"
+docker exec -it easy-apply-app-pg psql -U home-user-prod -d app-db -c "SELECT * FROM applications;"
+docker exec -it easy-apply-assessment-pg psql -U home-user-prod -d assessment-db -c "SELECT * FROM assessments;"
 docker exec -it easy-apply-notification-db psql -U home-user-prod -d notification-db -c "SELECT * FROM notifications;"
 
 

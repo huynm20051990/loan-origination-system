@@ -24,7 +24,6 @@ spring.cloud:
 
     kafka:
       binder:
-        brokers: localhost:9092
         auto-create-topics: true
 # --- Spring Cloud Stream & Kafka Configuration ---
 
@@ -68,6 +67,10 @@ spring.config.activate.on-profile: docker
 
 server.port: 80
 spring.datasource.url: jdbc:postgresql://app-pg/app-db
+
+# Override Kafka broker for Docker network
+spring.cloud.stream.kafka.binder.brokers: kafka:29092
+
 
 ---
 spring.config.activate.on-profile: demo
