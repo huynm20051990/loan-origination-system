@@ -220,6 +220,17 @@ services:
       auth-server:
         condition: service_healthy
 
+  assessment-mcp-server:
+    build: mcp-server/assessment-mcp-server
+    image: loan-origination-system/assessment-mcp-server
+    mem_limit: 512m
+    container_name: easy-apply-assessment-mcp-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/assessment-mcp-server.yml
+    volumes:
+      - $PWD/config-repo:/config-repo
+
   notification-service:
     build: microservices/notification-service
     image: loan-origination-system/notification-service

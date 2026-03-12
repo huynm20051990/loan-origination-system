@@ -1,6 +1,7 @@
 include("api")
 include("util")
 include("contracts")
+include("mcp-server:assessment-mcp-server")
 include("microservices:home-service")
 include("microservices:app-service")
 include("microservices:assessment-service")
