@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationSubmittedConsumer {
 
-  private static final Logger log = LoggerFactory.getLogger(ApplicationSubmittedConsumer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ApplicationSubmittedConsumer.class);
   private final ProcessAssessmentUseCase processAssessmentUseCase;
 
   public ApplicationSubmittedConsumer(ProcessAssessmentUseCase processAssessmentUseCase) {

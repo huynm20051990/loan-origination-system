@@ -41,7 +41,7 @@ docker exec -it easy-apply-kafka \
 /opt/kafka/bin/kafka-topics.sh \
 --bootstrap-server localhost:9092 \
 --describe \
---topic application.loan_application
+--topic application.application_submitted
 # Consume only the latest events
 docker exec -it easy-apply-kafka \
 /opt/kafka/bin/kafka-console-consumer.sh \

@@ -15,6 +15,7 @@ java {
 
 val mapstructVersion = "1.6.3"
 var springCloudVersion = "2025.0.0"
+val springAiVersion = "1.1.2"
 
 repositories {
     mavenCentral()
@@ -32,6 +33,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    // --- Spring AI ---
+    implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
+    implementation("org.springframework.ai:spring-ai-starter-mcp-client")
+    // --- Spring AI ---
     // --- KAFKA & CLOUD STREAM ---
     implementation("org.springframework.cloud:spring-cloud-stream")
     implementation("org.springframework.cloud:spring-cloud-stream-binder-kafka")
@@ -54,6 +59,7 @@ dependencies {
 
 dependencyManagement {
     imports {
+        mavenBom("org.springframework.ai:spring-ai-bom:$springAiVersion")
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
     }
 }
