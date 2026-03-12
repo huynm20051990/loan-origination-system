@@ -1,0 +1,17 @@
+spring.application.name: assessment-mcp-server
+spring.main.banner-mode: "off"
+
+spring.ai.mcp.server:
+  name: "assessment-mcp-server"
+  request-timeout: "1h"
+  protocol: "STREAMABLE"
+  port: 7008
+
+# Match the server port to the MCP port
+server.port: 7008
+logging.file.name: "/logs/mcp-server.log"
+
+---
+spring.config.activate.on-profile: docker
+server.port: 80
+spring.ai.mcp.server.port: 80
