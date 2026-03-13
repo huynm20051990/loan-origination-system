@@ -27,7 +27,9 @@ tasks.named<Jar>("jar") {
 dependencies {
     implementation(project(":api"))
     implementation(project(":util"))
+    implementation(project(":contracts"))
     implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

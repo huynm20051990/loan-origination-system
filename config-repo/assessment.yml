@@ -18,11 +18,11 @@ spring:
             model: gemini-2.5-flash
     mcp:
       client:
-        streamable:
-          http:
-            connections:
-              assessment-server:
-                url: "http://easy-apply-assessment-mcp-server:80"
+        sse:
+          enabled: true
+          connections:
+            assessment-server:
+              url: "http://easy-apply-assessment-mcp-server:80/mcp"
 #--- End Spring AI config ---
 
 # --- Spring Cloud Stream & Kafka Configuration ---
