@@ -211,12 +211,15 @@ services:
       - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/assessment.yml
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
+      - SPRING_AI_GOOGLE_GENAI_API_KEY=${GEMINI_API_KEY}
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
       - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:29092
     volumes:
       - $PWD/config-repo:/config-repo
     depends_on:
       assessment-pg:
+        condition: service_healthy
+      assessment-mcp-server:
         condition: service_healthy
       auth-server:
         condition: service_healthy
@@ -231,6 +234,12 @@ services:
       - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/assessment-mcp-server.yml
     volumes:
       - $PWD/config-repo:/config-repo
+    healthcheck:
+      test: [ "CMD", "curl", "-fs", "http://localhost:4004/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   notification-service:
     build: microservices/notification-service
