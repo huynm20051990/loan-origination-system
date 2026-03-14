@@ -8,14 +8,30 @@ spring.threads.virtual.enabled: true
 spring:
   ai:
     model:
+      embedding:
+        text: google-genai
       chat: google-genai
 
     google:
       genai:
-        api-key: ${SPRING_AI_GOOGLE_GENAI_API_KEY}
+        embedding:
+          api-key: ${SPRING_AI_GOOGLE_GENAI_API_KEY}
+          enable: true
+          text:
+            options:
+              model: gemini-embedding-001
+              dimensions: 768
         chat:
           options:
             model: gemini-2.5-flash
+
+    vectorstore:
+      pgvector:
+        table-name: assessment_embeddings
+        dimensions: 768
+        distance-type: COSINE_DISTANCE
+        index-type: HNSW
+
     mcp:
       client:
         sse:
@@ -23,6 +39,20 @@ spring:
           connections:
             assessment-server:
               url: "http://easy-apply-assessment-mcp-server:80/mcp"
+
+    chat:
+      memory:
+        cassandra:
+          keyspace: assessment_keyspace
+          messages-column: chat_messages
+          table: chat_memory
+  cassandra:
+    contact-points: easy-apply-assessment-cassandra
+    port: 9042
+    local-datacenter: dc1
+    schema-action: create_if_not_exists
+    request:
+      timeout: 10s
 #--- End Spring AI config ---
 
 # --- Spring Cloud Stream & Kafka Configuration ---

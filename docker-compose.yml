@@ -216,13 +216,36 @@ services:
       - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:29092
     volumes:
       - $PWD/config-repo:/config-repo
+      - $PWD/prompts:/prompts
+      - $PWD/rag:/rag
     depends_on:
       assessment-pg:
+        condition: service_healthy
+      assessment-cassandra:
         condition: service_healthy
       assessment-mcp-server:
         condition: service_healthy
       auth-server:
         condition: service_healthy
+
+  assessment-cassandra:
+    image: 'cassandra:latest'
+    mem_limit: 1024m
+    container_name: easy-apply-assessment-cassandra
+    environment:
+      - CASSANDRA_DC=dc1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=128M
+    volumes:
+      - $PWD/database/init-assessment-cassandra:/docker-entrypoint-initdb.d
+    ports:
+      - '9042:9042'
+    healthcheck:
+      test: [ "CMD-SHELL", "cqlsh -e 'describe keyspaces'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
 
   assessment-mcp-server:
     build: mcp-server/assessment-mcp-server

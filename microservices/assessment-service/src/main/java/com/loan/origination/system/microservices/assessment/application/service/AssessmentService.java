@@ -6,14 +6,25 @@ import com.loan.origination.system.contracts.domain.events.AssessmentCompletedEv
 import com.loan.origination.system.microservices.assessment.application.port.input.ProcessAssessmentUseCase;
 import com.loan.origination.system.microservices.assessment.application.port.output.AssessmentRepositoryPort;
 import com.loan.origination.system.microservices.assessment.application.port.output.OutboxRepositoryPort;
+import com.loan.origination.system.microservices.assessment.application.port.output.PolicyStoragePort;
 import com.loan.origination.system.microservices.assessment.domain.model.Assessment;
 import com.loan.origination.system.microservices.assessment.infrastructure.input.messaging.ApplicationSubmittedConsumer;
 import com.loan.origination.system.util.encryption.EncryptionUtils;
+import jakarta.annotation.PostConstruct;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,18 +34,45 @@ public class AssessmentService implements ProcessAssessmentUseCase {
 
   private final AssessmentRepositoryPort assessmentRepository;
   private final OutboxRepositoryPort outboxRepository;
+  private final PolicyStoragePort policyStoragePort;
   private final ChatClient chatClient;
   private final ToolCallbackProvider mcpToolProvider;
+
+  @Value("file:/prompts/assessment.st")
+  private Resource assessmentResource;
+
+  @PostConstruct
+  public void verifyPromptExists() {
+    if (!assessmentResource.exists()) {
+      LOG.warn("CRITICAL: Prompt file not found at file:/prompts/assessment.st. ");
+    }
+  }
+
+  @EventListener(ApplicationReadyEvent.class)
+  public void onApplicationReady() {
+    LOG.info("Application started. Loading lending policy into Vector Store...");
+    policyStoragePort.storePolicyDocuments();
+  }
 
   public AssessmentService(
       AssessmentRepositoryPort assessmentRepository,
       OutboxRepositoryPort outboxRepository,
+      PolicyStoragePort policyStoragePort,
       ChatClient.Builder builder,
+      ChatMemory chatMemory,
+      VectorStore vectorStore,
       ToolCallbackProvider mcpToolProvider) {
     this.assessmentRepository = assessmentRepository;
     this.outboxRepository = outboxRepository;
+    this.policyStoragePort = policyStoragePort;
     this.mcpToolProvider = mcpToolProvider;
-    this.chatClient = builder.build();
+    this.chatClient =
+        builder
+            .defaultAdvisors(
+                MessageChatMemoryAdvisor.builder(chatMemory).build(),
+                QuestionAnswerAdvisor.builder(vectorStore).build(),
+                new SimpleLoggerAdvisor())
+            .build();
   }
 
   @Override
@@ -48,36 +86,18 @@ public class AssessmentService implements ProcessAssessmentUseCase {
       LOG.info("Available MCP Tool: {}", callback.getToolDefinition().name());
     }
 
-    String secureSsn = EncryptionUtils.encryptQuietly(event.ssn());
     var decisionResult =
         chatClient
             .prompt()
             .toolCallbacks(callbacks)
-            .system(
-                """
-                    You are an automated loan underwriter.
-                    Follow this workflow:
-                    1. Verify identity and financials using the secureSsn token.
-                    2. Evaluate property value at the address.
-                    3. Run 'runRuleEngine' with all gathered data for the final result.
-
-                    Only return a DecisionResult object.
-                    """)
+            .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, event.applicationNumber()))
             .user(
                 u ->
-                    u.text(
-                            """
-                    Process application {appNum} for ${amount}.
-                    Secure Token: {secureSsn}
-                    Address: {address}
-                    """)
+                    u.text(assessmentResource)
                         .param("appNum", event.applicationNumber())
                         .param("amount", event.loanAmount())
-                        .param("secureSsn", secureSsn)
-                        .param(
-                            "address",
-                            "4532 Maple Drive, Austin, TX 78701")) // Replace with event.address()
-            // when ready
+                        .param("secureSsn", EncryptionUtils.encryptQuietly(event.ssn()))
+                        .param("address", "4532 Maple Drive, Austin, TX 78701"))
             .call()
             .entity(DecisionResult.class);
 
