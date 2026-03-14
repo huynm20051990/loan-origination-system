@@ -36,6 +36,10 @@ dependencies {
     // --- Spring AI ---
     implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
     implementation("org.springframework.ai:spring-ai-starter-mcp-client")
+    implementation("org.springframework.ai:spring-ai-starter-model-google-genai-embedding")
+    implementation("org.springframework.ai:spring-ai-starter-vector-store-pgvector")
+    implementation("org.springframework.ai:spring-ai-advisors-vector-store")
+    implementation("org.springframework.ai:spring-ai-starter-model-chat-memory-repository-cassandra")
     // --- Spring AI ---
     // --- KAFKA & CLOUD STREAM ---
     implementation("org.springframework.cloud:spring-cloud-stream")
