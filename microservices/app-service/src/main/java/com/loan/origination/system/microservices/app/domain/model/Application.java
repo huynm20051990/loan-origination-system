@@ -42,6 +42,24 @@ public class Application {
     this.status = ApplicationStatus.SUBMITTED;
   }
 
+  public void completeAssessment(ApplicationStatus newStatus) {
+    // Business Rule: You can only complete an assessment if it's currently being assessed
+    // (Or SUBMITTED, depending on your workflow)
+    if (this.status != ApplicationStatus.SUBMITTED && this.status != ApplicationStatus.ASSESSING) {
+      throw new IllegalStateException("Application is not in a state that can be completed.");
+    }
+
+    if (newStatus == ApplicationStatus.DRAFT || newStatus == ApplicationStatus.SUBMITTED) {
+      throw new IllegalArgumentException("Cannot transition to an initial state from assessment.");
+    }
+
+    this.status = newStatus;
+  }
+
+  public void markAsAssessing() {
+    this.status = ApplicationStatus.ASSESSING;
+  }
+
   // Getters only (Immutability where possible)
   public UUID getId() {
     return id;

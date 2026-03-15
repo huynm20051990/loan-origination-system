@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS applications (
     loan_purpose TEXT,
 
     -- Optional: Ensure status stays within expected values
-    CONSTRAINT chk_status CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED', 'SUBMITTED'))
+    CONSTRAINT chk_status CHECK (status IN ('DRAFT', 'ASSESSING', 'APPROVED', 'REJECTED', 'SUBMITTED'))
 );
 
 CREATE INDEX IF NOT EXISTS idx_loan_app_number ON applications(application_number);

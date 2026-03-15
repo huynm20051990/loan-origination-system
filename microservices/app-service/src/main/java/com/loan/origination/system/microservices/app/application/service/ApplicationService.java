@@ -9,6 +9,7 @@ import com.loan.origination.system.microservices.app.application.port.output.Out
 import com.loan.origination.system.microservices.app.domain.model.Application;
 import com.loan.origination.system.microservices.app.domain.model.Borrower;
 import com.loan.origination.system.microservices.app.domain.service.DomainApplicationService;
+import com.loan.origination.system.microservices.app.domain.vo.ApplicationStatus;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -56,7 +57,11 @@ public class ApplicationService implements ApplicationUseCase {
         .findById(applicationId)
         .ifPresentOrElse(
             app -> {
-              // Create the event using the data from the retrieved application
+              // 1. Update state to ASSESSING
+              app.markAsAssessing();
+              applicationRepository.save(app);
+
+              // 2. Trigger the event
               ApplicationSubmittedEvent event =
                   ApplicationSubmittedEvent.of(
                       app.getId(),
@@ -76,6 +81,35 @@ public class ApplicationService implements ApplicationUseCase {
             () -> {
               throw new RuntimeException(
                   "Cannot start assessment: Application not found with ID " + applicationId);
+            });
+  }
+
+  @Override
+  @Transactional
+  public void updateStatus(UUID applicationId, String status, String comment) {
+    LOG.info("Processing assessment result for ID: {} -> {}", applicationId, status);
+
+    applicationRepository
+        .findById(applicationId)
+        .ifPresentOrElse(
+            app -> {
+              try {
+                // Convert String from Event to Enum
+                ApplicationStatus newStatus = ApplicationStatus.valueOf(status.toUpperCase());
+
+                // Use the domain method
+                app.completeAssessment(newStatus);
+
+                // Save the updated aggregate
+                applicationRepository.save(app);
+
+                LOG.info("Application {} updated to {}", app.getApplicationNumber(), newStatus);
+              } catch (IllegalArgumentException e) {
+                LOG.error("Invalid status received: {}", status);
+              }
+            },
+            () -> {
+              throw new RuntimeException("Application not found: " + applicationId);
             });
   }
 

@@ -2,6 +2,7 @@ package com.loan.origination.system.microservices.app.infrastructure.input.messa
 
 import com.loan.origination.system.contracts.domain.events.*;
 import com.loan.origination.system.microservices.app.application.port.input.ApplicationUseCase;
+import java.util.UUID;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +29,16 @@ public class ApplicationConsumer {
         return;
       }
 
-      AssessmentNotifiedEvent assessmentNotifiedEvent =
-          AssessmentNotifiedEvent.of(
-              event.aggregateId(), event.aggregateType(), event.decision(), event.remarks(), null);
       try {
+        loanApplicationUseCase.updateStatus(
+            UUID.fromString(event.aggregateId()), event.decision(), event.remarks());
+        AssessmentNotifiedEvent assessmentNotifiedEvent =
+            AssessmentNotifiedEvent.of(
+                event.aggregateId(),
+                event.aggregateType(),
+                event.decision(),
+                event.remarks(),
+                null);
         loanApplicationUseCase.execute(assessmentNotifiedEvent);
         log.info("Successfully processed assessment result for {}", event.applicationNumber());
       } catch (Exception e) {

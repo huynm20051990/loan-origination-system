@@ -83,9 +83,9 @@
 
   /* Status Colors */
   &.approved { background: #dcfce7; color: #15803d; }
-  &.in-review { background: #dbeafe; color: #1d4ed8; }
-  &.pending { background: #fef9c3; color: #a16207; }
-  &.cancelled { background: #fee2e2; color: #b91c1c; }
+  &.assessing { background: #dbeafe; color: #1d4ed8; }
+  &.submitted { background: #fef9c3; color: #a16207; }
+  &.rejected { background: #fee2e2; color: #b91c1c; }
 }
 
 /* Card Body Layout */
