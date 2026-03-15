@@ -19,7 +19,7 @@ public class VectorStorePolicyStorageAdapter implements PolicyStoragePort {
 
   private final VectorStore vectorStore;
 
-  @Value("file:/rag/lending-policy.md")
+  @Value("file:/rag/lending-rules.md")
   private Resource searchResource;
 
   public VectorStorePolicyStorageAdapter(VectorStore vectorStore) {

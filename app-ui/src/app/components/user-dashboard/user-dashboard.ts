@@ -12,6 +12,8 @@ import { Application } from '../../core/models/application';
 import { ApplicationService } from '../../core/services/application';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
+import { interval, Subscription } from 'rxjs';
+import { switchMap, takeWhile, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -41,6 +43,8 @@ export class UserDashboardComponent implements OnInit {
   userName: string = 'User';
   loadingAppId: string | null = null;
 
+  private pollingSubscriptions: Map<string, Subscription> = new Map();
+
   constructor() {
     const navigation = this.router.getCurrentNavigation();
     // Proper type casting for state
@@ -64,6 +68,10 @@ export class UserDashboardComponent implements OnInit {
     if (this.applications.length === 0) {
       this.router.navigate(['/check-status']);
     }
+  }
+
+  ngOnDestroy() {
+    this.pollingSubscriptions.forEach(sub => sub.unsubscribe());
   }
 
   getProgress(status: string): number {
@@ -104,6 +112,7 @@ export class UserDashboardComponent implements OnInit {
         });
 
         app.status = 'ASSESSING';
+        this.pollApplicationStatus(app);
       },
       error: (err: any) => {
         this.loadingAppId = null; // Reset on error so user can try again
@@ -125,5 +134,36 @@ export class UserDashboardComponent implements OnInit {
         this.snackBar.open('System error: Could not cancel application.', 'Close');
       }
     });
+  }
+
+  pollApplicationStatus(app: any) {
+    // If we are already polling this app, don't start another one
+    if (this.pollingSubscriptions.has(app.id)) return;
+
+    const sub = interval(5000) // Poll every 5 seconds
+      .pipe(
+        // 1. Call the API to get the latest data
+        switchMap(() => this.applicationService.getApplicationById(app.id)),
+        // 2. Stop polling if the status changes from 'ASSESSING'
+        // The 'true' parameter ensures the final value (the one that stops it) is emitted
+        takeWhile((updatedApp) => updatedApp.status === 'ASSESSING', true)
+      )
+      .subscribe({
+        next: (updatedApp) => {
+          // Update the local object so the UI (progress bar/status) updates
+          app.status = updatedApp.status;
+
+          if (app.status !== 'ASSESSING') {
+            this.snackBar.open(`Application ${app.applicationNumber} assessment complete: ${app.status}`, 'Dismiss');
+            this.pollingSubscriptions.delete(app.id);
+          }
+        },
+        error: (err) => {
+          console.error('Polling error', err);
+          this.pollingSubscriptions.delete(app.id);
+        }
+      });
+
+    this.pollingSubscriptions.set(app.id, sub);
   }
 }

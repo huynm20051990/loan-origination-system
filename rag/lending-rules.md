@@ -14,4 +14,4 @@
 
 ### 4. Debt-to-Income (DTI) Ratios
 - Monthly gross income must be at least 3x the estimated monthly loan payment.
-- Estimated monthly payment is calculated as 10% of the loan amount (simplified).
+- Default is a standard 30-year term, the estimated monthly payment is calculated as 0.7% of the total loan amount.

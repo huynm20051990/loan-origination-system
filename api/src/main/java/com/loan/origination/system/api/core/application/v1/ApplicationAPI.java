@@ -24,7 +24,7 @@ public interface ApplicationAPI {
   ApplicationResponseDTO getApplicationById(@PathVariable UUID id);
 
   /** Get application details by the human-readable application number (e.g., APP-2026-X). */
-  @GetMapping(value = "/{applicationNumber}", produces = "application/json")
+  @GetMapping(value = "/app-number/{applicationNumber}", produces = "application/json")
   ApplicationResponseDTO getApplicationByNumber(@PathVariable String applicationNumber);
 
   /**

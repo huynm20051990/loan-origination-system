@@ -26,4 +26,8 @@ export class ApplicationService {
   deleteApplication(id: string): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
+
+  getApplicationById(id: string): Observable<Application> {
+    return this.http.get<Application>(`${this.API_URL}/${id}`);
+  }
 }

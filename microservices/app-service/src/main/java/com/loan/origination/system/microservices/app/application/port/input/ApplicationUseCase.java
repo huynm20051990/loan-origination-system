@@ -13,6 +13,8 @@ public interface ApplicationUseCase {
 
   void startAssessment(UUID applicationId);
 
+  void updateStatus(UUID applicationId, String status, String comment);
+
   void markAsNotified(DomainEvent event);
 
   void delete(UUID id);
