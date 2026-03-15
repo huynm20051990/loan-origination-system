@@ -14,6 +14,10 @@ export class ApplicationService {
     return this.http.post<any>(this.API_URL, payload);
   }
 
+  startAssessmentApplication(id: string): Observable<void> {
+    return this.http.post<void>(`${this.API_URL}/${id}/assessments`, {});
+  }
+
   getApplicationsByEmail(email: string): Observable<Application[]> {
     const params = new HttpParams().set('email', email);
     return this.http.get<Application[]>(this.API_URL, { params });

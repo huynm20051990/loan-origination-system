@@ -11,6 +11,8 @@ public interface ApplicationUseCase {
 
   Application submit(UUID homeId, Borrower borrower, BigDecimal loanAmount, String loanPurpose);
 
+  void startAssessment(UUID applicationId);
+
   void markAsNotified(DomainEvent event);
 
   void delete(UUID id);

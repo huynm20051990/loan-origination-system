@@ -56,9 +56,14 @@
                   (click)="cancelApplication(app)">
             CANCEL
           </button>
-          <button mat-flat-button color="primary" (click)="openFeatureNotAvailable()">
+          @if (loadingAppId !== app.id && app.status !== 'ASSESSING') {
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="startAssessmentApplication(app)">
             START ASSESSMENT
           </button>
+          }
         </mat-card-actions>
       </mat-card>
     </div>

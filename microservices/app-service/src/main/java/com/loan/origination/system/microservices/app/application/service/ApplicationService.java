@@ -11,11 +11,15 @@ import com.loan.origination.system.microservices.app.domain.model.Borrower;
 import com.loan.origination.system.microservices.app.domain.service.DomainApplicationService;
 import java.math.BigDecimal;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ApplicationService implements ApplicationUseCase {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ApplicationService.class);
 
   private final DomainApplicationService loanDomainService;
   private final ApplicationRepositoryPort applicationRepository;
@@ -43,17 +47,36 @@ public class ApplicationService implements ApplicationUseCase {
     // 2. Persist the Loan Application
     applicationRepository.save(application);
 
-    // 3. Create and persist the Outbox Event for Kafka
-    ApplicationSubmittedEvent event =
-        ApplicationSubmittedEvent.of(
-            application.getId(),
-            application.getApplicationNumber(),
-            application.getBorrower().email(),
-            application.getLoanAmount(),
-            application.getBorrower().ssn());
-    outboxRepository.save(event);
-
     return application;
+  }
+
+  @Override
+  public void startAssessment(UUID applicationId) {
+    applicationRepository
+        .findById(applicationId)
+        .ifPresentOrElse(
+            app -> {
+              // Create the event using the data from the retrieved application
+              ApplicationSubmittedEvent event =
+                  ApplicationSubmittedEvent.of(
+                      app.getId(),
+                      app.getApplicationNumber(),
+                      app.getBorrower().email(),
+                      app.getLoanAmount(),
+                      app.getBorrower().ssn());
+
+              // Persist to Outbox - the Outbox Poller will handle the Kafka dispatch
+              outboxRepository.save(event);
+
+              LOG.info(
+                  "Assessment triggered for Application ID: {} (Number: {})",
+                  applicationId,
+                  app.getApplicationNumber());
+            },
+            () -> {
+              throw new RuntimeException(
+                  "Cannot start assessment: Application not found with ID " + applicationId);
+            });
   }
 
   @Override

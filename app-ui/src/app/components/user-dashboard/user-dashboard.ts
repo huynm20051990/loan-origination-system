@@ -39,6 +39,7 @@ export class UserDashboardComponent implements OnInit {
 
   applications: Application[] = [];
   userName: string = 'User';
+  loadingAppId: string | null = null;
 
   constructor() {
     const navigation = this.router.getCurrentNavigation();
@@ -69,7 +70,7 @@ export class UserDashboardComponent implements OnInit {
     const s = status ? status.toUpperCase() : '';
     switch (s) {
       case 'SUBMITTED': return 0;
-      case 'IN_REVIEW': return 45;
+      case 'ASSESSING': return 45;
       case 'APPROVED': return 100;
       case 'REJECTED': return 100;
       default: return 10;
@@ -86,6 +87,30 @@ export class UserDashboardComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         this.executeDelete(app.id);
+      }
+    });
+  }
+
+  startAssessmentApplication(app: any) {
+    // Guard clause: prevent multiple clicks if already loading this specific app
+    if (this.loadingAppId === app.id) return;
+
+    this.loadingAppId = app.id;
+
+    this.applicationService.startAssessmentApplication(app.id).subscribe({
+      next: () => {
+        this.snackBar.open(`Assessment triggered for ${app.applicationNumber}. AI is now evaluating.`, 'Close', {
+          duration: 5000
+        });
+
+        app.status = 'ASSESSING';
+      },
+      error: (err: any) => {
+        this.loadingAppId = null; // Reset on error so user can try again
+        this.snackBar.open('Failed to start assessment. Please try again later.', 'Close', {
+          duration: 5000
+        });
+        console.error('Assessment trigger error:', err);
       }
     });
   }
