@@ -15,6 +15,10 @@ public interface ApplicationAPI {
   @ResponseStatus(HttpStatus.CREATED)
   ApplicationResponseDTO submitApplication(@RequestBody ApplicationSubmissionRequestDTO request);
 
+  @PostMapping(value = "/{id}/assessments")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  void startAssessmentApplication(@PathVariable("id") UUID id);
+
   /** Get application details by internal UUID. */
   @GetMapping(value = "/{id}", produces = "application/json")
   ApplicationResponseDTO getApplicationById(@PathVariable UUID id);

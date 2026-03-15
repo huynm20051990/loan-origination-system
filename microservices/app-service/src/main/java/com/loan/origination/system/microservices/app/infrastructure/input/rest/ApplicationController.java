@@ -47,6 +47,15 @@ public class ApplicationController implements ApplicationAPI {
   }
 
   @Override
+  public void startAssessmentApplication(UUID id) {
+    if (!loanRepositoryPort.existsById(id)) {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, "Application not found with ID: " + id);
+    }
+    loanApplicationUseCase.startAssessment(id);
+  }
+
+  @Override
   public ApplicationResponseDTO getApplicationById(@PathVariable UUID id) {
     return loanRepositoryPort
         .findById(id)
