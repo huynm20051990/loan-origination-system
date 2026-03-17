@@ -317,7 +317,7 @@ services:
       timeout: 2s
       retries: 60
 
-  jaeger-collector.istio-system:
+  zipkin:
     image: openzipkin/zipkin:3.5.1
     restart: always
     mem_limit: 1024m
