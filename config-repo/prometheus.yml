@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'easy-apply-services'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets:
+          - 'app-service:4004'
+          - 'home-service:4004'
+          - 'assessment-service:4004'

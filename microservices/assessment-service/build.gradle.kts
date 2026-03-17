@@ -40,7 +40,8 @@ dependencies {
     implementation("org.springframework.ai:spring-ai-starter-vector-store-pgvector")
     implementation("org.springframework.ai:spring-ai-advisors-vector-store")
     implementation("org.springframework.ai:spring-ai-starter-model-chat-memory-repository-cassandra")
-    // --- Spring AI ---
+    // -----------------
+    implementation("io.micrometer:micrometer-registry-prometheus")
     // --- KAFKA & CLOUD STREAM ---
     implementation("org.springframework.cloud:spring-cloud-stream")
     implementation("org.springframework.cloud:spring-cloud-stream-binder-kafka")
