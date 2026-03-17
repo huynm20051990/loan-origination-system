@@ -25,6 +25,8 @@ app:
 # Override Kafka broker for Docker network
 spring.cloud.stream.kafka.binder.brokers: kafka:29092
 
+management.endpoints.web.exposure.include: health,metrics,prometheus
+
 ---
 spring.config.activate.on-profile: prod
 
