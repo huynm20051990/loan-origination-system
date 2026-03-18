@@ -65,9 +65,9 @@ public class ApplicationService implements ApplicationUseCase {
               ApplicationSubmittedEvent event =
                   ApplicationSubmittedEvent.of(
                       app.getId(),
-                      null,
-                      null,
-                      null,
+                      "huynguyen",
+                      "borrower",
+                      UUID.randomUUID().toString(),
                       app.getApplicationNumber(),
                       app.getBorrower().email(),
                       app.getLoanAmount(),

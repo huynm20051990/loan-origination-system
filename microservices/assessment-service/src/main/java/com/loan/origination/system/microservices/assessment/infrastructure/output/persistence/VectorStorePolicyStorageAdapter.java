@@ -19,7 +19,7 @@ public class VectorStorePolicyStorageAdapter implements PolicyStoragePort {
 
   private final VectorStore vectorStore;
 
-  @Value("file:/rag/lending-rules.md")
+  @Value("file:/rag/borrower--lending-rules.md")
   private Resource searchResource;
 
   public VectorStorePolicyStorageAdapter(VectorStore vectorStore) {
@@ -28,12 +28,25 @@ public class VectorStorePolicyStorageAdapter implements PolicyStoragePort {
 
   @Override
   public void storePolicyDocuments() {
-    LOG.info("Starting policy ingestion from resource: {}", searchResource.getFilename());
+    String filename = searchResource.getFilename();
+    if (filename == null) return;
+
+    // Extract the single role: "borrower--rules.md" -> "borrower"
+    // If no "--" is found, default to "admin"
+    String authorizedRole = filename.contains("--") ? filename.split("--")[0] : "admin";
+
     TextReader textReader = new TextReader(searchResource);
     TokenTextSplitter splitter = new TokenTextSplitter();
-
     List<Document> chunks = splitter.apply(textReader.get());
+
+    chunks.forEach(
+        doc -> {
+          // Store as a simple String now, not a List
+          doc.getMetadata().put("authorized_role", authorizedRole);
+          doc.getMetadata().put("source", filename);
+        });
+
     vectorStore.accept(chunks);
-    LOG.info("Successfully persisted {} chunks to the Vector Store.", chunks.size());
+    LOG.info("Persisted {} chunks for role: {}", chunks.size(), authorizedRole);
   }
 }

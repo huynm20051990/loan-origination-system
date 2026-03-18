@@ -90,7 +90,16 @@ public class AssessmentService implements ProcessAssessmentUseCase {
         chatClient
             .prompt()
             .toolCallbacks(callbacks)
-            .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, event.applicationNumber()))
+            .advisors(
+                a ->
+                    a.param(
+                            // Apply per-user conversation memory
+                            ChatMemory.CONVERSATION_ID,
+                            event.userId() + "_" + event.conversationId())
+                        .param(
+                            QuestionAnswerAdvisor.FILTER_EXPRESSION,
+                            // Use standard equality: metadata_key == 'value'
+                            "authorized_role == '" + event.userRole() + "'"))
             .user(
                 u ->
                     u.text(assessmentResource)
