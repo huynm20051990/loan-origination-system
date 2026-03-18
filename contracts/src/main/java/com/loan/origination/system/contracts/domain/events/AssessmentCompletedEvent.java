@@ -6,20 +6,35 @@ import java.util.UUID;
 public record AssessmentCompletedEvent(
     UUID eventId,
     String aggregateType,
-    String aggregateId, // This will be the Application ID
-    String applicationNumber, // Added to help downstream services identify the loan
+    String aggregateId, // Kafka Partition Key / Outbox Aggregate
+    UUID applicationId, // Domain-specific Application ID
+    String userId,
+    String userRole,
+    String conversationId,
+    String applicationNumber,
     String decision,
-    String remarks, // Changed from 'decision' to match our ScoringDomainService
+    String remarks,
     LocalDateTime createdAt)
     implements DomainEvent {
 
-  /** Factory method for the Credit Service to easily create this event. */
+  /** Factory method for the Credit Service to easily create this event with context. */
   public static AssessmentCompletedEvent of(
-      String aggregateId, String applicationNumber, String decision, String remarks) {
+      UUID appId,
+      String userId,
+      String userRole,
+      String conversationId,
+      String applicationNumber,
+      String decision,
+      String remarks) {
+
     return new AssessmentCompletedEvent(
         UUID.randomUUID(),
         EventType.ASSESSMENT_COMPLETED.getTopicSuffix(),
-        aggregateId,
+        appId.toString(), // Map UUID to aggregateId String
+        appId,
+        userId,
+        userRole,
+        conversationId,
         applicationNumber,
         decision,
         remarks,
