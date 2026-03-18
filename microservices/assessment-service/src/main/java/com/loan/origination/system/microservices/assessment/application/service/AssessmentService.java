@@ -108,7 +108,10 @@ public class AssessmentService implements ProcessAssessmentUseCase {
 
     AssessmentCompletedEvent assessmentCompletedEvent =
         AssessmentCompletedEvent.of(
-            event.aggregateId(),
+            event.applicationId(),
+            null,
+            null,
+            null,
             event.applicationNumber(),
             assessment.getDecision(),
             assessment.getRemarks());

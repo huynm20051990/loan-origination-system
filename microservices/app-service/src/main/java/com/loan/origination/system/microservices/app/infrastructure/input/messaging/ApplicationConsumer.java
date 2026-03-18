@@ -34,7 +34,10 @@ public class ApplicationConsumer {
             UUID.fromString(event.aggregateId()), event.decision(), event.remarks());
         AssessmentNotifiedEvent assessmentNotifiedEvent =
             AssessmentNotifiedEvent.of(
-                event.aggregateId(),
+                event.applicationId(),
+                null,
+                null,
+                null,
                 event.aggregateType(),
                 event.decision(),
                 event.remarks(),

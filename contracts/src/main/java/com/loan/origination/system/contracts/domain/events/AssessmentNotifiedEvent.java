@@ -7,24 +7,36 @@ import java.util.UUID;
 public record AssessmentNotifiedEvent(
     UUID eventId,
     String aggregateType,
-    String aggregateId, // Application UUID
+    String aggregateId,
+    UUID applicationId,
+    String userId,
+    String userRole,
+    String conversationId,
     String applicationNumber,
-    String decision, // e.g., APPROVED, DECLINED, REFERRED
-    String decisionReason, // e.g., "High DTI ratio", "Excellent Credit"
+    String decision,
+    String decisionReason,
     BigDecimal approvedAmount,
     LocalDateTime createdAt)
     implements DomainEvent {
 
   public static AssessmentNotifiedEvent of(
-      String aggregateId,
+      UUID appId,
+      String userId,
+      String userRole,
+      String conversationId,
       String applicationNumber,
       String decision,
       String reason,
       BigDecimal amount) {
+
     return new AssessmentNotifiedEvent(
         UUID.randomUUID(),
-        EventType.ASSESSMENT_NOTIFIED.getTopicSuffix(), // Aggregate Type
-        aggregateId,
+        EventType.ASSESSMENT_NOTIFIED.getTopicSuffix(),
+        appId.toString(),
+        appId,
+        userId,
+        userRole,
+        conversationId,
         applicationNumber,
         decision,
         reason,
@@ -34,6 +46,6 @@ public record AssessmentNotifiedEvent(
 
   @Override
   public EventType eventType() {
-    return EventType.ASSESSMENT_NOTIFIED; // Ensure this exists in your EventType enum
+    return EventType.ASSESSMENT_NOTIFIED;
   }
 }

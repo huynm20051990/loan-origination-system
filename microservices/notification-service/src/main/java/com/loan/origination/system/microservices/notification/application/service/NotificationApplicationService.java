@@ -47,7 +47,7 @@ public class NotificationApplicationService implements SendNotificationUseCase {
     // 4. Outbox: Record the event to be picked up by Debezium
     NotificationSentEvent event =
         NotificationSentEvent.of(
-            applicationId.toString(), applicationNumber, notification.type().name());
+            applicationId, null, null, null, applicationNumber, notification.type().name());
 
     outboxRepositoryPort.save(event);
   }

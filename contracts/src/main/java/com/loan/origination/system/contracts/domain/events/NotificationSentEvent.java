@@ -7,17 +7,31 @@ public record NotificationSentEvent(
     UUID eventId,
     String aggregateType,
     String aggregateId,
+    UUID applicationId,
+    String userId,
+    String userRole,
+    String conversationId,
     String applicationNumber,
-    String channel, // e.g., EMAIL, SMS
+    String channel, // e.g., EMAIL, SMS, WEBSOCKET
     LocalDateTime createdAt)
     implements DomainEvent {
 
   public static NotificationSentEvent of(
-      String aggregateId, String applicationNumber, String channel) {
+      UUID appId,
+      String userId,
+      String userRole,
+      String conversationId,
+      String applicationNumber,
+      String channel) {
+
     return new NotificationSentEvent(
         UUID.randomUUID(),
         EventType.NOTIFICATION_SENT.getTopicSuffix(),
-        aggregateId,
+        appId.toString(),
+        appId,
+        userId,
+        userRole,
+        conversationId,
         applicationNumber,
         channel,
         LocalDateTime.now());
