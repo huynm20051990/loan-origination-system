@@ -42,7 +42,7 @@
 
             <div class="data-point progress">
               <div class="progress-info">
-                <span>Assessment Status</span>
+                <span>Progress</span>
                 <span class="percentage">{{ getProgress(app.status) }}%</span>
               </div>
               <mat-progress-bar mode="determinate" [value]="getProgress(app.status)"></mat-progress-bar>
@@ -56,9 +56,14 @@
                   (click)="cancelApplication(app)">
             CANCEL
           </button>
-          <button mat-flat-button color="primary" (click)="openFeatureNotAvailable()">
+          @if (loadingAppId !== app.id && app.status !== 'ASSESSING') {
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="startAssessmentApplication(app)">
             START ASSESSMENT
           </button>
+          }
         </mat-card-actions>
       </mat-card>
     </div>
