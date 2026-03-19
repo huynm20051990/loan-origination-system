@@ -14,6 +14,8 @@ import jakarta.annotation.PostConstruct;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springaicommunity.tool.search.ToolSearchToolCallAdvisor;
+import org.springaicommunity.tool.search.ToolSearcher;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
@@ -61,7 +63,8 @@ public class AssessmentService implements ProcessAssessmentUseCase {
       ChatClient.Builder builder,
       ChatMemory chatMemory,
       VectorStore vectorStore,
-      ToolCallbackProvider mcpToolProvider) {
+      ToolCallbackProvider mcpToolProvider,
+      ToolSearcher toolSearcher) {
     this.assessmentRepository = assessmentRepository;
     this.outboxRepository = outboxRepository;
     this.policyStoragePort = policyStoragePort;
@@ -71,6 +74,7 @@ public class AssessmentService implements ProcessAssessmentUseCase {
             .defaultAdvisors(
                 MessageChatMemoryAdvisor.builder(chatMemory).build(),
                 QuestionAnswerAdvisor.builder(vectorStore).build(),
+                ToolSearchToolCallAdvisor.builder().toolSearcher(toolSearcher).build(),
                 new SimpleLoggerAdvisor())
             .build();
   }
