@@ -34,11 +34,12 @@ spring:
 
     mcp:
       client:
+        type: SYNC
         sse:
           enabled: true
           connections:
             assessment-server:
-              url: "http://easy-apply-assessment-mcp-server:80/mcp"
+              url: "http://easy-apply-assessment-mcp-server:80"
 
     chat:
       memory:
@@ -89,6 +90,21 @@ spring.datasource.hikari:
   maximum-pool-size: 10
 
 # --- DB CONFIGURATION END ---
+
+# Authserver common config
+spring.security.oauth2.client.provider.authserver.issuer-uri: http://${app.auth-server}
+
+# Security: for tokens used during initialization/listing (System Context)
+# This matches: CLIENT_CREDENTIALS_CLIENT_REGISTRATION_ID = "mcp-client"
+spring.security.oauth2.client.registration.mcp-client:
+  client-id: mcp-client
+  client-secret: mcp-secret
+  authorization-grant-type: client_credentials # Machine-to-machine
+  provider: authserver
+  scope:
+    - mcp:read
+    - mcp:execute
+# -----------------------
 
 # Health checks now only focus on the DB and Disk, not RabbitMQ
 management:

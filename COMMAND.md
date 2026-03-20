@@ -610,6 +610,7 @@ docker exec -it easy-apply-app-pg psql -U home-user-prod -d app-db -c "SELECT * 
 docker exec -it easy-apply-assessment-pg psql -U home-user-prod -d assessment-db -c "SELECT * FROM assessments;"
 docker exec -it easy-apply-notification-db psql -U home-user-prod -d notification-db -c "SELECT * FROM notifications;"
 
+dos2unix register-connectors.sh
 
 
 
