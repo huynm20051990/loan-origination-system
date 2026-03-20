@@ -136,7 +136,20 @@ public class AuthorizationServerConfig {
                 TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
             .build();
 
-    return new InMemoryRegisteredClientRepository(writerClient, readerClient);
+    RegisteredClient mcpClient =
+        RegisteredClient.withId(UUID.randomUUID().toString())
+            .clientId("mcp-client")
+            .clientSecret("{noop}mcp-secret")
+            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+            .scope("mcp:read")
+            .scope("mcp:execute")
+            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+            .tokenSettings(
+                TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
+            .build();
+
+    return new InMemoryRegisteredClientRepository(writerClient, readerClient, mcpClient);
   }
 
   @Bean
