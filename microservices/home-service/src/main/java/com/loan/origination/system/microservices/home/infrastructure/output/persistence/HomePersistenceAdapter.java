@@ -7,6 +7,7 @@ import com.loan.origination.system.microservices.home.infrastructure.output.pers
 import com.loan.origination.system.microservices.home.infrastructure.output.persistence.repository.HomeRepository;
 import com.loan.origination.system.microservices.home.infrastructure.tools.HomeSearchTools;
 import jakarta.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -34,15 +35,16 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
   private final VectorStore vectorStore;
   private final ChatClient chatClient;
 
-  @Value("file:/prompts/search-properties.st")
+  @Value("file:/agentic-ai/prompts/search-properties.st")
   private Resource searchResource;
 
   @PostConstruct
-  public void verifyPromptExists() {
+  public void verifyPromptExists() throws IOException {
     if (!searchResource.exists()) {
       LOG.warn(
-          "CRITICAL: Prompt file not found at /prompts/search-properties.st. "
-              + "Agentic search will fail and trigger fallback mode.");
+          "CRITICAL: Prompt file not found at {}. "
+              + "Agentic search will fail and trigger fallback mode.",
+          searchResource.getFile().getAbsolutePath());
     }
   }
 
