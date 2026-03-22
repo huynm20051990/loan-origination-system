@@ -174,7 +174,7 @@ services:
       - SPRING_AI_GOOGLE_GENAI_API_KEY=${GEMINI_API_KEY}
     volumes:
       - $PWD/config-repo:/config-repo
-      - $PWD/prompts:/prompts
+      - $PWD/agentic-ai:/agentic-ai
     depends_on:
       home-pg:
         condition: service_healthy
