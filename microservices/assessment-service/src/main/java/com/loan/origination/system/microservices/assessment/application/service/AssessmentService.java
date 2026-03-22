@@ -6,26 +6,22 @@ import com.loan.origination.system.contracts.domain.events.AssessmentCompletedEv
 import com.loan.origination.system.microservices.assessment.application.port.input.ProcessAssessmentUseCase;
 import com.loan.origination.system.microservices.assessment.application.port.output.AssessmentRepositoryPort;
 import com.loan.origination.system.microservices.assessment.application.port.output.OutboxRepositoryPort;
-import com.loan.origination.system.microservices.assessment.application.port.output.PolicyStoragePort;
 import com.loan.origination.system.microservices.assessment.domain.model.Assessment;
 import com.loan.origination.system.microservices.assessment.infrastructure.input.messaging.ApplicationSubmittedConsumer;
 import com.loan.origination.system.util.encryption.EncryptionUtils;
-import jakarta.annotation.PostConstruct;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springaicommunity.tool.search.ToolSearchToolCallAdvisor;
+import org.springaicommunity.agent.tools.SkillsTool;
+import org.springaicommunity.agent.tools.task.TaskToolCallbackProvider;
+import org.springaicommunity.agent.tools.task.subagent.claude.ClaudeSubagentReferences;
 import org.springaicommunity.tool.search.ToolSearcher;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
-import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.tool.ToolCallbackProvider;
-import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -36,45 +32,35 @@ public class AssessmentService implements ProcessAssessmentUseCase {
 
   private final AssessmentRepositoryPort assessmentRepository;
   private final OutboxRepositoryPort outboxRepository;
-  private final PolicyStoragePort policyStoragePort;
   private final ChatClient chatClient;
   private final ToolCallbackProvider mcpToolProvider;
-
-  @Value("file:/prompts/assessment.st")
   private Resource assessmentResource;
-
-  @PostConstruct
-  public void verifyPromptExists() {
-    if (!assessmentResource.exists()) {
-      LOG.warn("CRITICAL: Prompt file not found at file:/prompts/assessment.st. ");
-    }
-  }
-
-  @EventListener(ApplicationReadyEvent.class)
-  public void onApplicationReady() {
-    LOG.info("Application started. Loading lending policy into Vector Store...");
-    policyStoragePort.storePolicyDocuments();
-  }
 
   public AssessmentService(
       AssessmentRepositoryPort assessmentRepository,
       OutboxRepositoryPort outboxRepository,
-      PolicyStoragePort policyStoragePort,
       ChatClient.Builder builder,
       ChatMemory chatMemory,
-      VectorStore vectorStore,
       ToolCallbackProvider mcpToolProvider,
-      ToolSearcher toolSearcher) {
+      ToolSearcher toolSearcher,
+      @Value("file:/agentic-ai/prompts/assessment.st") Resource assessmentResource,
+      @Value("file:/agentic-ai/skills") Resource skillsResource,
+      @Value("file:/agentic-ai/agents") Resource subagentResource) {
     this.assessmentRepository = assessmentRepository;
     this.outboxRepository = outboxRepository;
-    this.policyStoragePort = policyStoragePort;
     this.mcpToolProvider = mcpToolProvider;
+    this.assessmentResource = assessmentResource;
     this.chatClient =
         builder
+            .defaultToolCallbacks(SkillsTool.builder().addSkillsResource(skillsResource).build())
+            .defaultToolCallbacks(
+                TaskToolCallbackProvider.builder()
+                    .chatClientBuilder("default", builder)
+                    .subagentReferences(ClaudeSubagentReferences.fromResource(subagentResource))
+                    .build())
             .defaultAdvisors(
                 MessageChatMemoryAdvisor.builder(chatMemory).build(),
-                QuestionAnswerAdvisor.builder(vectorStore).build(),
-                ToolSearchToolCallAdvisor.builder().toolSearcher(toolSearcher).build(),
+                // ToolSearchToolCallAdvisor.builder().toolSearcher(toolSearcher).build(),
                 new SimpleLoggerAdvisor())
             .build();
   }
@@ -97,13 +83,8 @@ public class AssessmentService implements ProcessAssessmentUseCase {
             .advisors(
                 a ->
                     a.param(
-                            // Apply per-user conversation memory
-                            ChatMemory.CONVERSATION_ID,
-                            event.userId() + "_" + event.conversationId())
-                        .param(
-                            QuestionAnswerAdvisor.FILTER_EXPRESSION,
-                            // Use standard equality: metadata_key == 'value'
-                            "authorized_role == '" + event.userRole() + "'"))
+                        // Apply per-user conversation memory
+                        ChatMemory.CONVERSATION_ID, event.userId() + "_" + event.conversationId()))
             .user(
                 u ->
                     u.text(assessmentResource)

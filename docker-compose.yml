@@ -216,8 +216,7 @@ services:
       - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:29092
     volumes:
       - $PWD/config-repo:/config-repo
-      - $PWD/prompts:/prompts
-      - $PWD/rag:/rag
+      - $PWD/agentic-ai:/agentic-ai
     depends_on:
       assessment-pg:
         condition: service_healthy

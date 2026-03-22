@@ -612,6 +612,8 @@ docker exec -it easy-apply-notification-db psql -U home-user-prod -d notificatio
 
 dos2unix register-connectors.sh
 
+nano ~/.docker/config.json
+
 
 
 
