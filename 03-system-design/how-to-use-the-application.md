@@ -1,9 +1,8 @@
 # How To Use The Application
 
 1. Go to https://easy-apply.pro/
-2. On home page, find a house we want to buy by entering text in search box.
-   Ex: "Modern house greater 2-bed upper $500k in Austin"
-3. lick Search button. 
+2. On home page, find a house we want to buy by entering text in search box. Ex: "Modern house greater 2-bed upper $500k in Austin"
+3. Click Search button. 
 4. Click Apply Now to apply for loan to buy the house.
 5. Enter random information to pass validation.
 6. Continue and Submit Application.
