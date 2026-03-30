@@ -8,45 +8,54 @@ The service follows **Hexagonal Architecture (Ports and Adapters)** and is imple
 ## Folder Structure
 ```
 com.loan.origination.system.microservices.home
-├── domain                                   <-- THE CORE (Logic)
-│   ├── model
-│   │   ├── Home.java                        <-- Domain Entity (Aggregate Root)
-│   │   └── Address.java                     <-- Value Object
-│   ├── port
-│   │   ├── in                               <-- Driving Ports (Interfaces)
-│   │   │   ├── AddHomeUseCase.java
-│   │   │   ├── GetHomeUseCase.java
-│   │   │   └── DeleteHomeUseCase.java
-│   │   └── out                              <-- Driven Ports (Interfaces)
+├── HomeApplication.java                     <-- Spring Boot Entry Point
+│
+├── domain                                   <-- THE CORE (Pure Logic)
+│   ├── model                                <-- Domain Entities & Aggregates
+│   │   ├── Home.java
+│   │   ├── FilterItem.java
+│   │   └── SearchIntent.java
+│   ├── vo                                   <-- Value Objects
+│   │   ├── Address.java
+│   │   └── HomeStatus.java
+│   ├── port                                 <-- INTERFACES
+│   │   ├── in                               <-- Driving Ports
+│   │   │   └── HomeUseCase.java
+│   │   └── out                              <-- Driven Ports
 │   │       └── HomeRepositoryPort.java
-│   └── service
-│       └── HomeDomainService.java           <-- Internal Domain Logic
+│   └── service                              <-- Domain Services
+│       └── DomainHomeService.java           <-- Pure domain logic
 │
 ├── application                              <-- THE ORCHESTRATOR
 │   └── service
-│       └── HomeApplicationService.java      <-- Implements UseCases, coordinates flow
+│       └── HomeApplicationService.java      <-- Implements HomeUseCase
 │
-├── adapter
-│   ├── in
-│   │   └── web                              <-- Driving Adapter (REST)
-│   │       ├── HomeOrderController.java     <-- Implements the API Interface
-│   │       ├── mapper
-│   │       │   └── HomeWebMapper.java       <-- DTO <-> Domain mapping
-│   │       └── dto                          <-- (Optional: if not using shared API jar)
-│   └── out
-│       └── persistence                      <-- Driven Adapter (DB)
-│           ├── HomePersistenceAdapter.java  <-- Implements Repository Port
-│           ├── entity
-│           │   ├── HomeEntity.java          <-- JPA @Entity
-│           │   └── AddressEntity.java       <-- JPA @Embeddable or @Entity
-│           ├── repository
-│           │   └── SpringDataHomeRepository.java
-│           └── mapper
-│               └── HomePersistenceMapper.java <-- Entity <-> Domain mapping
+├── adapter                                  <-- THE IMPLEMENTATION
+│   ├── in                                   <-- Driving Adapters
+│   │   ├── web                              <-- REST API
+│   │   │   ├── HomeWebAdapterController.java
+│   │   │   └── mapper
+│   │   │       └── HomeWebMapper.java
+│   │   └── messaging                        <-- Inbound Events (Kafka/etc)
+│   └── out                                  <-- Driven Adapters
+│       ├── persistence                      <-- Database Implementation
+│       │   ├── HomePersistenceAdapter.java  <-- Implements HomeRepositoryPort
+│       │   ├── entity
+│       │   │   ├── HomeEntity.java
+│       │   │   └── AddressEmbeddable.java
+│       │   ├── mapper
+│       │   │   └── HomePersistenceMapper.java
+│       │   └── repository
+│       │       └── HomeRepository.java      <-- Spring Data Interface
+│       ├── client                           <-- External API Clients
+│       └── messaging                        <-- Outbound Events
 │
-└── infrastructure                           <-- CONFIGURATION
-    └── config
-        └── BeanConfiguration.java           <-- Wire Domain beans manually
+└── infrastructure                           <-- CROSS-CUTTING / CONFIG
+    ├── config
+    │   └── BeanConfiguration.java           <-- Manual Bean Wiring
+    ├── scheduler                            <-- Scheduled Tasks
+    └── tools
+        └── HomeSearchTools.java             <-- AI/Search Utility Classes
 ```
 ---
 

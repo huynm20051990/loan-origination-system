@@ -15,17 +15,7 @@ A digital platform designed to streamline the home buying and loan application p
   - [API Design](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/02-api-design.md)
   - [Data Model](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/03-data-model.md)
   - [Hexagonal Architecture](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/04-hexagonal-architecture.md)
-  - [Rate Limiting](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/05-rate-limiting.md)
-  - [Idempotency](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/13-idempotency.md)
-  - [Change Data Capture](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/07-change-data-capture.md)
-  - [Vectore Database](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/08-vector-database.md)
-  - [LLM Integration](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/09-LLM-integration.md)
-  - [RAG vs GAR](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/10-rag-vs-gar.md)
-  - [Resilience](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/06-resilience.md)
-  - [Scaling](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/11-scaling.md)
-  - [Monitoring](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/12-monitoring.md)
-- Testing
-- Deployment
+  - [How To Use The Application](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/how-to-use-the-application.md)
 
 # Tech Stack
 * **Architecture:** Microservices, Event-Driven
