@@ -1,6 +1,6 @@
-# [EasyApply](https://easy-apply.pro/)
+# [EasyApply]()
 
-A digital platform designed to streamline the home buying and loan application process.
+https://easy-apply.pro/ - A digital platform designed to streamline the home buying and loan application process.
 
 # Contents
 - [Requirement](01-requirement/01-requirement.md)
