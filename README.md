@@ -12,9 +12,9 @@ https://easy-apply.pro/ - A digital platform designed to streamline the home buy
   - [Architecture Style](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/03-architectural-style.md)
 - System Design
   - [High Level Design](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/01-high-level-design.md)
+  - [Service Design](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/04-hexagonal-architecture.md)
   - [API Design](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/02-api-design.md)
   - [Data Model](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/03-data-model.md)
-  - [Hexagonal Architecture](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/04-hexagonal-architecture.md)
   - [How To Use The Application](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/how-to-use-the-application.md)
 
 # Tech Stack
