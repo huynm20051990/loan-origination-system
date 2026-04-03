@@ -614,6 +614,8 @@ dos2unix register-connectors.sh
 
 nano ~/.docker/config.json
 
+docker builder prune -a
+
 
 
 

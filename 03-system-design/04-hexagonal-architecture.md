@@ -1,7 +1,5 @@
 # Service Design
-The service package structure follows hexagonal architecture:
 ![Service Design](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/05-service-design.png)
-* Folder Structure
 ```text
 [service-name]
 │
