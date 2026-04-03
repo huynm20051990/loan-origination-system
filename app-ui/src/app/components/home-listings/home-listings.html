@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="page-container with-chat">
   <div class="search-hero-section">
     <div class="search-container">
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="minimal-search">
@@ -74,3 +74,6 @@
   </div>
   }
 </div>
+
+<!-- AI Chat Side Panel -->
+<app-chat-box (listingsReset)="loadAllHomes()"></app-chat-box>

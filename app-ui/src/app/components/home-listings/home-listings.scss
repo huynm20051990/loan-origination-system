@@ -81,6 +81,24 @@
   min-height: 100vh;
 }
 
+/* Layout when chat panel is visible */
+:host {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+
+  .page-container.with-chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 24px 40px;
+  }
+
+  app-chat-box {
+    flex-shrink: 0;
+    height: 100%;
+  }
+}
+
 .search-hero-section {
   padding: 35px 0;
   display: flex;

@@ -1,0 +1,22 @@
+fullnameOverride: chat-service
+
+annotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "7008"
+  prometheus.io/scheme: http
+  prometheus.io/path: "/actuator/prometheus"
+
+image:
+  name: chat-service
+
+env:
+  SPRING_PROFILES_ACTIVE: "docker"
+  SPRING_CONFIG_LOCATION: "file:/config-repo/application.yml,file:/config-repo/chat.yml"
+
+configmap:
+  enabled: true
+  volumeMounts:
+    mountPath: /config-repo
+
+livenessProbe_enabled: true
+readinessProbe_enabled: true

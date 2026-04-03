@@ -1,0 +1,244 @@
+openapi: 3.1.0
+info:
+  title: Chat Service API
+  description: |
+    AI-powered chat API for the EasyApply home page.
+    Allows authenticated users to ask natural language questions about home listings.
+    All endpoints require a valid Bearer token.
+  version: 1.0.0
+
+servers:
+  - url: https://localhost:8443/api/v1/chat
+    description: Local development (via API Gateway)
+
+security:
+  - bearerAuth: []
+
+paths:
+
+  /sessions:
+    post:
+      summary: Create a new chat session
+      operationId: createSession
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    get:
+      summary: List all sessions for the authenticated user
+      operationId: listSessions
+      responses:
+        '200':
+          description: List of sessions ordered by createdAt descending
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatSessionSummary'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /sessions/{sessionId}/messages:
+    post:
+      summary: Send a user message and stream the assistant response via SSE
+      operationId: sendMessage
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '200':
+          description: SSE stream of response tokens
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/ChatStreamChunk'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    get:
+      summary: Get all messages in a session (chronological order)
+      operationId: getMessages
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatMessageResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /sessions/{sessionId}:
+    delete:
+      summary: Delete a session and all its messages
+      operationId: deleteSession
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        '204':
+          description: Session deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    SessionId:
+      name: sessionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: UUID of the chat session
+
+  schemas:
+
+    ChatSessionResponse:
+      type: object
+      required: [sessionId, userId, createdAt]
+      properties:
+        sessionId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          description: JWT subject claim of the session owner
+        createdAt:
+          type: string
+          format: date-time
+
+    ChatSessionSummary:
+      type: object
+      required: [sessionId, createdAt, messageCount]
+      properties:
+        sessionId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        messageCount:
+          type: integer
+          minimum: 0
+
+    ChatMessageRequest:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+          minLength: 1
+          description: Natural language query from the user (must not be blank)
+
+    ChatMessageResponse:
+      type: object
+      required: [messageId, role, content, timestamp]
+      properties:
+        messageId:
+          type: string
+          format: uuid
+        role:
+          type: string
+          enum: [USER, ASSISTANT]
+        content:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    ChatStreamChunk:
+      type: object
+      description: |
+        Individual SSE event during assistant response streaming.
+        Each event is a JSON object. The final event has done=true and includes messageId.
+      required: [token, done]
+      properties:
+        token:
+          type: string
+          description: Response token fragment (empty string on final event)
+        done:
+          type: boolean
+          description: True only on the final event
+        messageId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Persisted message ID, present only when done=true
+
+    ErrorResponse:
+      type: object
+      required: [timestamp, status, error, message]
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+          description: Human-readable error message (no stack traces, no exception class names)
+
+  responses:
+    BadRequest:
+      description: Invalid request (e.g., blank content)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Session does not belong to the authenticated user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Session not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

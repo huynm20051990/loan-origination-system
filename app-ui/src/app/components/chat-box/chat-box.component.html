@@ -1,0 +1,64 @@
+<div class="chat-panel">
+  <div class="chat-header">
+    <span class="chat-title">AI Home Assistant</span>
+    <button mat-icon-button (click)="clearSession()" title="Clear chat" [disabled]="isLoading">
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+  </div>
+
+  <!-- Rate limit warning -->
+  <div class="rate-limit-banner" *ngIf="rateLimitWarning">
+    Too many messages. Please wait <strong>{{ cooldownSeconds }}s</strong> before sending again.
+  </div>
+
+  <!-- Error banner -->
+  <div class="error-banner" *ngIf="errorMessage">
+    <span>{{ errorMessage }}</span>
+    <button mat-button color="warn" (click)="retryLastMessage()">Try again</button>
+  </div>
+
+  <!-- Message history -->
+  <div class="chat-messages" #messagesContainer>
+    <div
+      *ngFor="let message of messages"
+      class="message-bubble"
+      [class.user-bubble]="message.role === 'USER'"
+      [class.assistant-bubble]="message.role === 'ASSISTANT'"
+    >
+      <div class="message-content">{{ message.content }}</div>
+      <div class="message-time">{{ message.timestamp | date:'shortTime' }}</div>
+    </div>
+
+    <!-- Streaming assistant bubble -->
+    <div class="message-bubble assistant-bubble" *ngIf="streamingContent">
+      <div class="message-content">{{ streamingContent }}<span class="cursor">|</span></div>
+    </div>
+
+    <!-- Loading spinner -->
+    <div class="loading-indicator" *ngIf="isLoading && !streamingContent">
+      <mat-spinner diameter="24"></mat-spinner>
+    </div>
+  </div>
+
+  <!-- Input area -->
+  <div class="chat-input-area">
+    <mat-form-field appearance="outline" class="chat-input-field">
+      <input
+        matInput
+        [(ngModel)]="userInput"
+        placeholder="Ask about home listings..."
+        (keyup.enter)="sendMessage()"
+        [disabled]="isLoading || rateLimitCooldown"
+      />
+    </mat-form-field>
+    <button
+      mat-fab
+      color="primary"
+      data-testid="send-button"
+      [disabled]="!userInput.trim() || isLoading || rateLimitCooldown"
+      (click)="sendMessage()"
+    >
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>

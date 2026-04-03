@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize, catchError } from 'rxjs/operators';
 import { HomeService } from '../../core/services/home';
 import { Home } from '../../core/models/home';
+import { ChatBoxComponent } from '../chat-box/chat-box.component';
 
 @Component({
   selector: 'app-home-listings',
@@ -22,7 +23,8 @@ import { Home } from '../../core/models/home';
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ChatBoxComponent
   ],
   templateUrl: './home-listings.html',
   styleUrls: ['./home-listings.scss']
@@ -44,7 +46,7 @@ export class HomeListingsComponent implements OnInit {
     this.loadAllHomes();
   }
 
-  private loadAllHomes() {
+  loadAllHomes() {
     this.executeSearch('all');
   }
 

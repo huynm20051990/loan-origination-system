@@ -18,6 +18,11 @@ spring.cloud.gateway.server.webflux.routes:
   predicates:
     - Path=/api/v1/applications/**
 
+- id: chat-service
+  uri: http://easy-apply-chat-service
+  predicates:
+    - Path=/api/v1/chat/**
+
 - id: product-composite
   uri: http://product-composite
   predicates:

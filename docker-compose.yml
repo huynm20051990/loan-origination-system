@@ -263,6 +263,48 @@ services:
       retries: 10
       start_period: 30s
 
+  chat-service:
+    build: microservices/chat-service
+    image: loan-origination-system/chat-service
+    mem_limit: 512m
+    container_name: easy-apply-chat-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/chat.yml
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USR}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PWD}
+      - SPRING_AI_GOOGLE_GENAI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - $PWD/config-repo:/config-repo
+      - $PWD/agentic-ai:/agentic-ai
+    depends_on:
+      chat-pg:
+        condition: service_healthy
+      assessment-cassandra:
+        condition: service_healthy
+      home-service:
+        condition: service_started
+      auth-server:
+        condition: service_healthy
+
+  chat-pg:
+    image: pgvector/pgvector:pg16
+    container_name: easy-apply-chat-pg
+    mem_limit: 512m
+    environment:
+      - POSTGRES_DB=chat-db
+      - POSTGRES_USER=${POSTGRES_USR}
+      - POSTGRES_PASSWORD=${POSTGRES_PWD}
+    volumes:
+      - ./database/init-chat:/docker-entrypoint-initdb.d
+    ports:
+      - "5436:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USR} -d chat-db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   notification-service:
     build: microservices/notification-service
     image: loan-origination-system/notification-service
