@@ -614,6 +614,17 @@ dos2unix register-connectors.sh
 
 nano ~/.docker/config.json
 
+docker builder prune -a
+
+docker-compose up -d \
+app-ui \
+home-pg app-pg assessment-pg notification-pg chat-pg \
+kafka debezium \
+auth-server gateway \
+home-service app-service assessment-service notification-service \
+assessment-cassandra assessment-mcp-server \
+chat-service
+
 
 
 

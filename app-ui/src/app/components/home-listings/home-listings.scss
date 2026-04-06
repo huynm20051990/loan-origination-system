@@ -84,7 +84,7 @@
 /* Layout when chat panel is visible */
 :host {
   display: flex;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
 
   .page-container.with-chat {

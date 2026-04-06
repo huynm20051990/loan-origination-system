@@ -8,6 +8,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.memory.repository.cassandra.CassandraChatMemoryRepository;
+import org.springframework.ai.mcp.McpToolNamePrefixGenerator;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,5 +52,10 @@ public class BeanConfiguration {
   @Bean
   WebClient.Builder webClientBuilder(McpSyncClientExchangeFilterFunction filterFunction) {
     return WebClient.builder().apply(filterFunction.configuration());
+  }
+
+  @Bean
+  public McpToolNamePrefixGenerator mcpToolNameNoPrefixGenerator() {
+    return (mcpClientName, tool) -> tool.name();
   }
 }

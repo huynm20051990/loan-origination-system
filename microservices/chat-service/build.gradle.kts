@@ -33,19 +33,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-    // Spring AI — Gemini chat + embedding
+    // Spring AI — Gemini chat
     implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
-    implementation("org.springframework.ai:spring-ai-starter-model-google-genai-embedding")
-    implementation("org.springframework.ai:spring-ai-starter-vector-store-pgvector")
-    implementation("org.springframework.ai:spring-ai-advisors-vector-store")
 
     // Spring AI — Cassandra chat memory (same as assessment-service)
     implementation("org.springframework.ai:spring-ai-starter-model-chat-memory-repository-cassandra")
 
     // PostgreSQL
     implementation("org.postgresql:postgresql")
-    implementation("com.pgvector:pgvector:0.1.6")
 
     // Observability
     implementation("io.micrometer:micrometer-tracing-bridge-brave")

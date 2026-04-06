@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ChatSession } from '../models/chat-session';
 import { ChatMessage } from '../models/chat-message';
+import { AuthService } from './auth';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { ChatMessage } from '../models/chat-message';
 export class ChatService {
   private readonly API_URL = 'https://localhost:8443/api/v1/chat';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   createSession(): Observable<ChatSession> {
     return this.http.post<ChatSession>(`${this.API_URL}/sessions`, {});
@@ -36,15 +37,17 @@ export class ChatService {
   ): void {
     const url = `${this.API_URL}/sessions/${sessionId}/messages`;
 
-    // Use fetch API for SSE streaming (HttpClient doesn't natively support SSE streaming)
+    // Use fetch API for SSE streaming (HttpClient doesn't natively support SSE streaming).
+    // Manually attach the Bearer token because fetch bypasses Angular's HTTP interceptors.
+    this.authService.getAccessToken().subscribe(token => {
     fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'text/event-stream'
+        'Accept': 'text/event-stream',
+        'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ content }),
-      credentials: 'include'
+      body: JSON.stringify({ content })
     }).then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error ${response.status}`);
@@ -88,6 +91,7 @@ export class ChatService {
     }).catch(err => {
       console.error('SSE stream error:', err);
       onDone();
+    });
     });
   }
 }

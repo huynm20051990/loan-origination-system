@@ -39,6 +39,7 @@ const COOLDOWN_SECONDS = 15;
 export class ChatBoxComponent implements OnInit, AfterViewChecked {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   @Output() listingsReset = new EventEmitter<void>();
+  @Output() searchRequested = new EventEmitter<string>();
 
   sessionId: string | null = null;
   messages: ChatMessage[] = [];
@@ -130,28 +131,17 @@ export class ChatBoxComponent implements OnInit, AfterViewChecked {
     this.userInput = '';
     this.isLoading = true;
     this.streamingContent = '';
+    this.searchRequested.emit(content);
 
-    const assistantTimestamp = new Date().toISOString();
-
-    this.chatService.sendMessage(
-      this.sessionId,
-      content,
-      token => {
-        this.streamingContent += token;
-      },
-      () => {
-        if (this.streamingContent) {
-          this.messages.push({
-            messageId: crypto.randomUUID(),
-            role: 'ASSISTANT',
-            content: this.streamingContent,
-            timestamp: assistantTimestamp
-          });
-        }
-        this.streamingContent = '';
-        this.isLoading = false;
-      }
-    );
+    setTimeout(() => {
+      this.messages.push({
+        messageId: crypto.randomUUID(),
+        role: 'ASSISTANT',
+        content: 'The listings have been updated based on your query. Please review the results!',
+        timestamp: new Date().toISOString()
+      });
+      this.isLoading = false;
+    }, 300);
   }
 
   private isRateLimited(): boolean {

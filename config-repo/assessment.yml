@@ -43,10 +43,10 @@ spring:
 
     chat:
       memory:
-        cassandra:
-          keyspace: assessment_keyspace
-          messages-column: chat_messages
-          table: chat_memory
+        repository:
+          cassandra:
+            keyspace: springframework
+            table: ai_chat_memory
   cassandra:
     contact-points: easy-apply-assessment-cassandra
     port: 9042

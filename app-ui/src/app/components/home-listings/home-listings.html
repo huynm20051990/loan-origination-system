@@ -76,4 +76,4 @@
 </div>
 
 <!-- AI Chat Side Panel -->
-<app-chat-box (listingsReset)="loadAllHomes()"></app-chat-box>
+<app-chat-box (listingsReset)="loadAllHomes()" (searchRequested)="executeSearch($event)"></app-chat-box>

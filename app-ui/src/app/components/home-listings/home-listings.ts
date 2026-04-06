@@ -59,7 +59,7 @@ export class HomeListingsComponent implements OnInit {
     }
   }
 
-  private executeSearch(query: string) {
+  executeSearch(query: string) {
     this.loading = true;
     this.cdr.markForCheck();
 
