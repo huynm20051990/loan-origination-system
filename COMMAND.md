@@ -551,6 +551,8 @@ docker exec -it easy-apply-kafka /opt/kafka/bin/kafka-console-consumer.sh \
 
 # Check status of all connectors
 curl -s localhost:8083/connectors?expand=status | jq
+sed -i 's/\r$//' register-connectors.sh
+sed -i 's/\r$//' gradlew
 
 # Check all available topics
 docker exec easy-apply-kafka /opt/kafka/bin/kafka-topics.sh \
