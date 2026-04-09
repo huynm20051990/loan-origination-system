@@ -4,3 +4,4 @@
 [2026-04-09 00:03] T004: Added ChatAPI.java and ChatRequestDTO.java to api module under api/core/chat
 [2026-04-09 00:04] T005: ChatRequestDTO.java already present at api/core/chat/dto — marked complete
 [2026-04-09 00:05] T006: Created config-repo/chat.yml — port 7007, virtual threads, Gemini 2.5 Flash, Cassandra chat memory, home-service URL, management endpoints
+[2026-04-09 00:06] T007: Created database/init-chat-cassandra/init.cql — chat_keyspace SimpleStrategy replication_factor 1

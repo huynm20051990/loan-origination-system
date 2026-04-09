@@ -23,7 +23,7 @@
 - [x] T004 [P] Add `ChatAPI.java` to `api/src/main/java/com/loan/origination/system/api/core/chat/v1/ChatAPI.java` — copy from `specs/003-ai-chat-box/contracts/ChatAPI.java`
 - [x] T005 [P] Add `ChatRequestDTO.java` to `api/src/main/java/com/loan/origination/system/api/core/chat/dto/ChatRequestDTO.java` — copy from `specs/003-ai-chat-box/contracts/ChatRequestDTO.java`
 - [x] T006 [P] Create `config-repo/chat.yml` — port 7007, `spring.threads.virtual.enabled: true`, Gemini 2.5 Flash, Cassandra chat memory (`chat_keyspace`, `chat_memory` table), `app.home-service.url: http://home-service`
-- [ ] T007 [P] Create `database/init-chat-cassandra/init.cql` — `CREATE KEYSPACE IF NOT EXISTS chat_keyspace WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};`
+- [x] T007 [P] Create `database/init-chat-cassandra/init.cql` — `CREATE KEYSPACE IF NOT EXISTS chat_keyspace WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};`
 - [ ] T008 Add `chat-cassandra` service to `docker-compose.yml` — `cassandra:latest`, `chat_keyspace` init volume, healthcheck `cqlsh -e 'describe keyspaces'`
 - [ ] T009 Add `chat-service` service to `docker-compose.yml` — depends on `chat-cassandra` (healthy) and `auth-server` (healthy), mounts `config-repo/`, env vars `SPRING_AI_GOOGLE_GENAI_API_KEY`
 - [ ] T010 [P] Add gateway route to `config-repo/gateway.yml` — `id: chat-service`, `uri: http://chat-service`, `Path=/api/v1/chat/**` (insert before the `app-ui` catch-all route)
