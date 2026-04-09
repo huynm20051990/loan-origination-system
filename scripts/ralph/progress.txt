@@ -43,3 +43,4 @@
 [2026-04-09 23:45] T043: Added aria-label="Chat messages" to <ul> in chat-box.html; all other aria-labels (input, submit, reset, section) were already present; Angular build passes
 [2026-04-09 23:50] T044: Added @media (max-width: 768px) breakpoints to home-listings.scss (flex-direction:column, full-width columns, position:static) and chat-box.scss (height:400px); Angular build passes
 [2026-04-09 23:55] T045: Added W3C traceparent header propagation to HomeSearchAdapter.java via injected Micrometer Tracer; updated HomeSearchAdapterIT and ChatApplicationServiceIT to pass Tracer.NOOP; compile and non-Docker tests pass
+[2026-04-09 23:58] T046: management.endpoints.web.exposure.include: health,prometheus already present in config-repo/chat.yml from T006; marked complete
