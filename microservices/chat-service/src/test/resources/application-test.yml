@@ -1,0 +1,21 @@
+spring:
+  ai:
+    google:
+      genai:
+        api-key: "test-fake-api-key"
+    chat:
+      memory:
+        repository:
+          cassandra:
+            keyspace: chat_keyspace
+            table: chat_memory
+            initialize-schema: false
+  cassandra:
+    contact-points: localhost
+    port: 9042
+    local-datacenter: datacenter1
+    keyspace-name: chat_keyspace
+
+app:
+  home-service:
+    url: "http://localhost:9999"
