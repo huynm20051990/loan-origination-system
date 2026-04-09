@@ -11,3 +11,4 @@
 [2026-04-09 00:11] T011: Created ChatTurn.java — pure POJO record (sessionId, query, reply, timestamp) in domain/model with zero framework annotations
 [2026-04-09 00:12] T012: Created HomeResult.java — plain Java record (id, price, beds, baths, sqft, imageUrl, address, status, description) with nested Address record in application/port/output
 [2026-04-09 00:13] T013: Created HomeSearchPort.java — output port interface with List<HomeResult> search(String query) in application/port/output
+[2026-04-09 00:14] T014: Created ChatUseCase.java — input port interface with Flux<ServerSentEvent<String>> stream(String sessionId, String query) in application/port/input
