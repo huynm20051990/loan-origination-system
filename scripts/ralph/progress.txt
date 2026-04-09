@@ -9,3 +9,4 @@
 [2026-04-09 00:08] T009: Added chat-service to docker-compose.yml — depends on chat-cassandra (healthy) and auth-server (healthy), mounts config-repo/, env vars SPRING_AI_GOOGLE_GENAI_API_KEY, port 7007, healthcheck /actuator/health
 [2026-04-09 00:10] T010: Added chat-service gateway route to config-repo/gateway.yml — Path=/api/v1/chat/**, inserted before app-ui catch-all route
 [2026-04-09 00:11] T011: Created ChatTurn.java — pure POJO record (sessionId, query, reply, timestamp) in domain/model with zero framework annotations
+[2026-04-09 00:12] T012: Created HomeResult.java — plain Java record (id, price, beds, baths, sqft, imageUrl, address, status, description) with nested Address record in application/port/output
