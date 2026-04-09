@@ -265,6 +265,32 @@ services:
       timeout: 10s
       retries: 10
 
+  chat-service:
+    build: microservices/chat-service
+    image: loan-origination-system/chat-service
+    mem_limit: 512m
+    container_name: easy-apply-chat-service
+    hostname: chat-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/chat.yml
+      - SPRING_AI_GOOGLE_GENAI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - $PWD/config-repo:/config-repo
+    ports:
+      - "7007:7007"
+    depends_on:
+      chat-cassandra:
+        condition: service_healthy
+      auth-server:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-fs", "http://localhost:7007/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
   assessment-mcp-server:
     build: mcp-server/assessment-mcp-server
     image: loan-origination-system/assessment-mcp-server

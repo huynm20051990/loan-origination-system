@@ -6,3 +6,4 @@
 [2026-04-09 00:05] T006: Created config-repo/chat.yml — port 7007, virtual threads, Gemini 2.5 Flash, Cassandra chat memory, home-service URL, management endpoints
 [2026-04-09 00:06] T007: Created database/init-chat-cassandra/init.cql — chat_keyspace SimpleStrategy replication_factor 1
 [2026-04-09 00:07] T008: Added chat-cassandra service to docker-compose.yml — cassandra:latest, init-chat-cassandra volume, port 9043:9042, healthcheck cqlsh -e 'describe keyspaces'
+[2026-04-09 00:08] T009: Added chat-service to docker-compose.yml — depends on chat-cassandra (healthy) and auth-server (healthy), mounts config-repo/, env vars SPRING_AI_GOOGLE_GENAI_API_KEY, port 7007, healthcheck /actuator/health
