@@ -1,19 +1,22 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { Router } from '@angular/router';
-import { of } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { finalize, catchError } from 'rxjs/operators';
-import { HomeService } from '../../core/services/home';
+import { Router } from '@angular/router';
 import { HomeSearchStateService } from '../../core/services/home-search-state';
 import { Home } from '../../core/models/home';
 import { ChatBoxComponent } from '../chat-box/chat-box';
 
+/**
+ * Displays the home listings grid alongside the AI chat sidebar.
+ *
+ * <p>On initialisation the component delegates to {@link HomeSearchStateService#reset}
+ * so the full listing set is loaded from the server. Subsequent filtering and
+ * reset actions are driven entirely through the chat sidebar and the shared
+ * state service — no inline search bar is rendered by this component.</p>
+ */
 @Component({
   selector: 'app-home-listings',
   standalone: true,
@@ -22,8 +25,6 @@ import { ChatBoxComponent } from '../chat-box/chat-box';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatInputModule,
-    MatFormFieldModule,
     MatProgressSpinnerModule,
     ChatBoxComponent
   ],
@@ -31,10 +32,7 @@ import { ChatBoxComponent } from '../chat-box/chat-box';
   styleUrls: ['./home-listings.scss']
 })
 export class HomeListingsComponent implements OnInit {
-  @ViewChild('searchInput') searchInput!: ElementRef;
-
   constructor(
-    private readonly homeService: HomeService,
     private readonly homeSearchState: HomeSearchStateService,
     private readonly router: Router
   ) {}
@@ -55,44 +53,19 @@ export class HomeListingsComponent implements OnInit {
     return this.homeSearchState.isLoading();
   }
 
+  /**
+   * Loads the full unfiltered listing set on component initialisation.
+   */
   ngOnInit(): void {
-    this.loadAllHomes();
+    this.homeSearchState.reset();
   }
 
-  private loadAllHomes() {
-    this.executeSearch('all');
-  }
-
-  onAiSearch() {
-    const query = this.searchInput?.nativeElement?.value;
-    if (query && query.trim() !== '') {
-      this.executeSearch(query);
-    } else {
-      this.loadAllHomes();
-    }
-  }
-
-  private executeSearch(query: string) {
-    this.homeSearchState.setLoading(true);
-
-    const request$ = query === 'all'
-      ? this.homeService.getHomes()
-      : this.homeService.searchHomes(query);
-
-    request$.pipe(
-      catchError(error => {
-        console.error('Search failed', error);
-        return of([]);
-      }),
-      finalize(() => {
-        this.homeSearchState.setLoading(false);
-      })
-    ).subscribe(data => {
-      this.homeSearchState.updateHomes(data);
-    });
-  }
-
-  applyForLoan(home: Home) {
+  /**
+   * Navigates to the loan application page for the selected home.
+   *
+   * @param home the home the user wants to apply for
+   */
+  applyForLoan(home: Home): void {
     this.router.navigate(['/apply', home.id], {
       queryParams: { price: home.price }
     });
