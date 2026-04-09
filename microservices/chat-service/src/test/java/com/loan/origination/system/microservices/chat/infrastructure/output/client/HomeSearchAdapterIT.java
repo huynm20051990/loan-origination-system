@@ -3,6 +3,7 @@ package com.loan.origination.system.microservices.chat.infrastructure.output.cli
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.loan.origination.system.microservices.chat.application.port.output.HomeResult;
+import io.micrometer.tracing.Tracer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -90,7 +91,9 @@ class HomeSearchAdapterIT {
                 .baseUrl("http://localhost:" + wireMock.port())
                 .build();
 
-        adapter = new HomeSearchAdapter(restClient);
+        // Tracer.NOOP returns null for currentSpan(), so no traceparent header is added.
+        // This is intentional — the IT validates HTTP semantics, not tracing behaviour.
+        adapter = new HomeSearchAdapter(restClient, Tracer.NOOP);
     }
 
     /** Stops the WireMock server after each test to release the ephemeral port. */

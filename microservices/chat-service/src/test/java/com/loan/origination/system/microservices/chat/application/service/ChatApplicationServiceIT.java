@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.loan.origination.system.microservices.chat.infrastructure.output.client.HomeSearchAdapter;
+import io.micrometer.tracing.Tracer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -161,7 +162,7 @@ class ChatApplicationServiceIT {
         RestClient homeRestClient = RestClient.builder()
                 .baseUrl("http://localhost:" + wireMock.port())
                 .build();
-        HomeSearchAdapter homeSearchAdapter = new HomeSearchAdapter(homeRestClient);
+        HomeSearchAdapter homeSearchAdapter = new HomeSearchAdapter(homeRestClient, Tracer.NOOP);
 
         // --- System under test ---
         chatApplicationService = new ChatApplicationService(homeSearchAdapter, chatClient);
