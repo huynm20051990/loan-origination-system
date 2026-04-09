@@ -1,0 +1,35 @@
+<section class="chat-box" aria-label="AI chat">
+  <ul class="chat-messages" aria-live="polite">
+    @for (message of messages(); track $index) {
+      <li class="chat-message" [class.user]="message.role === 'user'" [class.assistant]="message.role === 'assistant'">
+        <span class="bubble">{{ message.content }}<span *ngIf="message.isStreaming" class="cursor">▋</span></span>
+      </li>
+    }
+  </ul>
+
+  <form class="chat-input-row" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="query-field">
+      <input
+        matInput
+        [(ngModel)]="queryInput"
+        name="query"
+        placeholder="Search homes (e.g. 3 beds under $500k in Austin)"
+        aria-label="Home search query"
+        [disabled]="isLoading()"
+      />
+    </mat-form-field>
+
+    <button
+      mat-icon-button
+      type="submit"
+      aria-label="Submit query"
+      [disabled]="isLoading() || !queryInput.trim()"
+    >
+      @if (isLoading()) {
+        <mat-spinner diameter="20" />
+      } @else {
+        <mat-icon>send</mat-icon>
+      }
+    </button>
+  </form>
+</section>
