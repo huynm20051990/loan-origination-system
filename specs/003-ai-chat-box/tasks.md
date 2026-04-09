@@ -43,7 +43,7 @@
 - [x] T013 Create `microservices/chat-service/src/main/java/.../chat/application/port/output/HomeSearchPort.java` — interface: `List<HomeResult> search(String query)` (depends on T012)
 - [x] T014 [P] Create `microservices/chat-service/src/main/java/.../chat/application/port/input/ChatUseCase.java` — interface: `Flux<ServerSentEvent<String>> stream(String sessionId, String query)`
 - [x] T015 Create `microservices/chat-service/src/main/java/.../chat/infrastructure/config/BeanConfiguration.java` — `@Bean ChatMemory chatMemory(CassandraChatMemoryRepository)` → `MessageWindowChatMemory(maxMessages=20)`; `@Bean ChatClient`  with `MessageChatMemoryAdvisor` and `SimpleLoggerAdvisor`; `@Bean RestClient homeRestClient(@Value("${app.home-service.url}") String url)`
-- [ ] T016 [P] Create `app-ui/src/app/core/models/chat.ts` — `ChatMessage` interface: `role: 'user' | 'assistant'`, `content: string`, `isStreaming: boolean`
+- [x] T016 [P] Create `app-ui/src/app/core/models/chat.ts` — `ChatMessage` interface: `role: 'user' | 'assistant'`, `content: string`, `isStreaming: boolean`
 - [ ] T017 Create `app-ui/src/app/core/services/home-search-state.ts` — `HomeSearchStateService` with `homes = signal<Home[]>([])` and `isLoading = signal<boolean>(false)`; methods `updateHomes(homes: Home[])`, `setLoading(v: boolean)`, `reset()` (calls `HomeService.getHomes()` and updates signal)
 
 **Checkpoint**: Compile check — `./gradlew :microservices:chat-service:compileJava`. All ports and config beans must compile without errors.
