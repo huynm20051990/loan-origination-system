@@ -130,7 +130,7 @@
 - [x] T045 [P] Add `@CorrelationId` / trace context propagation to `HomeSearchAdapter.java` — ensure outgoing `RestClient` call carries W3C `traceparent` header for distributed tracing (Istio/Jaeger)
 - [x] T046 [P] Add `management.endpoints.web.exposure.include: health,prometheus` to `config-repo/chat.yml`
 - [x] T047 Run full build: `./gradlew build` — all modules including `:api` and `:microservices:chat-service` must pass
-- [ ] T048 Docker compose smoke test: `docker compose up -d chat-cassandra chat-service` — verify `chat-service` starts healthy and `GET /actuator/health` returns 200
+- [x] T048 Docker compose smoke test: `docker compose up -d chat-cassandra chat-service` — verify `chat-service` starts healthy and `GET /actuator/health` returns 200
 - [ ] T049 Manual SSE smoke test: `curl -N -X POST http://localhost:7007/api/v1/chat/stream -H "Content-Type: application/json" -d '{"sessionId":"smoke-test-1","query":"3 beds under 500k"}'` — confirm event sequence: `listings` → multiple `token` → `done`
 
 ---
