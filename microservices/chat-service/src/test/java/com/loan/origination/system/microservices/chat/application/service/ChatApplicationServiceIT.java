@@ -63,7 +63,7 @@ import static org.mockito.Mockito.withSettings;
  * {@link ChatApplicationService} is created in T023 and
  * {@code HomeSearchAdapter} / {@code HomeSearchUnavailableException} are created in T024/T025.
  */
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 class ChatApplicationServiceIT {
 
     /** Ephemeral Cassandra node; started once per JVM by {@link Testcontainers}. */
