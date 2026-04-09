@@ -246,6 +246,25 @@ services:
       timeout: 10s
       retries: 10
 
+  chat-cassandra:
+    image: 'cassandra:latest'
+    mem_limit: 1024m
+    container_name: easy-apply-chat-cassandra
+    environment:
+      - CASSANDRA_DC=dc1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=128M
+    volumes:
+      - $PWD/database/init-chat-cassandra:/docker-entrypoint-initdb.d
+    ports:
+      - '9043:9042'
+    healthcheck:
+      test: [ "CMD-SHELL", "cqlsh -e 'describe keyspaces'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+
   assessment-mcp-server:
     build: mcp-server/assessment-mcp-server
     image: loan-origination-system/assessment-mcp-server
