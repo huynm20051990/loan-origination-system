@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,6 +10,7 @@ import { of } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize, catchError } from 'rxjs/operators';
 import { HomeService } from '../../core/services/home';
+import { HomeSearchStateService } from '../../core/services/home-search-state';
 import { Home } from '../../core/models/home';
 
 @Component({
@@ -30,15 +31,27 @@ import { Home } from '../../core/models/home';
 export class HomeListingsComponent implements OnInit {
   @ViewChild('searchInput') searchInput!: ElementRef;
 
-  // Use a plain array instead of an Observable to prevent async pipe race conditions
-  homes: Home[] = [];
-  loading = false;
-
   constructor(
-    private homeService: HomeService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
+    private readonly homeService: HomeService,
+    private readonly homeSearchState: HomeSearchStateService,
+    private readonly router: Router
   ) {}
+
+  /**
+   * Returns the currently displayed homes from the shared state service.
+   * Reads the signal so that Angular's reactivity system tracks this dependency
+   * and re-renders the template whenever the signal value changes.
+   */
+  get homes(): Home[] {
+    return this.homeSearchState.homes();
+  }
+
+  /**
+   * Returns the current loading flag from the shared state service.
+   */
+  get loading(): boolean {
+    return this.homeSearchState.isLoading();
+  }
 
   ngOnInit(): void {
     this.loadAllHomes();
@@ -58,8 +71,7 @@ export class HomeListingsComponent implements OnInit {
   }
 
   private executeSearch(query: string) {
-    this.loading = true;
-    this.cdr.markForCheck();
+    this.homeSearchState.setLoading(true);
 
     const request$ = query === 'all'
       ? this.homeService.getHomes()
@@ -71,12 +83,10 @@ export class HomeListingsComponent implements OnInit {
         return of([]);
       }),
       finalize(() => {
-        this.loading = false;
-        // Forces Angular to recognize the loading state change and the new data
-        this.cdr.detectChanges();
+        this.homeSearchState.setLoading(false);
       })
     ).subscribe(data => {
-      this.homes = data;
+      this.homeSearchState.updateHomes(data);
     });
   }
 
