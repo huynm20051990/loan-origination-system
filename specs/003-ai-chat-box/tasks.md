@@ -21,8 +21,8 @@
 - [x] T002 Create `microservices/chat-service/build.gradle.kts` — Spring Boot 3.5.x, Spring AI 1.1.2, `spring-boot-starter-webflux` (SSE support), `spring-ai-starter-model-google-genai`, `spring-ai-starter-model-chat-memory-repository-cassandra`, Micrometer, Brave tracing. No JPA dependency.
 - [x] T003 Create `microservices/chat-service/src/main/java/com/loan/origination/system/microservices/chat/ChatServiceApplication.java`
 - [x] T004 [P] Add `ChatAPI.java` to `api/src/main/java/com/loan/origination/system/api/core/chat/v1/ChatAPI.java` — copy from `specs/003-ai-chat-box/contracts/ChatAPI.java`
-- [ ] T005 [P] Add `ChatRequestDTO.java` to `api/src/main/java/com/loan/origination/system/api/core/chat/dto/ChatRequestDTO.java` — copy from `specs/003-ai-chat-box/contracts/ChatRequestDTO.java`
-- [ ] T006 [P] Create `config-repo/chat.yml` — port 7007, `spring.threads.virtual.enabled: true`, Gemini 2.5 Flash, Cassandra chat memory (`chat_keyspace`, `chat_memory` table), `app.home-service.url: http://home-service`
+- [x] T005 [P] Add `ChatRequestDTO.java` to `api/src/main/java/com/loan/origination/system/api/core/chat/dto/ChatRequestDTO.java` — copy from `specs/003-ai-chat-box/contracts/ChatRequestDTO.java`
+- [x] T006 [P] Create `config-repo/chat.yml` — port 7007, `spring.threads.virtual.enabled: true`, Gemini 2.5 Flash, Cassandra chat memory (`chat_keyspace`, `chat_memory` table), `app.home-service.url: http://home-service`
 - [ ] T007 [P] Create `database/init-chat-cassandra/init.cql` — `CREATE KEYSPACE IF NOT EXISTS chat_keyspace WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};`
 - [ ] T008 Add `chat-cassandra` service to `docker-compose.yml` — `cassandra:latest`, `chat_keyspace` init volume, healthcheck `cqlsh -e 'describe keyspaces'`
 - [ ] T009 Add `chat-service` service to `docker-compose.yml` — depends on `chat-cassandra` (healthy) and `auth-server` (healthy), mounts `config-repo/`, env vars `SPRING_AI_GOOGLE_GENAI_API_KEY`

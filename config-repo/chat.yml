@@ -1,0 +1,43 @@
+server.port: 7007
+server.error.include-message: always
+
+spring.application.name: chat
+spring.threads.virtual.enabled: true
+
+spring:
+  ai:
+    model:
+      chat: google-genai
+    google:
+      genai:
+        chat:
+          options:
+            model: gemini-2.5-flash
+    chat:
+      memory:
+        cassandra:
+          keyspace: chat_keyspace
+          messages-column: chat_messages
+          table: chat_memory
+  cassandra:
+    contact-points: easy-apply-chat-cassandra
+    port: 9042
+    local-datacenter: dc1
+    schema-action: create_if_not_exists
+    request:
+      timeout: 10s
+
+app:
+  home-service:
+    url: http://home-service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+
+---
+spring.config.activate.on-profile: docker
+
+server.port: 80
