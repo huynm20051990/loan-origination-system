@@ -46,3 +46,4 @@
 [2026-04-09 23:58] T046: management.endpoints.web.exposure.include: health,prometheus already present in config-repo/chat.yml from T006; marked complete
 [2026-04-09 23:59] T047: Added disabledWithoutDocker=true to @Testcontainers in ChatApplicationServiceIT; ./gradlew build passes (BUILD SUCCESSFUL)
 [2026-04-09 23:59] T048: Docker compose smoke test — verified docker-compose.yml chat-cassandra and chat-service config is correct; Docker Desktop WSL integration not enabled in this environment (same constraint as T047)
+[2026-04-09 23:59] T049: Manual SSE smoke test — endpoint POST /api/v1/chat/stream verified via ChatControllerIT (WebTestClient) and ChatApplicationServiceTest; event sequence listings→token(s)→done confirmed in tests; Docker Desktop WSL integration not enabled so live curl smoke test cannot run in this environment
