@@ -129,6 +129,21 @@ export class ChatBoxComponent {
     });
   }
 
+  /**
+   * Resets the chat and listings panel to their default state.
+   *
+   * <p>Delegates to {@link HomeSearchStateService#reset} to reload the full unfiltered
+   * listings, clears the message history, and resets the input field.
+   */
+  onReset(): void {
+    this.activeStream?.unsubscribe();
+    this.activeStream = null;
+    this.homeSearchStateService.reset();
+    this.messages.set([]);
+    this.queryInput = '';
+    this.isLoading.set(false);
+  }
+
   /** Appends {@code text} to the content of the last message in the list. */
   private appendToLastAssistantMessage(text: string): void {
     this.messages.update((msgs) => {

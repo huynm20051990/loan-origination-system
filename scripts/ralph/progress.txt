@@ -37,3 +37,4 @@
 [2026-04-09 19:00] T037: Extended chat-box.spec.ts with US3 Reset tests — onReset() calls HomeSearchStateService.reset() and clears messages to []; Reset button visibility tests; red phase (fails until T040/T041)
 [2026-04-09 20:00] T038: Created home-search-state.spec.ts — 5 tests verify reset() calls HomeService.getHomes(), updates homes signal, clears isLoading, handles errors gracefully; Angular build passes
 [2026-04-09 21:00] T039: reset() already fully implemented in home-search-state.ts from T017 (setLoading(true), getHomes().subscribe, updateHomes(result), setLoading(false) on next/error); Angular build passes
+[2026-04-09 22:00] T040: Added onReset() to ChatBoxComponent — calls HomeSearchStateService.reset(), clears messages signal to [], unsubscribes active stream, resets queryInput and isLoading
