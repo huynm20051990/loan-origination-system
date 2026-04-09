@@ -75,7 +75,7 @@
 - [x] T029 [P] [US1] Create `app-ui/src/app/components/chat-box/chat-box.html` — message list (`@for` over `messages`), input field, submit button `[disabled]="isLoading()"`, loading spinner while `isLoading()`
 - [x] T030 [P] [US1] Create `app-ui/src/app/components/chat-box/chat-box.scss` — sidebar panel, scrollable message list, user/assistant message bubble styles
 - [x] T031 [US1] Update `app-ui/src/app/components/home-listings/home-listings.ts` — inject `HomeSearchStateService`; on `ngOnInit` call `HomeService.getHomes()` and push result to `HomeSearchStateService.updateHomes()`; bind `homes` to `HomeSearchStateService.homes` signal instead of local array
-- [ ] T032 [US1] Update `app-ui/src/app/components/home-listings/home-listings.html` — wrap content in two-column CSS layout: listings grid (~70%) left column + `<app-chat-box>` (~30%) right column; add `ChatBoxComponent` to `imports[]` in component decorator
+- [x] T032 [US1] Update `app-ui/src/app/components/home-listings/home-listings.html` — wrap content in two-column CSS layout: listings grid (~70%) left column + `<app-chat-box>` (~30%) right column; add `ChatBoxComponent` to `imports[]` in component decorator
 
 **Checkpoint**: US1 fully functional. Chat sidebar visible, query returns filtered listings, tokens stream into chat, loading state works, Cassandra stores turn memory.
 

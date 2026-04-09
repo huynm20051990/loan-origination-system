@@ -12,6 +12,7 @@ import { finalize, catchError } from 'rxjs/operators';
 import { HomeService } from '../../core/services/home';
 import { HomeSearchStateService } from '../../core/services/home-search-state';
 import { Home } from '../../core/models/home';
+import { ChatBoxComponent } from '../chat-box/chat-box';
 
 @Component({
   selector: 'app-home-listings',
@@ -23,7 +24,8 @@ import { Home } from '../../core/models/home';
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ChatBoxComponent
   ],
   templateUrl: './home-listings.html',
   styleUrls: ['./home-listings.scss']

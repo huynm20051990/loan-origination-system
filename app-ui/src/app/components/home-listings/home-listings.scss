@@ -402,6 +402,25 @@
   margin-top: 10px;
 }
 
+/* --- Two-Column Content Layout --- */
+.content-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.listings-column {
+  flex: 0 0 70%;
+  min-width: 0;
+}
+
+.chat-column {
+  flex: 0 0 30%;
+  min-width: 0;
+  position: sticky;
+  top: 80px;
+}
+
 /* --- AI Limit Note Styling --- */
 .ai-limit-note {
   display: flex;
