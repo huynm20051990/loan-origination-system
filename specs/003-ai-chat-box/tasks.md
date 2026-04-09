@@ -94,7 +94,7 @@
 
 ### Implementation for US2
 
-- [ ] T035 [US2] Update `ChatApplicationService.java` — when `HomeResult` list is empty: emit `listings` event with `[]`; build AI prompt variant that informs the model no listings matched (so AI generates "No listings found. Try adjusting your criteria." style response)
+- [x] T035 [US2] Update `ChatApplicationService.java` — when `HomeResult` list is empty: emit `listings` event with `[]`; build AI prompt variant that informs the model no listings matched (so AI generates "No listings found. Try adjusting your criteria." style response)
 - [ ] T036 [US2] Verify `app-ui/src/app/components/home-listings/home-listings.html` — confirm existing `@empty` block ("No homes found") renders when `HomeSearchStateService.homes()` is `[]`. Adjust empty-state copy if needed to match AC: `"No listings found. Try adjusting your criteria."`
 
 **Checkpoint**: US2 functional. Empty queries show empty state in both listings panel and chat. US1 still works.
