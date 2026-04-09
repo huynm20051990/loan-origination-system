@@ -24,3 +24,4 @@
 [2026-04-09 07:00] T024: Created HomeSearchAdapter.java — implements HomeSearchPort; RestClient GET /api/v1/homes/search?query=…; deserialises List<HomeResult>; catches RestClientException and rethrows as HomeSearchUnavailableException
 [2026-04-09 07:00] T025: Created HomeSearchUnavailableException.java — unchecked exception with message "home-service unavailable"; needed as blocker for T023/T024 compilation
 [2026-04-09 08:00] T026: Created ChatController.java — @RestController implements ChatAPI; delegates to ChatUseCase; JSON-encodes all SSE data for wire compatibility; TestCassandraConfiguration added to mock Cassandra for @SpringBootTest; ChatControllerIT passes
+[2026-04-09 09:00] T027: Created ChatService.ts — Angular service; stream() creates native EventSource via GET URL with sessionId+query params; returns Observable<ChatSseEvent>; handles listings/token/done/error events; closes EventSource on done/error/unsubscribe
