@@ -19,3 +19,4 @@
 [2026-04-09 03:00] T019: Created HomeSearchAdapterIT.java — WireMock stubs 200/503 for GET /api/v1/homes/search; asserts HomeResult deserialization and HomeSearchUnavailableException on 503; red phase (fails until T024/T025)
 [2026-04-09 04:00] T020: Created ChatControllerIT.java — @SpringBootTest+WebTestClient; @MockBean ChatUseCase; asserts listings→token×2→done SSE ordering and 400 on blank query; red phase (fails until ChatController created in T026)
 [2026-04-09 05:00] T021: Created ChatApplicationServiceIT.java — Testcontainers Cassandra + WireMock + mocked StreamingChatModel; asserts listings→token(s)→done SSE order and Cassandra persistence of user+assistant messages; red phase (fails until T023/T024/T025)
+[2026-04-09 06:00] T022: Created chat.spec.ts — MockEventSource class drives listings/token/done/error/unsubscribe assertions; red phase (fails until ChatService implemented in T027)
