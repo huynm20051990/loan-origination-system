@@ -35,3 +35,4 @@
 [2026-04-09 17:00] T035: ChatApplicationService.java already implements empty-results handling (listings=[] + no-results prompt with "No matching listings were found") from T023; verified ChatApplicationServiceTest passes including empty-results test case
 [2026-04-09 18:00] T036: Updated home-listings.html @empty block copy from "No homes found" to "No listings found. Try adjusting your criteria." to match US2 AC; Angular build passes
 [2026-04-09 19:00] T037: Extended chat-box.spec.ts with US3 Reset tests — onReset() calls HomeSearchStateService.reset() and clears messages to []; Reset button visibility tests; red phase (fails until T040/T041)
+[2026-04-09 20:00] T038: Created home-search-state.spec.ts — 5 tests verify reset() calls HomeService.getHomes(), updates homes signal, clears isLoading, handles errors gracefully; Angular build passes
