@@ -17,7 +17,7 @@
 
 **Purpose**: Register the new module and create all infrastructure files before any Java/TypeScript source is written.
 
-- [ ] T001 Add `include("microservices:chat-service")` to `settings.gradle.kts`
+- [x] T001 Add `include("microservices:chat-service")` to `settings.gradle.kts`
 - [ ] T002 Create `microservices/chat-service/build.gradle.kts` — Spring Boot 3.5.x, Spring AI 1.1.2, `spring-boot-starter-webflux` (SSE support), `spring-ai-starter-model-google-genai`, `spring-ai-starter-model-chat-memory-repository-cassandra`, Micrometer, Brave tracing. No JPA dependency.
 - [ ] T003 Create `microservices/chat-service/src/main/java/com/loan/origination/system/microservices/chat/ChatServiceApplication.java`
 - [ ] T004 [P] Add `ChatAPI.java` to `api/src/main/java/com/loan/origination/system/api/core/chat/v1/ChatAPI.java` — copy from `specs/003-ai-chat-box/contracts/ChatAPI.java`
