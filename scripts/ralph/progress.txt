@@ -30,3 +30,4 @@
 [2026-04-09 12:00] T030: chat-box.scss already created in T028 — sidebar panel (.chat-box), scrollable message list (.chat-messages overflow-y:auto), user bubble (#1976d2) and assistant bubble (#f1f1f1) styles, blinking cursor animation; Angular build passes
 [2026-04-09 13:00] T031: Updated home-listings.ts — injected HomeSearchStateService; ngOnInit loads homes via HomeService.getHomes() and pushes to updateHomes(); homes/loading properties delegate to state service signals via getters; Angular build passes
 [2026-04-09 14:00] T032: Updated home-listings.html to two-column layout (70% listings / 30% chat sidebar with <app-chat-box>); added ChatBoxComponent to imports[]; added .content-layout/.listings-column/.chat-column CSS; Angular build passes
+[2026-04-09 15:00] T033: Extended ChatApplicationServiceTest.java with empty-results test case; asserts listings SSE data="[]" and AI prompt contains "no matching listings"; all tests pass

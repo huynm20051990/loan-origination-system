@@ -16,10 +16,13 @@ import reactor.test.StepVerifier;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.mockito.ArgumentCaptor;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -132,5 +135,64 @@ class ChatApplicationServiceTest {
                                 .as("final event type must be 'done'")
                                 .isEqualTo("done"))
                 .verifyComplete();
+    }
+
+    /**
+     * No-results path: {@link HomeSearchPort} returns an empty list.
+     *
+     * <p>Assert that the first SSE event has type {@code listings} and its data payload is the
+     * JSON literal {@code "[]"}, and that the AI prompt passed to the {@link ChatClient} includes
+     * language indicating that no listings matched (triggering the "no results" AI response).
+     */
+    @Test
+    @DisplayName("stream() emits listings=[] and no-results prompt context when HomeSearchPort returns empty list")
+    @SuppressWarnings("unchecked")
+    void stream_shouldEmitEmptyListingsAndNoResultsPromptWhenNoHomesFound() {
+        // Given: HomeSearchPort returns no matching listings
+        when(homeSearchPort.search(anyString())).thenReturn(List.of());
+
+        // Mock ChatClient fluent chain
+        ChatClient.ChatClientRequestSpec requestSpec =
+                mock(ChatClient.ChatClientRequestSpec.class);
+        ChatClient.StreamResponseSpec streamResponseSpec =
+                mock(ChatClient.StreamResponseSpec.class);
+
+        when(chatClient.prompt()).thenReturn(requestSpec);
+        when(requestSpec.advisors(any(Consumer.class))).thenReturn(requestSpec);
+        ArgumentCaptor<String> promptCaptor = ArgumentCaptor.forClass(String.class);
+        when(requestSpec.user(promptCaptor.capture())).thenReturn(requestSpec);
+        when(requestSpec.stream()).thenReturn(streamResponseSpec);
+        when(streamResponseSpec.content()).thenReturn(
+                Flux.just("No listings found. Try adjusting your criteria."));
+
+        // When
+        Flux<ServerSentEvent<String>> result =
+                chatApplicationService.stream("session-99", "40-bed mansion on the moon");
+
+        // Then: listings event with empty array payload, then token, then done
+        StepVerifier.create(result)
+                .assertNext(sse -> {
+                    assertThat(sse.event())
+                            .as("first event type must be 'listings'")
+                            .isEqualTo("listings");
+                    assertThat(sse.data())
+                            .as("listings payload must be an empty JSON array")
+                            .isEqualTo("[]");
+                })
+                .assertNext(sse ->
+                        assertThat(sse.event())
+                                .as("token event must follow listings")
+                                .isEqualTo("token"))
+                .assertNext(sse ->
+                        assertThat(sse.event())
+                                .as("final event type must be 'done'")
+                                .isEqualTo("done"))
+                .verifyComplete();
+
+        // And: the prompt sent to the AI mentions that no listings matched
+        verify(requestSpec).user(anyString());
+        assertThat(promptCaptor.getValue())
+                .as("AI prompt must inform the model that no listings were found")
+                .containsIgnoringCase("no matching listings");
     }
 }
