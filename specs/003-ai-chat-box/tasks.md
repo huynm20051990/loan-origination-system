@@ -40,7 +40,7 @@
 
 - [x] T011 [P] Create `microservices/chat-service/src/main/java/.../chat/domain/model/ChatTurn.java` — pure POJO record: `sessionId`, `query`, `reply`, `timestamp`. Zero framework annotations.
 - [x] T012 [P] Create `microservices/chat-service/src/main/java/.../chat/application/port/output/HomeResult.java` — plain Java record: `id`, `price`, `beds`, `baths`, `sqft`, `imageUrl`, `address` (nested record: `street`, `city`, `state`, `zip`), `status`, `description`. Not a domain entity — port contract type only, never persisted.
-- [ ] T013 Create `microservices/chat-service/src/main/java/.../chat/application/port/output/HomeSearchPort.java` — interface: `List<HomeResult> search(String query)` (depends on T012)
+- [x] T013 Create `microservices/chat-service/src/main/java/.../chat/application/port/output/HomeSearchPort.java` — interface: `List<HomeResult> search(String query)` (depends on T012)
 - [ ] T014 [P] Create `microservices/chat-service/src/main/java/.../chat/application/port/input/ChatUseCase.java` — interface: `Flux<ServerSentEvent<String>> stream(String sessionId, String query)`
 - [ ] T015 Create `microservices/chat-service/src/main/java/.../chat/infrastructure/config/BeanConfiguration.java` — `@Bean ChatMemory chatMemory(CassandraChatMemoryRepository)` → `MessageWindowChatMemory(maxMessages=20)`; `@Bean ChatClient`  with `MessageChatMemoryAdvisor` and `SimpleLoggerAdvisor`; `@Bean RestClient homeRestClient(@Value("${app.home-service.url}") String url)`
 - [ ] T016 [P] Create `app-ui/src/app/core/models/chat.ts` — `ChatMessage` interface: `role: 'user' | 'assistant'`, `content: string`, `isStreaming: boolean`
