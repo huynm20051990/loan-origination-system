@@ -109,7 +109,7 @@
 
 ### Tests for US3 — Write FIRST, verify they FAIL before implementing
 
-- [ ] T037 [P] [US3] Extend `app-ui/src/app/components/chat-box/chat-box.spec.ts` — verify "Reset" button calls `HomeSearchStateService.reset()` and clears `messages` signal to `[]`
+- [x] T037 [P] [US3] Extend `app-ui/src/app/components/chat-box/chat-box.spec.ts` — verify "Reset" button calls `HomeSearchStateService.reset()` and clears `messages` signal to `[]`
 - [ ] T038 [P] [US3] Extend `app-ui/src/app/core/services/home-search-state.spec.ts` — verify `reset()` calls `HomeService.getHomes()` and updates `homes` signal with full listing set
 
 ### Implementation for US3

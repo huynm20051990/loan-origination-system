@@ -85,6 +85,87 @@ describe('ChatBoxComponent — US2 empty results', () => {
 });
 
 /**
+ * Unit tests for the US3 Reset feature in {@link ChatBoxComponent}.
+ *
+ * <p>Test suite 3 — verifies that clicking the "Reset" button:
+ * <ul>
+ *   <li>calls {@link HomeSearchStateService#reset} so the listings panel returns to its
+ *       unfiltered state, and
+ *   <li>clears the {@code messages} signal back to {@code []} so the chat history is wiped.
+ * </ul>
+ *
+ * <p>These tests are in the RED phase until T040 adds {@code onReset()} to
+ * {@link ChatBoxComponent} and T041 adds the Reset button to the template.
+ */
+describe('ChatBoxComponent — US3 Reset', () => {
+  let fixture: ComponentFixture<ChatBoxComponent>;
+  let component: ChatBoxComponent;
+  let resetMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(async () => {
+    resetMock = vi.fn();
+
+    const mockChatService = {
+      stream: vi.fn().mockReturnValue(new Subject<ChatSseEvent>().asObservable()),
+    };
+
+    const mockHomeSearchState = {
+      homes: signal<Home[]>([]),
+      isLoading: signal<boolean>(false),
+      updateHomes: vi.fn(),
+      setLoading: vi.fn(),
+      reset: resetMock,
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [ChatBoxComponent],
+      providers: [
+        { provide: ChatService, useValue: mockChatService },
+        { provide: HomeSearchStateService, useValue: mockHomeSearchState },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ChatBoxComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should call HomeSearchStateService.reset() when onReset() is invoked', () => {
+    // onReset() will be added in T040.
+    (component as unknown as { onReset(): void }).onReset();
+    expect(resetMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('should clear messages signal to [] when onReset() is invoked', () => {
+    // Prime messages with a user turn first.
+    component.messages.set([{ role: 'user', content: 'hello', isStreaming: false }]);
+
+    (component as unknown as { onReset(): void }).onReset();
+
+    expect(component.messages()).toEqual([]);
+  });
+
+  it('should render a Reset button when messages is non-empty', () => {
+    component.messages.set([{ role: 'user', content: 'hello', isStreaming: false }]);
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.nativeElement;
+    const resetBtn = compiled.querySelector('button[aria-label="Reset chat"]');
+    // T041 adds this button; until then the test is RED.
+    expect(resetBtn).not.toBeNull();
+  });
+
+  it('should NOT render a Reset button when messages is empty', () => {
+    component.messages.set([]);
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.nativeElement;
+    const resetBtn = compiled.querySelector('button[aria-label="Reset chat"]');
+    expect(resetBtn).toBeNull();
+  });
+});
+
+/**
  * Integration test verifying the {@code @empty} block in {@link HomeListingsComponent}.
  *
  * <p>When {@link HomeSearchStateService#homes} signal holds {@code []}, the listings grid
