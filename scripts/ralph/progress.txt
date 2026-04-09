@@ -20,3 +20,6 @@
 [2026-04-09 04:00] T020: Created ChatControllerIT.java — @SpringBootTest+WebTestClient; @MockBean ChatUseCase; asserts listings→token×2→done SSE ordering and 400 on blank query; red phase (fails until ChatController created in T026)
 [2026-04-09 05:00] T021: Created ChatApplicationServiceIT.java — Testcontainers Cassandra + WireMock + mocked StreamingChatModel; asserts listings→token(s)→done SSE order and Cassandra persistence of user+assistant messages; red phase (fails until T023/T024/T025)
 [2026-04-09 06:00] T022: Created chat.spec.ts — MockEventSource class drives listings/token/done/error/unsubscribe assertions; red phase (fails until ChatService implemented in T027)
+[2026-04-09 07:00] T023: Created ChatApplicationService.java — implements ChatUseCase; emits listings→token(s)→done SSE events; catches HomeSearchUnavailableException→error event; uses chat_memory_conversation_id advisor param for session scoping
+[2026-04-09 07:00] T024: Created HomeSearchAdapter.java — implements HomeSearchPort; RestClient GET /api/v1/homes/search?query=…; deserialises List<HomeResult>; catches RestClientException and rethrows as HomeSearchUnavailableException
+[2026-04-09 07:00] T025: Created HomeSearchUnavailableException.java — unchecked exception with message "home-service unavailable"; needed as blocker for T023/T024 compilation

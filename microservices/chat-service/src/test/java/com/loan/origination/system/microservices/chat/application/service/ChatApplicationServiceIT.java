@@ -14,6 +14,8 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.memory.repository.cassandra.CassandraChatMemoryRepository;
+import org.springframework.ai.chat.memory.repository.cassandra.CassandraChatMemoryRepositoryConfig;
+import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.ai.chat.model.ChatModel;
@@ -65,8 +67,8 @@ class ChatApplicationServiceIT {
 
     /** Ephemeral Cassandra node; started once per JVM by {@link Testcontainers}. */
     @Container
-    static final CassandraContainer<?> cassandra =
-            new CassandraContainer<>("cassandra:4.1.5");
+    static final CassandraContainer cassandra =
+            new CassandraContainer("cassandra:4.1.5");
 
     /** JSON payload returned by the WireMock home-service stub for all search calls. */
     private static final String HOMES_JSON = """
@@ -131,10 +133,10 @@ class ChatApplicationServiceIT {
                 .withKeyspace("chat_keyspace")
                 .build();
 
-        cassandraRepo = CassandraChatMemoryRepository.builder()
-                .cqlSession(memorySession)
-                .initializeSchema(true)
-                .build();
+        cassandraRepo = CassandraChatMemoryRepository.create(
+                CassandraChatMemoryRepositoryConfig.builder()
+                        .withCqlSession(memorySession)
+                        .build());
 
         ChatMemory chatMemory = MessageWindowChatMemory.builder()
                 .chatMemoryRepository(cassandraRepo)
@@ -147,8 +149,8 @@ class ChatApplicationServiceIT {
         StreamingChatModel streamingModel = (StreamingChatModel) mockModel;
         when(streamingModel.stream(any(Prompt.class))).thenReturn(
                 Flux.just(
-                        new ChatResponse(List.of(new Generation("Results "))),
-                        new ChatResponse(List.of(new Generation("updated. Please review above.")))));
+                        new ChatResponse(List.of(new Generation(new AssistantMessage("Results ")))),
+                        new ChatResponse(List.of(new Generation(new AssistantMessage("updated. Please review above."))))));
 
         // Real ChatClient with real MessageChatMemoryAdvisor so Cassandra write-back is tested
         ChatClient chatClient = ChatClient.builder(mockModel)
