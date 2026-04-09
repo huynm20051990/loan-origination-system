@@ -1,4 +1,8 @@
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration
+      - org.springframework.ai.model.chat.memory.repository.cassandra.autoconfigure.CassandraChatMemoryRepositoryAutoConfiguration
   ai:
     google:
       genai:
@@ -10,11 +14,6 @@ spring:
             keyspace: chat_keyspace
             table: chat_memory
             initialize-schema: false
-  cassandra:
-    contact-points: localhost
-    port: 9042
-    local-datacenter: datacenter1
-    keyspace-name: chat_keyspace
 
 app:
   home-service:

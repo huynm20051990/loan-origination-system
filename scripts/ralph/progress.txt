@@ -23,3 +23,4 @@
 [2026-04-09 07:00] T023: Created ChatApplicationService.java — implements ChatUseCase; emits listings→token(s)→done SSE events; catches HomeSearchUnavailableException→error event; uses chat_memory_conversation_id advisor param for session scoping
 [2026-04-09 07:00] T024: Created HomeSearchAdapter.java — implements HomeSearchPort; RestClient GET /api/v1/homes/search?query=…; deserialises List<HomeResult>; catches RestClientException and rethrows as HomeSearchUnavailableException
 [2026-04-09 07:00] T025: Created HomeSearchUnavailableException.java — unchecked exception with message "home-service unavailable"; needed as blocker for T023/T024 compilation
+[2026-04-09 08:00] T026: Created ChatController.java — @RestController implements ChatAPI; delegates to ChatUseCase; JSON-encodes all SSE data for wire compatibility; TestCassandraConfiguration added to mock Cassandra for @SpringBootTest; ChatControllerIT passes
