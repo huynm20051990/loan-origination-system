@@ -48,6 +48,11 @@ spring.cloud.gateway.server.webflux.routes:
   predicates:
   - Path=/webjars/**
 
+- id: chat-service
+  uri: http://chat-service
+  predicates:
+  - Path=/api/v1/chat/**
+
 - id: app-ui
   uri: http://app-ui:80
   predicates:
