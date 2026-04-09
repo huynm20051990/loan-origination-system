@@ -90,7 +90,7 @@
 ### Tests for US2 — Write FIRST, verify they FAIL before implementing
 
 - [x] T033 [P] [US2] Extend `ChatApplicationServiceTest.java` — add test case: `HomeSearchPort` returns empty list; assert `listings` SSE event emitted with `data: []`; assert AI prompt includes context that no results were found
-- [ ] T034 [P] [US2] Create `app-ui/src/app/components/chat-box/chat-box.spec.ts` — verify that when `listings` SSE event contains `[]`, `HomeSearchStateService.updateHomes([])` is called; verify `@empty` block renders in listings panel
+- [x] T034 [P] [US2] Create `app-ui/src/app/components/chat-box/chat-box.spec.ts` — verify that when `listings` SSE event contains `[]`, `HomeSearchStateService.updateHomes([])` is called; verify `@empty` block renders in listings panel
 
 ### Implementation for US2
 
