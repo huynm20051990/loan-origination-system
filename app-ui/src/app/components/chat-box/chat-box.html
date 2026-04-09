@@ -7,6 +7,19 @@
     }
   </ul>
 
+  @if (messages().length > 0) {
+    <div class="chat-actions">
+      <button
+        mat-stroked-button
+        type="button"
+        aria-label="Reset chat"
+        (click)="onReset()"
+      >
+        Reset
+      </button>
+    </div>
+  }
+
   <form class="chat-input-row" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline" class="query-field">
       <input
