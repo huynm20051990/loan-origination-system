@@ -55,6 +55,14 @@
   50% { opacity: 0; }
 }
 
+/* --- Mobile Responsive Breakpoints --- */
+@media (max-width: 768px) {
+  .chat-box {
+    height: 400px;
+    padding: 0 4px;
+  }
+}
+
 .chat-input-row {
   display: flex;
   align-items: center;

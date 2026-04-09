@@ -421,6 +421,25 @@
   top: 80px;
 }
 
+/* --- Mobile Responsive Breakpoints --- */
+@media (max-width: 768px) {
+  .content-layout {
+    flex-direction: column;
+  }
+
+  .listings-column {
+    flex: none;
+    width: 100%;
+  }
+
+  .chat-column {
+    flex: none;
+    width: 100%;
+    position: static;
+    top: auto;
+  }
+}
+
 /* --- AI Limit Note Styling --- */
 .ai-limit-note {
   display: flex;
