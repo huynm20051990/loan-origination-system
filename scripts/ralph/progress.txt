@@ -16,3 +16,4 @@
 [2026-04-09 00:50] T016: Created chat.ts — ChatMessage interface with role ('user' | 'assistant'), content, and isStreaming fields
 [2026-04-09 01:00] T017: Created home-search-state.ts — HomeSearchStateService with homes/isLoading signals, updateHomes(), setLoading(), and reset() methods
 [2026-04-09 02:00] T018: Created ChatApplicationServiceTest.java — Mockito unit test asserting listings→token×3→done SSE event order; fails until ChatApplicationService is implemented in T023
+[2026-04-09 03:00] T019: Created HomeSearchAdapterIT.java — WireMock stubs 200/503 for GET /api/v1/homes/search; asserts HomeResult deserialization and HomeSearchUnavailableException on 503; red phase (fails until T024/T025)
