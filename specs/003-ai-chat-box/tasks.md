@@ -114,7 +114,7 @@
 
 ### Implementation for US3
 
-- [ ] T039 [US3] Update `app-ui/src/app/core/services/home-search-state.ts` — implement `reset()`: calls `HomeService.getHomes()`, subscribes, calls `updateHomes(result)` and `setLoading(false)`
+- [x] T039 [US3] Update `app-ui/src/app/core/services/home-search-state.ts` — implement `reset()`: calls `HomeService.getHomes()`, subscribes, calls `updateHomes(result)` and `setLoading(false)`
 - [ ] T040 [US3] Update `app-ui/src/app/components/chat-box/chat-box.ts` — add `onReset()` method: calls `HomeSearchStateService.reset()`, clears `messages` signal to `[]`, clears input field value
 - [ ] T041 [US3] Update `app-ui/src/app/components/chat-box/chat-box.html` — add "Reset" button (visible when `messages().length > 0`); binds to `onReset()`
 
