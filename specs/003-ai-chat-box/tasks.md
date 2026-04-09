@@ -58,7 +58,7 @@
 
 ### Tests for US1 — Write FIRST, verify they FAIL before implementing
 
-- [ ] T018 [P] [US1] Create `microservices/chat-service/src/test/java/.../chat/application/service/ChatApplicationServiceTest.java` — Mockito: mock `HomeSearchPort` returns 2 results; mock `ChatClient` streams 3 tokens; assert `listings` event emitted first, then `token` events, then `done`
+- [x] T018 [P] [US1] Create `microservices/chat-service/src/test/java/.../chat/application/service/ChatApplicationServiceTest.java` — Mockito: mock `HomeSearchPort` returns 2 results; mock `ChatClient` streams 3 tokens; assert `listings` event emitted first, then `token` events, then `done`
 - [ ] T019 [P] [US1] Create `microservices/chat-service/src/test/java/.../chat/infrastructure/output/client/HomeSearchAdapterIT.java` — WireMock stubs `GET /api/v1/homes/search?query=…` returning JSON array; assert `HomeResult` list deserialized correctly; assert `HomeSearchUnavailableException` thrown on 503
 - [ ] T020 [P] [US1] Create `microservices/chat-service/src/test/java/.../chat/infrastructure/input/rest/ChatControllerIT.java` — `@SpringBootTest` + `WebTestClient`; POST `/api/v1/chat/stream`; assert SSE event sequence: `listings` arrives before any `token`, stream ends with `done`
 - [ ] T021 [P] [US1] Create `microservices/chat-service/src/test/java/.../chat/application/service/ChatApplicationServiceIT.java` — Testcontainers Cassandra + WireMock; full flow: query → home results → tokens → `done`; verify `CassandraChatMemoryRepository` contains the user + assistant messages after stream completes

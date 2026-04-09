@@ -15,3 +15,4 @@
 [2026-04-09 00:15] T015: Created BeanConfiguration.java — @Bean ChatMemory (CassandraChatMemoryRepository, maxMessages=20), @Bean ChatClient (MessageChatMemoryAdvisor + SimpleLoggerAdvisor), @Bean RestClient homeRestClient (app.home-service.url)
 [2026-04-09 00:50] T016: Created chat.ts — ChatMessage interface with role ('user' | 'assistant'), content, and isStreaming fields
 [2026-04-09 01:00] T017: Created home-search-state.ts — HomeSearchStateService with homes/isLoading signals, updateHomes(), setLoading(), and reset() methods
+[2026-04-09 02:00] T018: Created ChatApplicationServiceTest.java — Mockito unit test asserting listings→token×3→done SSE event order; fails until ChatApplicationService is implemented in T023
