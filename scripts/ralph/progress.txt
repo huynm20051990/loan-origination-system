@@ -40,3 +40,4 @@
 [2026-04-09 22:00] T040: Added onReset() to ChatBoxComponent — calls HomeSearchStateService.reset(), clears messages signal to [], unsubscribes active stream, resets queryInput and isLoading
 [2026-04-09 23:00] T041: Added Reset button to chat-box.html — visible when messages().length > 0, aria-label="Reset chat", binds to onReset(); Angular build passes
 [2026-04-09 23:30] T042: Removed search-hero-section block from home-listings.html; removed @ViewChild, onAiSearch(), executeSearch(), loadAllHomes() and unused imports from home-listings.ts; ngOnInit now delegates to HomeSearchStateService.reset(); Angular build passes
+[2026-04-09 23:45] T043: Added aria-label="Chat messages" to <ul> in chat-box.html; all other aria-labels (input, submit, reset, section) were already present; Angular build passes

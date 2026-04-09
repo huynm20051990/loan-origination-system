@@ -125,7 +125,7 @@
 ## Phase 6: Polish & Cross-Cutting Concerns
 
 - [x] T042 Remove the existing inline AI search bar from `app-ui/src/app/components/home-listings/home-listings.html` — delete the `<div class="search-hero-section">` block (superseded by the chat sidebar). Update `home-listings.ts` to remove `@ViewChild('searchInput')` and `onAiSearch()` / `executeSearch()` if no longer needed.
-- [ ] T043 [P] Add `aria-label` attributes to `chat-box.html` (input field, submit button, reset button, message list region) for accessibility
+- [x] T043 [P] Add `aria-label` attributes to `chat-box.html` (input field, submit button, reset button, message list region) for accessibility
 - [ ] T044 [P] Add mobile responsive CSS breakpoints to `app-ui/src/app/components/home-listings/home-listings.scss` and `chat-box.scss` — below 768 px: switch to single-column stacked layout (chat below listings)
 - [ ] T045 [P] Add `@CorrelationId` / trace context propagation to `HomeSearchAdapter.java` — ensure outgoing `RestClient` call carries W3C `traceparent` header for distributed tracing (Istio/Jaeger)
 - [ ] T046 [P] Add `management.endpoints.web.exposure.include: health,prometheus` to `config-repo/chat.yml`

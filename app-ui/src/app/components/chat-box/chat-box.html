@@ -1,5 +1,5 @@
 <section class="chat-box" aria-label="AI chat">
-  <ul class="chat-messages" aria-live="polite">
+  <ul class="chat-messages" aria-label="Chat messages" aria-live="polite">
     @for (message of messages(); track $index) {
       <li class="chat-message" [class.user]="message.role === 'user'" [class.assistant]="message.role === 'assistant'">
         <span class="bubble">{{ message.content }}<span *ngIf="message.isStreaming" class="cursor">▋</span></span>
