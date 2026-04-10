@@ -49,6 +49,7 @@ services:
       - JAVA_OPTS=-Xms128m -Xmx384m
     volumes:
       - $PWD/config-repo:/config-repo
+      - $PWD/agentic-ai:/agentic-ai
       - $PWD/prompts:/prompts
     depends_on:
       demo-pg:
