@@ -1,21 +1,24 @@
-/* --- FAB toggle button --- */
+/* --- Toggle button fixed just below the nav bar --- */
 .chat-toggle-btn {
   position: fixed !important;
-  bottom: 28px;
-  right: 28px;
+  top: 72px;
+  right: 0;
   z-index: 1001;
   background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
   color: white !important;
-  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4) !important;
+  box-shadow: -2px 2px 12px rgba(37, 99, 235, 0.4) !important;
+  border-radius: 8px 0 0 8px !important;
+  width: 48px !important;
+  height: 48px !important;
 }
 
-/* --- Fixed side panel --- */
+/* --- Fixed side panel, anchored below the nav bar --- */
 .chat-panel {
   position: fixed;
-  top: 0;
+  top: 72px;
   right: 0;
-  height: 100vh;
-  width: 360px;
+  height: calc(100vh - 72px);
+  width: 280px;
   background: #ffffff;
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
   z-index: 1000;
@@ -136,25 +139,6 @@
   }
 }
 
-/* --- Reset button row --- */
-.chat-actions {
-  padding: 0 12px 8px;
-  display: flex;
-  justify-content: flex-end;
-
-  button {
-    font-size: 0.8rem;
-    height: 32px;
-    line-height: 32px;
-
-    mat-icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
-      margin-right: 4px;
-    }
-  }
-}
 
 /* --- Input row --- */
 .chat-input-row {
@@ -170,7 +154,7 @@
 }
 
 /* --- Mobile --- */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .chat-panel {
     width: 100vw;
   }

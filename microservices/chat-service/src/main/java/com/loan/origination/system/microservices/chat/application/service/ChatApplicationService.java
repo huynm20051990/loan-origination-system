@@ -79,7 +79,11 @@ public class ChatApplicationService implements ChatUseCase {
                 .map(token -> ServerSentEvent.<String>builder()
                         .event("token")
                         .data(token)
-                        .build());
+                        .build())
+                .onErrorResume(ex -> {
+                    LOG.warn("AI streaming error for sessionId={}: {}", sessionId, ex.getMessage());
+                    return Flux.empty();
+                });
 
         ServerSentEvent<String> doneEvent = ServerSentEvent.<String>builder()
                 .event("done")

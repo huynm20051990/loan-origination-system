@@ -1,12 +1,14 @@
-<!-- FAB toggle button — always visible in bottom-right corner -->
+<!-- Toggle button — hidden when the chat panel is open -->
+@if (!isOpen()) {
 <button
   mat-fab
   class="chat-toggle-btn"
-  aria-label="Toggle AI chat"
+  aria-label="Open AI chat"
   (click)="toggle()"
 >
-  <mat-icon>{{ isOpen() ? 'close' : 'chat' }}</mat-icon>
+  <mat-icon>chat</mat-icon>
 </button>
+}
 
 <!-- Fixed side panel -->
 <aside class="chat-panel" [class.open]="isOpen()" aria-label="AI chat panel">
@@ -14,6 +16,11 @@
   <div class="panel-header">
     <mat-icon class="panel-icon">auto_awesome</mat-icon>
     <span>AI Home Assistant</span>
+    @if (messages().length > 0) {
+      <button mat-icon-button type="button" aria-label="Reset chat" (click)="onReset()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    }
     <button mat-icon-button (click)="toggle()" aria-label="Close chat panel">
       <mat-icon>chevron_right</mat-icon>
     </button>
@@ -31,14 +38,6 @@
       </li>
     }
   </ul>
-
-  @if (messages().length > 0) {
-    <div class="chat-actions">
-      <button mat-stroked-button type="button" aria-label="Reset chat" (click)="onReset()">
-        <mat-icon>refresh</mat-icon> Reset
-      </button>
-    </div>
-  }
 
   <form class="chat-input-row" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline" class="query-field">

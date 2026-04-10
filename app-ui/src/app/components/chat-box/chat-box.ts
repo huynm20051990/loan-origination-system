@@ -58,6 +58,9 @@ export class ChatBoxComponent {
   /** Active SSE subscription — held so it can be cancelled on error/done. */
   private activeStream: Subscription | null = null;
 
+  /** When true, incoming token events are discarded (listings summary already set). */
+  private skipTokens = false;
+
   constructor(
     private readonly chatService: ChatService,
     private readonly homeSearchStateService: HomeSearchStateService,
@@ -88,7 +91,9 @@ export class ChatBoxComponent {
     }
 
     this.isLoading.set(true);
+    this.homeSearchStateService.setLoading(true);
     this.queryInput = '';
+    this.skipTokens = false;
 
     // Append user turn.
     this.messages.update((msgs) => [
@@ -108,31 +113,42 @@ export class ChatBoxComponent {
           try {
             const homes: Home[] = JSON.parse(event.data);
             this.homeSearchStateService.updateHomes(homes);
+            this.homeSearchStateService.setLoading(false);
+            this.isLoading.set(false);
+            const msg = homes.length === 0
+              ? 'No homes matched your search. Try adjusting your criteria.'
+              : `Found ${homes.length} home${homes.length !== 1 ? 's' : ''} — results updated!`;
+            this.setLastAssistantMessage(msg);
+            this.skipTokens = true;
           } catch {
-            // Malformed listings payload — skip silently.
+            // Malformed listings payload — fall back to streaming tokens.
           }
-        } else if (event.type === 'token') {
+        } else if (event.type === 'token' && !this.skipTokens) {
           this.appendToLastAssistantMessage(event.data);
         } else if (event.type === 'done') {
           this.finalizeAssistantMessage();
           this.isLoading.set(false);
+          this.homeSearchStateService.setLoading(false);
         } else if (event.type === 'error') {
           this.appendToLastAssistantMessage(
             event.data ?? 'An error occurred. Please try again.',
           );
           this.finalizeAssistantMessage();
           this.isLoading.set(false);
+          this.homeSearchStateService.setLoading(false);
         }
       },
       complete: () => {
         // Ensure loading is cleared if the observable completes without a done/error event.
         this.finalizeAssistantMessage();
         this.isLoading.set(false);
+        this.homeSearchStateService.setLoading(false);
       },
       error: () => {
         this.appendToLastAssistantMessage('Connection error. Please try again.');
         this.finalizeAssistantMessage();
         this.isLoading.set(false);
+        this.homeSearchStateService.setLoading(false);
       },
     });
   }
@@ -150,6 +166,17 @@ export class ChatBoxComponent {
     this.messages.set([]);
     this.queryInput = '';
     this.isLoading.set(false);
+  }
+
+  /** Replaces the content of the last message with {@code text}. */
+  private setLastAssistantMessage(text: string): void {
+    this.messages.update((msgs) => {
+      if (msgs.length === 0) return msgs;
+      const updated = [...msgs];
+      const last = updated[updated.length - 1];
+      updated[updated.length - 1] = { ...last, content: text };
+      return updated;
+    });
   }
 
   /** Appends {@code text} to the content of the last message in the list. */

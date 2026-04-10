@@ -27,7 +27,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 MAX_ITERATIONS=${1:-25}
 TOOL=${2:-claude}
-LOG_FILE="$PROJECT_ROOT/ralph.log"
+LOG_FILE="$PROJECT_ROOT/scripts/ralph/ralph.log"
 SLEEP_BETWEEN_ITERATIONS=2
 
 # Cost estimation (approximate)

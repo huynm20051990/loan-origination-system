@@ -265,6 +265,9 @@ services:
       - HEAP_NEWSIZE=128M
     ports:
       - '9043:9042'
+    depends_on:
+      assessment-cassandra:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "cqlsh -e 'describe keyspaces'" ]
       interval: 30s

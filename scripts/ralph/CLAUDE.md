@@ -5,13 +5,14 @@ You are working in an autonomous loop. Each iteration:
 2. Implement ONE task only
 3. Validate your work
 4. Commit if successful
+5. STOP — do not proceed to a second task regardless of remaining work
 
 ## Orientation
 
-- Read AGENTS.md for project patterns.
+- Read scripts/ralph/AGENTS.md for project patterns.
 - Read specs/* for specifications.
 - Read specs/003-ai-chat-box/tasks.md for the plan.
-- Read progress.txt for current progress.
+- Read scripts/ralph/progress.txt for current progress.
 - Verify you’re on a feature branch.
 
 ## Task Selection
@@ -45,7 +46,7 @@ mvn test
 mvn verify -DskipTests
 ```
 
-## Quality Checks (Maven)
+## Quality Checks (Gradle)
 
 ```bash
 # Compile
@@ -64,14 +65,18 @@ If ANY check fails, fix and re-run.
 
 After ALL checks pass:
 1. Update specs/003-ai-chat-box/tasks.md mark as complete [x].
-2. git add -A
-3. git commit -m "feat: <description>"
-4. git push
+2. Append to scripts/ralph/progress.txt:
+   ```
+   [YYYY-MM-DD HH:MM] <task-id>: <one-line summary of what was done>
+   ```
+3. git add -A
+4. git commit -m "feat: <description>"
+5. git push
 
 ## Completion
 
-All done: <promise> COMPLETE </promise>
-Items remain: Exit normally (loop will spawn fresh instance).
+- All tasks done: output exactly `<promise>COMPLETE</promise>` and stop.
+- Items remain: output a one-line status summary and STOP immediately. Do NOT start a second task. The loop will spawn a fresh instance for the next task.
 
 ## Critical Rules
 

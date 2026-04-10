@@ -69,7 +69,7 @@ class ChatApplicationServiceIT {
     /** Ephemeral Cassandra node; started once per JVM by {@link Testcontainers}. */
     @Container
     static final CassandraContainer cassandra =
-            new CassandraContainer("cassandra:4.1.5");
+            new CassandraContainer("cassandra:5.0");
 
     /** JSON payload returned by the WireMock home-service stub for all search calls. */
     private static final String HOMES_JSON = """
