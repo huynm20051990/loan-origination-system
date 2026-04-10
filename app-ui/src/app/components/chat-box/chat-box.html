@@ -1,21 +1,41 @@
-<section class="chat-box" aria-label="AI chat">
+<!-- FAB toggle button — always visible in bottom-right corner -->
+<button
+  mat-fab
+  class="chat-toggle-btn"
+  aria-label="Toggle AI chat"
+  (click)="toggle()"
+>
+  <mat-icon>{{ isOpen() ? 'close' : 'chat' }}</mat-icon>
+</button>
+
+<!-- Fixed side panel -->
+<aside class="chat-panel" [class.open]="isOpen()" aria-label="AI chat panel">
+
+  <div class="panel-header">
+    <mat-icon class="panel-icon">auto_awesome</mat-icon>
+    <span>AI Home Assistant</span>
+    <button mat-icon-button (click)="toggle()" aria-label="Close chat panel">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
   <ul class="chat-messages" aria-label="Chat messages" aria-live="polite">
     @for (message of messages(); track $index) {
       <li class="chat-message" [class.user]="message.role === 'user'" [class.assistant]="message.role === 'assistant'">
         <span class="bubble">{{ message.content }}<span *ngIf="message.isStreaming" class="cursor">▋</span></span>
+      </li>
+    } @empty {
+      <li class="empty-hint">
+        <mat-icon>home_search</mat-icon>
+        <p>Ask me to find homes for you — try <em>"3 beds under $500k in Austin"</em></p>
       </li>
     }
   </ul>
 
   @if (messages().length > 0) {
     <div class="chat-actions">
-      <button
-        mat-stroked-button
-        type="button"
-        aria-label="Reset chat"
-        (click)="onReset()"
-      >
-        Reset
+      <button mat-stroked-button type="button" aria-label="Reset chat" (click)="onReset()">
+        <mat-icon>refresh</mat-icon> Reset
       </button>
     </div>
   }
@@ -26,7 +46,7 @@
         matInput
         [(ngModel)]="queryInput"
         name="query"
-        placeholder="Search homes (e.g. 3 beds under $500k in Austin)"
+        placeholder="Search homes with AI..."
         aria-label="Home search query"
         [disabled]="isLoading()"
       />
@@ -45,4 +65,5 @@
       }
     </button>
   </form>
-</section>
+
+</aside>

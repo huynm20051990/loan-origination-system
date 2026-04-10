@@ -43,6 +43,9 @@ export class ChatBoxComponent {
   /** True while an SSE stream is in progress; disables the submit button. */
   readonly isLoading = signal(false);
 
+  /** Controls whether the side panel is visible. */
+  readonly isOpen = signal(false);
+
   /** Current value of the query input field (bound via ngModel). */
   queryInput = '';
 
@@ -59,6 +62,11 @@ export class ChatBoxComponent {
     private readonly chatService: ChatService,
     private readonly homeSearchStateService: HomeSearchStateService,
   ) {}
+
+  /** Toggles the side panel open/closed. */
+  toggle(): void {
+    this.isOpen.update(v => !v);
+  }
 
   /**
    * Submits the current query to the chat-service SSE endpoint.

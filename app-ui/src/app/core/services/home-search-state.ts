@@ -41,6 +41,24 @@ export class HomeSearchStateService {
   }
 
   /**
+   * Filters listings by a natural-language query via {@link HomeService#searchHomes}.
+   *
+   * @param query the search string entered by the user
+   */
+  search(query: string): void {
+    this.setLoading(true);
+    this.homeService.searchHomes(query).subscribe({
+      next: (result) => {
+        this.updateHomes(result);
+        this.setLoading(false);
+      },
+      error: () => {
+        this.setLoading(false);
+      },
+    });
+  }
+
+  /**
    * Resets the listings to the full unfiltered set by fetching all homes from
    * {@link HomeService}. Sets the loading flag while the request is in-flight.
    */

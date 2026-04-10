@@ -402,43 +402,6 @@
   margin-top: 10px;
 }
 
-/* --- Two-Column Content Layout --- */
-.content-layout {
-  display: flex;
-  gap: 24px;
-  align-items: flex-start;
-}
-
-.listings-column {
-  flex: 0 0 70%;
-  min-width: 0;
-}
-
-.chat-column {
-  flex: 0 0 30%;
-  min-width: 0;
-  position: sticky;
-  top: 80px;
-}
-
-/* --- Mobile Responsive Breakpoints --- */
-@media (max-width: 768px) {
-  .content-layout {
-    flex-direction: column;
-  }
-
-  .listings-column {
-    flex: none;
-    width: 100%;
-  }
-
-  .chat-column {
-    flex: none;
-    width: 100%;
-    position: static;
-    top: auto;
-  }
-}
 
 /* --- AI Limit Note Styling --- */
 .ai-limit-note {
