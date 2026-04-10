@@ -2,15 +2,15 @@ package com.loan.origination.system.microservices.chat.infrastructure.input.rest
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.loan.origination.system.api.core.chat.dto.ChatRequestDTO;
 import com.loan.origination.system.api.core.chat.v1.ChatAPI;
 import com.loan.origination.system.microservices.chat.application.port.input.ChatUseCase;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.codec.ServerSentEvent;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 
 /**
@@ -52,9 +52,12 @@ public class ChatController implements ChatAPI {
      * JSON value so that the wire format is consistent regardless of event type.
      */
     @Override
-    public Flux<ServerSentEvent<String>> stream(@Valid @RequestBody ChatRequestDTO request) {
-        LOG.debug("Received chat stream request: sessionId={}, query={}", request.sessionId(), request.query());
-        return chatUseCase.stream(request.sessionId(), request.query())
+    public Flux<ServerSentEvent<String>> stream(@RequestParam String sessionId, @RequestParam String query) {
+        if (sessionId == null || sessionId.isBlank() || query == null || query.isBlank()) {
+            return Flux.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "sessionId and query must not be blank"));
+        }
+        LOG.debug("Received chat stream request: sessionId={}, query={}", sessionId, query);
+        return chatUseCase.stream(sessionId, query)
                 .map(event -> ServerSentEvent.<String>builder()
                         .event(event.event())
                         .data(toJsonData(event.data()))
