@@ -160,11 +160,16 @@ public class HomePersistenceAdapter implements HomeRepositoryPort {
       return response.entity();
     } catch (RuntimeException e) {
       LOG.error("Search failed, falling back to basic similarity search", e);
-      return vectorStore
-          .similaritySearch(SearchRequest.builder().query(userQuery).topK(5).build())
-          .stream()
-          .map(doc -> UUID.fromString(doc.getMetadata().get("homeId").toString()))
-          .toList();
+      try {
+        return vectorStore
+            .similaritySearch(SearchRequest.builder().query(userQuery).topK(5).build())
+            .stream()
+            .map(doc -> UUID.fromString(doc.getMetadata().get("homeId").toString()))
+            .toList();
+      } catch (RuntimeException fallbackEx) {
+        LOG.error("Similarity search fallback also failed; returning empty result", fallbackEx);
+        return List.of();
+      }
     }
   }
 }
