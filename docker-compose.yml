@@ -4,8 +4,8 @@ networks:
 
 services:
   app-ui:
-    build: app-ui
-    image: loan-origination-system/app-ui
+    build: ./app-ui
+    image: app-ui
     mem_limit: 512m
     container_name: easy-apply-app-ui
     hostname: app-ui
@@ -162,7 +162,7 @@ services:
       debezium: { condition: service_healthy }
 
   home-service:
-    build: microservices/home-service
+    build: ./microservices/home-service
     image: loan-origination-system/home-service
     mem_limit: 512m
     container_name: easy-apply-home-service
@@ -182,7 +182,7 @@ services:
         condition: service_healthy
 
   app-service:
-    build: microservices/app-service
+    build: ./microservices/app-service
     image: loan-origination-system/app-service
     mem_limit: 512m
     container_name: easy-apply-app-service
@@ -202,7 +202,7 @@ services:
         condition: service_healthy
 
   assessment-service:
-    build: microservices/assessment-service
+    build: ./microservices/assessment-service
     image: loan-origination-system/assessment-service
     mem_limit: 512m
     container_name: easy-apply-assessment-service
@@ -255,8 +255,6 @@ services:
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
       - MAX_HEAP_SIZE=512M
       - HEAP_NEWSIZE=128M
-    volumes:
-      - $PWD/database/init-chat-cassandra:/docker-entrypoint-initdb.d
     ports:
       - '9043:9042'
     healthcheck:
@@ -264,9 +262,19 @@ services:
       interval: 30s
       timeout: 10s
       retries: 10
+      start_period: 60s
+
+  chat-cassandra-init:
+    image: 'cassandra:latest'
+    container_name: easy-apply-chat-cassandra-init
+    depends_on:
+      chat-cassandra:
+        condition: service_healthy
+    entrypoint: [ "cqlsh", "chat-cassandra", "-e", "CREATE KEYSPACE IF NOT EXISTS chat_keyspace WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};" ]
+    restart: "no"
 
   chat-service:
-    build: microservices/chat-service
+    build: ./microservices/chat-service
     image: loan-origination-system/chat-service
     mem_limit: 512m
     container_name: easy-apply-chat-service
@@ -280,8 +288,8 @@ services:
     ports:
       - "7007:7007"
     depends_on:
-      chat-cassandra:
-        condition: service_healthy
+      chat-cassandra-init:
+        condition: service_completed_successfully
       auth-server:
         condition: service_healthy
     healthcheck:
@@ -292,7 +300,7 @@ services:
       start_period: 30s
 
   assessment-mcp-server:
-    build: mcp-server/assessment-mcp-server
+    build: ./mcp-server/assessment-mcp-server
     image: loan-origination-system/assessment-mcp-server
     mem_limit: 512m
     container_name: easy-apply-assessment-mcp-server
@@ -309,7 +317,7 @@ services:
       start_period: 30s
 
   notification-service:
-    build: microservices/notification-service
+    build: ./microservices/notification-service
     image: loan-origination-system/notification-service
     mem_limit: 512m
     container_name: easy-apply-notification-service
@@ -329,7 +337,7 @@ services:
         condition: service_healthy
 
   gateway:
-    build: spring-cloud/gateway
+    build: ./spring-cloud/gateway
     image: loan-origination-system/gateway
     mem_limit: 512m
     container_name: easy-apply-gateway
@@ -346,7 +354,7 @@ services:
         condition: service_healthy
 
   auth-server:
-    build: spring-cloud/authorization-server
+    build: ./spring-cloud/authorization-server
     image: loan-origination-system/auth-server
     mem_limit: 512m
     container_name: easy-apply-auth-server
