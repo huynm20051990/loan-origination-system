@@ -9,7 +9,7 @@ import org.springframework.ai.chat.memory.repository.cassandra.CassandraChatMemo
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * Spring bean wiring for the chat-service.
@@ -68,16 +68,17 @@ public class BeanConfiguration {
   }
 
   /**
-   * Creates a {@link RestClient} pre-configured with the home-service base URL.
+   * Creates a {@link WebClient} pre-configured with the home-service base URL.
    *
-   * <p>The base URL is resolved from {@code app.home-service.url} in the externalized config
-   * ({@code chat.yml}), allowing environment-specific overrides without code changes.
+   * <p>WebClient is used instead of RestClient because chat-service runs on Spring WebFlux
+   * (Reactor Netty event-loop threads) where blocking I/O is forbidden. WebClient is fully
+   * non-blocking and safe to use on reactor threads.
    *
    * @param url the home-service base URL (e.g. {@code http://home-service})
-   * @return a {@link RestClient} with the home-service base URL set
+   * @return a {@link WebClient} with the home-service base URL set
    */
   @Bean
-  public RestClient homeRestClient(@Value("${app.home-service.url}") String url) {
-    return RestClient.builder().baseUrl(url).build();
+  public WebClient homeWebClient(@Value("${app.home-service.url}") String url) {
+    return WebClient.builder().baseUrl(url).build();
   }
 }

@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.http.codec.ServerSentEvent;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.List;
@@ -85,7 +86,7 @@ class ChatApplicationServiceTest {
                         new HomeResult.Address("456 Oak Ave", "Austin", "TX", "78702"),
                         "active",
                         "Spacious corner-lot home with pool"));
-        when(homeSearchPort.search(anyString())).thenReturn(homes);
+        when(homeSearchPort.search(anyString())).thenReturn(Mono.just(homes));
 
         // Mock ChatClient fluent chain:
         //   chatClient.prompt()
@@ -149,7 +150,7 @@ class ChatApplicationServiceTest {
     @SuppressWarnings("unchecked")
     void stream_shouldEmitEmptyListingsAndNoResultsPromptWhenNoHomesFound() {
         // Given: HomeSearchPort returns no matching listings
-        when(homeSearchPort.search(anyString())).thenReturn(List.of());
+        when(homeSearchPort.search(anyString())).thenReturn(Mono.just(List.of()));
 
         // Mock ChatClient fluent chain
         ChatClient.ChatClientRequestSpec requestSpec =

@@ -25,7 +25,7 @@ import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.model.StreamingChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.http.codec.ServerSentEvent;
-import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.testcontainers.cassandra.CassandraContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -159,10 +159,10 @@ class ChatApplicationServiceIT {
                 .build();
 
         // --- HomeSearchAdapter: points to WireMock ---
-        RestClient homeRestClient = RestClient.builder()
+        WebClient homeRestClient = WebClient.builder()
                 .baseUrl("http://localhost:" + wireMock.port())
                 .build();
-        HomeSearchAdapter homeSearchAdapter = new HomeSearchAdapter(homeRestClient, Tracer.NOOP);
+        HomeSearchAdapter homeSearchAdapter = new HomeSearchAdapter(homeRestClient, Tracer.NOOP);  // WebClient
 
         // --- System under test ---
         chatApplicationService = new ChatApplicationService(homeSearchAdapter, chatClient);
