@@ -132,6 +132,7 @@
 - [x] T047 Run full build: `./gradlew build` — all modules including `:api` and `:microservices:chat-service` must pass
 - [x] T048 Docker compose smoke test: `docker compose up -d chat-cassandra chat-service` — verify `chat-service` starts healthy and `GET /actuator/health` returns 200
 - [x] T049 Manual SSE smoke test: `curl -N -X POST http://localhost:7007/api/v1/chat/stream -H "Content-Type: application/json" -d '{"sessionId":"smoke-test-1","query":"3 beds under 500k"}'` — confirm event sequence: `listings` → multiple `token` → `done`
+- [x] T050 [P] Create `microservices/chat-service/Dockerfile` — multi-stage layered image using `eclipse-temurin:21-jre`; extract layers with `java -Djarmode=layertools`; `EXPOSE 8080`; `ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]` (mirrors home-service Dockerfile)
 
 ---
 
