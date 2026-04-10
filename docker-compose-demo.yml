@@ -115,13 +115,13 @@ services:
 
   chat-cassandra:
     image: 'cassandra:latest'
-    mem_limit: 768m
+    mem_limit: 1024m
     container_name: easy-apply-chat-cassandra
     environment:
       - CASSANDRA_DC=dc1
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - MAX_HEAP_SIZE=384M
-      - HEAP_NEWSIZE=96M
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=128M
     ports:
       - '9043:9042'
     healthcheck:
