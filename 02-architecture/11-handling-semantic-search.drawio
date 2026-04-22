@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Page-1" id="w3mXY_w46zx9Nn1LXMU2">
-    <mxGraphModel dx="766" dy="1554" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1532" dy="908" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -46,7 +46,7 @@
         <mxCell id="Ogg_s7wcUMaUMlBAey5n-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="5. Store embedding data" vertex="1">
           <mxGeometry height="30" width="150" x="100" y="230" as="geometry" />
         </mxCell>
-        <mxCell id="Ogg_s7wcUMaUMlBAey5n-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="6. searchHome(semanticQuery)" vertex="1">
+        <mxCell id="Ogg_s7wcUMaUMlBAey5n-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="6. searchHomes(semanticQuery)" vertex="1">
           <mxGeometry height="30" width="180" x="20" y="121" as="geometry" />
         </mxCell>
         <mxCell id="Ogg_s7wcUMaUMlBAey5n-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="7. Ask LLM to extract search parameters from user&#39;s request" vertex="1">
@@ -57,9 +57,6 @@
         </mxCell>
         <mxCell id="Ogg_s7wcUMaUMlBAey5n-22" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Vector Database" vertex="1">
           <mxGeometry height="30" width="150" x="196" y="320" as="geometry" />
-        </mxCell>
-        <mxCell id="Ogg_s7wcUMaUMlBAey5n-23" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Prompt&lt;/h1&gt;&lt;p&gt;You are a real estate data assistant.&lt;/p&gt;&lt;p&gt;Your goal is to extract search parameters from the user&#39;s request.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;STRICT MAPPING RULES for the &#39;filterString&#39; parameter:&lt;/p&gt;&lt;p&gt;- &#39;More than&#39;, &#39;upper&#39;, &#39;greater than&#39; -&amp;gt; Use &amp;gt;&lt;/p&gt;&lt;p&gt;- &#39;At least&#39;, &#39;minimum&#39;, &#39;starting from&#39; -&amp;gt; Use &amp;gt;=&lt;/p&gt;&lt;p&gt;- &#39;Less than&#39;, &#39;under&#39;, &#39;below&#39; -&amp;gt; Use &amp;lt;&lt;/p&gt;&lt;p&gt;- &#39;At most&#39;, &#39;maximum&#39;, &#39;up to&#39; -&amp;gt; Use &amp;lt;=&lt;/p&gt;&lt;p&gt;- &#39;Exactly&#39;, &#39;equal to&#39;, &#39;is&#39; -&amp;gt; Use ==&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;AVAILABLE FIELDS: street, city, state, country, price, beds, baths, sqft, status.&lt;/p&gt;&lt;p&gt;CASE SENSITIVITY: All string values (city, state, etc.) MUST be lowercase.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Example: (price &amp;gt; 500000 &amp;amp;&amp;amp; city == &#39;austin&#39; &amp;amp;&amp;amp; beds &amp;gt;= 3)&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;User Query: {userQuery}&lt;/p&gt;" vertex="1">
-          <mxGeometry height="510" width="560" x="240" y="-470" as="geometry" />
         </mxCell>
         <mxCell id="Ogg_s7wcUMaUMlBAey5n-24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="9. Query database" vertex="1">
           <mxGeometry height="30" width="150" x="260" y="230" as="geometry" />
