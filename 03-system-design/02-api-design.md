@@ -1,5 +1,5 @@
 # API Design
-This is API design for EasyApply project.
+![Design Good API](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/09-how-to-design-good-api.png)
 
 ## Content
 
