@@ -16,7 +16,7 @@ message broker can result in a message being delivered multiple times. Say a cli
 crashes after processing a message and updating its database—but before acknowledging the message. 
 The message broker will deliver the unacknowledged message again,
 either to that client when it restarts or to another replica of the client.  
-To handle duplicate messages, we can Track messages and discard duplicates.
+To handle duplicate messages, we can track messages and discard duplicates.
 ![Duplicate Messages](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/14-handling-duplicate-messages.png)
 
 ## Consumer Groups
@@ -25,6 +25,7 @@ we start two instances of the microservice, both instances of the microservice w
 consume the same messages. This could result in one message being processed two times, potentially leading to duplicates or other
 undesired inconsistencies in the database. Therefore, we only want one instance per consumer to
 process each message. This can be solved by introducing a consumer group.
+
 ![Consumer Groups](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/15-consumer-group.png)
 
 ## Guaranteed Order
