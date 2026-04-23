@@ -25,7 +25,7 @@ we start two instances of the microservice, both instances of the microservice w
 consume the same messages. This could result in one message being processed two times, potentially leading to duplicates or other
 undesired inconsistencies in the database. Therefore, we only want one instance per consumer to
 process each message. This can be solved by introducing a consumer group.
-![Duplicate Messages](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/15-consumer-group.png)
+![Consumer Groups](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/15-consumer-group.png)
 
 ## Guaranteed Order
 If the business logic requires that messages are consumed and processed in the same order as they
