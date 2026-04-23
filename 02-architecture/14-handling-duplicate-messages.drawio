@@ -1,0 +1,71 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="BN6KtkhKGT35OQB5Qhaw">
+    <mxGraphModel dx="901" dy="534" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-1" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Assessment Service" vertex="1">
+          <mxGeometry height="80" width="120" x="290" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-3" edge="1" parent="1" source="D0XDjWLzofq_dYsYZwZn-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="D0XDjWLzofq_dYsYZwZn-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-2" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.direct_data;whiteSpace=wrap;fillColor=#ffe6cc;strokeColor=#d79b00;" value="" vertex="1">
+          <mxGeometry height="60" width="100" x="40" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-4" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="" vertex="1">
+          <mxGeometry height="270" width="250" x="225" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-6" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontSize=10;" value="MSG_ID" vertex="1">
+          <mxGeometry height="60" width="70" x="390" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-7" parent="D0XDjWLzofq_dYsYZwZn-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;xyz&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="70" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=10;labelBorderColor=default;" value="PROCESSED_MESSAGE table" vertex="1">
+          <mxGeometry height="30" width="150" x="510" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-11" edge="1" parent="1" source="D0XDjWLzofq_dYsYZwZn-6" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;labelBorderColor=default;" target="D0XDjWLzofq_dYsYZwZn-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="520" y="490" as="sourcePoint" />
+            <mxPoint x="570" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-12" parent="1" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=0;strokeColor=default;fontSize=10;" value="assessments" vertex="1">
+          <mxGeometry height="60" width="92" x="240" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-13" parent="D0XDjWLzofq_dYsYZwZn-12" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=16;" value="" vertex="1">
+          <mxGeometry height="30" width="92" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-14" parent="D0XDjWLzofq_dYsYZwZn-13" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;overflow=hidden;pointerEvents=1;strokeColor=inherit;fontSize=16;" value="..." vertex="1">
+          <mxGeometry height="30" width="30" as="geometry">
+            <mxRectangle height="30" width="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-15" parent="D0XDjWLzofq_dYsYZwZn-13" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=inherit;fontSize=16;" value="..." vertex="1">
+          <mxGeometry height="30" width="62" x="30" as="geometry">
+            <mxRectangle height="30" width="62" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-22" edge="1" parent="1" source="D0XDjWLzofq_dYsYZwZn-1" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="D0XDjWLzofq_dYsYZwZn-6" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="450" y="440" as="sourcePoint" />
+            <mxPoint x="500" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-23" edge="1" parent="1" source="D0XDjWLzofq_dYsYZwZn-1" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="D0XDjWLzofq_dYsYZwZn-12" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="450" y="440" as="sourcePoint" />
+            <mxPoint x="500" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-24" parent="1" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.mail;" value="id: xyz" vertex="1">
+          <mxGeometry height="16.5" width="30" x="195" y="143.5" as="geometry" />
+        </mxCell>
+        <mxCell id="D0XDjWLzofq_dYsYZwZn-25" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Tracking Messages and Discarding duplicates&lt;/font&gt;&lt;/h1&gt;&lt;p&gt;A consumer detects and discards duplicate messages by recording the IDs of processed messages in a database table. If a message has been processed before, the INSERT into PROCESSED_MESSAGES table will fail.&lt;/p&gt;" vertex="1">
+          <mxGeometry height="140" width="270" x="510" y="210" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
