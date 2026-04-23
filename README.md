@@ -18,8 +18,9 @@ https://easy-apply.pro/ - A digital platform designed to streamline the home buy
   - [Data Model](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/03-data-model.md)
   - [Handling Semantic Search](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/19-handling-semantic-search.md)
   - [Submitting Prompt For Generation](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/20-submitting-prompt-for-generation.md)
-  - [Handling Partial Failure](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/18-handling-partial-failure.md)
   - [Concurrency Issue](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/17-concurrency-issue.md)
+  - [Handling Partial Failure](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/18-handling-partial-failure.md)
+  - [Handling Challenges With Messaging](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/21-handling-challenges-with-messaging.md)
   - [How To Use The Application](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/how-to-use-the-application.md)
 
 # Tech Stack
