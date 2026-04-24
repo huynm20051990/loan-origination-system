@@ -17,7 +17,7 @@ https://easy-apply.pro/ - A digital platform designed to streamline the home buy
   - [API Design](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/02-api-design.md)
   - [Data Model](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/03-data-model.md)
   - [Handling Semantic Search](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/19-handling-semantic-search.md)
-    - [Converting Data To Embeddings]()
+    - [Converting Data To Embeddings](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/24-converting-data-to-embeddings.md)
     - [Submitting Prompt For Generation](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/20-submitting-prompt-for-generation.md)
     - [Safeguarding against adversarial prompting](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/23-safeguarding-prompting.md)
   - [Concurrency Issue](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/17-concurrency-issue.md)
