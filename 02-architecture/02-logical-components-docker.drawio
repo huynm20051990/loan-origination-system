@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0" version="29.6.1">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0">
   <diagram name="Page-1" id="R4OmAOf5GCMlovqwtTuY">
-    <mxGraphModel dx="2147" dy="757" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2153" dy="757" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -63,9 +63,6 @@
             <mxPoint x="187.5" y="480" as="sourcePoint" />
             <mxPoint x="187.5" y="455" as="targetPoint" />
           </mxGeometry>
-        </mxCell>
-        <mxCell id="ZncxfJL6bduVLojWPnwy-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Prometheus" vertex="1">
-          <mxGeometry height="40" width="110" x="1.5" y="638.5" as="geometry" />
         </mxCell>
         <mxCell id="ZncxfJL6bduVLojWPnwy-4" edge="1" parent="1" source="1rDa63Gf48a2_4C4nQ5B-25" style="endArrow=classic;html=1;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" target="1rDa63Gf48a2_4C4nQ5B-26" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
@@ -372,12 +369,6 @@
             <mxPoint x="670" y="434" as="sourcePoint" />
             <mxPoint x="759" y="410" as="targetPoint" />
           </mxGeometry>
-        </mxCell>
-        <mxCell id="EWkdSIf2ZYhIJjNWHw9L-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Grafana" vertex="1">
-          <mxGeometry height="40" width="110" x="124" y="638.5" as="geometry" />
-        </mxCell>
-        <mxCell id="EWkdSIf2ZYhIJjNWHw9L-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Tracing" vertex="1">
-          <mxGeometry height="40" width="110" x="244" y="638.5" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
