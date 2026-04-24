@@ -19,7 +19,7 @@ https://easy-apply.pro/ - A digital platform designed to streamline the home buy
   - [Handling Semantic Search](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/19-handling-semantic-search.md)
     - [Converting Data To Embeddings]()
     - [Submitting Prompt For Generation](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/20-submitting-prompt-for-generation.md)
-    - [Safeguarding against adversarial prompting]()
+    - [Safeguarding against adversarial prompting](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/23-safeguarding-prompting.md)
   - [Concurrency Issue](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/17-concurrency-issue.md)
   - [Handling Partial Failure](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/18-handling-partial-failure.md)
   - [Handling Challenges With Messaging](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/21-handling-challenges-with-messaging.md)

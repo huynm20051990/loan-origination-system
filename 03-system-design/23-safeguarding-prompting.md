@@ -1,0 +1,2 @@
+# Safeguarding against adversarial prompting
+![Safeguarding against adversarial prompting](https://github.com/huynm20051990/loan-origination-system/blob/main/02-architecture/18-safeguarding-prompting.png)
