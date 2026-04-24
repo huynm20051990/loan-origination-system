@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Page-1" id="8N4DVKTHH7Io4n5N1GDd">
-    <mxGraphModel dx="782" dy="454" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="267" dy="649" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -39,12 +39,6 @@
         </mxCell>
         <mxCell id="nY64HoZnYHIjgIVyoiV4-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div class=&quot;math-block&quot; data-math=&quot;V_{search} = [0.82, -0.45, 0.12, \dots, 0.99]&quot; style=&quot;font-family: &amp;quot;Google Sans Text&amp;quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;&quot;&gt;&lt;div class=&quot;math-block&quot; data-math=&quot;V_{search} = [0.82, -0.45, 0.12, \dots, 0.99]&quot; style=&quot;line-height: 1.15 !important; margin-top: 0px !important;&quot;&gt;[0.82, -0.45, 0.12, ..., 0.99]&lt;/div&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="30" width="210" x="1280" y="1040" as="geometry" />
-        </mxCell>
-        <mxCell id="nY64HoZnYHIjgIVyoiV4-25" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=#FF0000;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" value="">
-          <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="640" y="603" as="sourcePoint" />
-            <mxPoint x="780" y="602.5" as="targetPoint" />
-          </mxGeometry>
         </mxCell>
         <mxCell id="nY64HoZnYHIjgIVyoiV4-26" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Vector DB" vertex="1">
           <mxGeometry height="80" width="60" x="1163" y="1150" as="geometry" />
