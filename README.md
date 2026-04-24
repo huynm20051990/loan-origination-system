@@ -24,6 +24,7 @@ https://easy-apply.pro/ - A digital platform designed to streamline the home buy
   - [Handling Partial Failure](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/18-handling-partial-failure.md)
   - [Handling Challenges With Messaging](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/21-handling-challenges-with-messaging.md)
   - [Security](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/22-security.md)
+  - [Observability](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/25-observability.md)
   - [How To Use The Application](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/how-to-use-the-application.md)
 
 # Tech Stack
