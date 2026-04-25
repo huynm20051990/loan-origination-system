@@ -21,9 +21,6 @@ https://easy-apply.pro/ - A digital platform designed to streamline the home buy
     - [Prompt Templating](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/20-submitting-prompt-for-generation.md)
     - [Tool Calling](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/27-tool-calling.md)
     - [Safeguarding against adversarial prompting](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/23-safeguarding-prompting.md)
-  - [Concurrency Issue](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/17-concurrency-issue.md)
-  - [Handling Partial Failure](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/18-handling-partial-failure.md)
-  - [Handling Challenges With Messaging](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/21-handling-challenges-with-messaging.md)
   - [AI Assessment Workflow](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/28-automated-assessment-workflow.md)
     - MCP Server
     - Skill
@@ -32,6 +29,9 @@ https://easy-apply.pro/ - A digital platform designed to streamline the home buy
   - AI Chat Box
     - [Spec-Driven Development](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/29-spec-driven-development.md)
     - [Ralph Loop](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/30-ralph-loop.md)
+  - [Concurrency Issue](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/17-concurrency-issue.md)
+  - [Handling Partial Failure](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/18-handling-partial-failure.md)
+  - [Handling Challenges With Messaging](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/21-handling-challenges-with-messaging.md)
   - [Security](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/22-security.md)
   - [Observing and Monitoring](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/25-observability.md)
   - [Scaling](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/26-scaling.md)
