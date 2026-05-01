@@ -16,6 +16,7 @@ https://easy-apply.pro/ - A digital platform designed to streamline the home buy
   - [API Gateway Design](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/16-api-gateway.md)
   - [API Design](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/02-api-design.md)
   - [Data Model](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/03-data-model.md)
+  - [Choosing Database](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/31-choosing-database.md)
   - [AI Semantic Search](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/19-handling-semantic-search.md)
     - [Converting Data To Embeddings](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/24-converting-data-to-embeddings.md)
     - [Prompt Templating](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/20-submitting-prompt-for-generation.md)
@@ -29,7 +30,7 @@ https://easy-apply.pro/ - A digital platform designed to streamline the home buy
   - AI Chat Box
     - [Spec-Driven Development](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/29-spec-driven-development.md)
     - [Ralph Loop](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/30-ralph-loop.md)
-  - [Concurrency Issue](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/17-concurrency-issue.md)
+  - [Dealing With Concurrency Issue](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/17-concurrency-issue.md)
   - [Handling Partial Failure](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/18-handling-partial-failure.md)
   - [Handling Challenges With Messaging](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/21-handling-challenges-with-messaging.md)
   - [Security](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/22-security.md)
