@@ -1,5 +1,12 @@
 # Handling Challenges With Messaging
 
+# Contents
+- [Transactional Messaging](#transactional-messaging)
+- [Handling Duplicate Messages](#handling-duplicate-messages)
+- [Consumer Groups](#consumer-groups)
+- [Guaranteed Order](#guaranteed-order)
+- [Retries And Dead-Letter Queue](#retries-and-dead-letter-queue)
+
 ## Transactional Messaging
 A service often need to publish domain events whenever they create or update business entities.
 Both database update and the sending of the message must happen within a transaction.
