@@ -33,6 +33,7 @@ https://easy-apply.pro/ - A digital platform designed to streamline the home buy
   - [Dealing With Concurrency Issue](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/17-concurrency-issue.md)
   - [Handling Partial Failure](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/18-handling-partial-failure.md)
   - [Handling Challenges With Messaging](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/21-handling-challenges-with-messaging.md)
+  - [Rate Limiting](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/05-rate-limiting.md)
   - [Security](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/22-security.md)
   - [Observing and Monitoring](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/25-observability.md)
   - [Scaling](https://github.com/huynm20051990/loan-origination-system/blob/main/03-system-design/26-scaling.md)
