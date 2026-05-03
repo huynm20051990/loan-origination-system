@@ -1,5 +1,7 @@
 # Rate Limiting
-In our case, we will limit 10 requests/second/user at API level and 3 active loan applications in total.
+In our case, we will limit 
+* 10 requests/second/user at API Gateway level.
+* 3 active loan applications in total for business logic.
 
 ## Decision Analysis
 * Rate limit by what? - IP, user ID or API Key.
