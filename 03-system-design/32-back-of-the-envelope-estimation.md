@@ -1,4 +1,4 @@
-# System Capacity Research: From Hardware to Users
+# Back-of-the-envelop Estimation
 
 > **The core question:** Given this server, how many users can the system serve?
 >
