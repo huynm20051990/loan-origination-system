@@ -21,24 +21,26 @@
                             │ determines
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  BOTTLENECK: Auth-Server                                        │
-│  Every request must pass through JWT/RSA validation             │
-│  Ceiling on 512MB + shared CPU ≈ 500 RPS                       │
+│  BOTTLENECK: app-service (write path)                           │
+│  10 DB connections ÷ 150ms write latency = ~67 RPS ceiling      │
+│  (150ms ~ 60ms PG + 50ms Kafka + 40ms connection pools wait)    │
 └───────────────────────────┬─────────────────────────────────────┘
                             │ convert
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  SYSTEM RPS: ~200 RPS (mixed workload, 70% safety margin)      │
+│  SYSTEM RPS: ~100 RPS (write-heavy mixed workload)             │
 └───────────────────────────┬─────────────────────────────────────┘
-                            │ 1 user ≈ 0.017 RPS (1 req/min)
+                            │ 1 user ≈ 0.017 RPS
+                            │ (11 requests per 10-min session
+                            │  = 1.1 req/min ÷ 60 ≈ 0.017 RPS)
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  CONCURRENT USERS: ~8,200                                       │
+│  CONCURRENT USERS: ~4,100                                       │
 └───────────────────────────┬─────────────────────────────────────┘
                             │ peak = 10% of DAU online at once
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  DAILY ACTIVE USERS (DAU): ~100,000                            │
+│  DAILY ACTIVE USERS (DAU): ~40,000                             │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -149,26 +151,41 @@ The **slowest stage determines the system throughput**.
 
 ### Component Throughput Ceilings
 
-| Component | Throughput Ceiling | Why |
+> **How ceilings are derived:** Little's Law — `RPS = pool_size ÷ p50_latency`.
+> Spring Boot services use HikariCP with **10 connections** by default (unless configured otherwise).
+
+| Component | Throughput Ceiling | Derivation |
 |---|---|---|
-| Gateway (WebFlux/reactive) | ~3,000–5,000 RPS | Non-blocking, CPU-bound |
-| **Auth-Server (RSA JWT)** | **~500–1,500 RPS** | **RSA validation is CPU-intensive; 512MB JVM on shared host** |
-| `home-service` | ~300–600 RPS | PostgreSQL reads |
-| `app-service` | ~200–400 RPS | DB writes + Kafka publish + WAL overhead |
-| `assessment-service` | ~50–150 RPS | Gemini API external calls (200–2000ms each) |
-| `notification-service` | ~300–500 RPS | Kafka consumer + PostgreSQL write |
+| Gateway (WebFlux/reactive) | ~3,000–5,000 RPS | Non-blocking; no connection pool limit |
+| **Auth-Server (RSA JWT)** | **~500–1,000 RPS** | **80 threads ÷ 20ms × 0.40 (CPU) × 0.80 (GC) ≈ 1,280 → practical ~500–1,000** |
+| `home-service` | ~100–200 RPS | 10 connections ÷ 75ms avg read (p50 = 50–100ms) |
+| `app-service` | ~50–100 RPS | 10 connections ÷ 150ms avg write (p50 = 100–200ms, includes Kafka + WAL) |
+| `assessment-service` | ~5–20 RPS | 10 connections ÷ Gemini API latency (500ms–2s) |
+| `notification-service` | ~100–200 RPS | 10 connections ÷ 75ms Kafka consume + DB write |
 | PostgreSQL (per instance) | ~500–1,500 QPS | 512MB, shared disk I/O |
 | Cassandra | ~2,000–5,000 ops/s | 1GB heap, good for reads |
 | Kafka (single node) | ~10,000–50,000 msg/s | Not a bottleneck here |
 
 ### Latency Per Endpoint
 
+> These are **estimates**, not measurements. Validate with load testing (Step 8).
+
 | Endpoint Type | p50 | p99 |
 |---|---|---|
 | Simple read (home listings) | 50–100ms | 300–500ms |
-| Loan application submit | 100–200ms | 500ms–1s |
+| Loan application submit | ~150ms (60ms PG + 50ms Kafka + 40ms JVM) | 500ms–1s |
 | Assessment trigger (async) | 200–500ms | 1–3s |
 | Assessment result (AI) | 2–10s | 10–30s |
+
+**How loan application submit p50 = 150ms is estimated:**
+
+```
+A. PostgreSQL write (wal_level=logical):   60ms   (WAL flush must be written to disk before ack)
+B. Kafka publish + broker ack:             50ms   (producer waits for broker to confirm receipt)
+C. JVM overhead + connection pool wait:    40ms   (serialization, HikariCP queue, GC pauses)
+   ──────────────────────────────────────────────
+   Total p50 estimate:               A+B+C = 150ms
+```
 
 ---
 
@@ -177,14 +194,16 @@ The **slowest stage determines the system throughput**.
 ### Bottleneck Stack Rank
 
 ```
-Rank 1 → Auth-Server       — RSA validation on EVERY request; ~500 RPS ceiling on shared CPU
-Rank 2 → Shared CPU        — 17 containers on 8 vCPU; JVM GC spikes steal cycles from all
-Rank 3 → PostgreSQL (4×)   — All on same disk; CDC WAL on 3 DBs adds write amplification
-Rank 4 → Gemini API        — External call with 200–2000ms latency throttles assessment flow
-Rank 5 → JVM heap (512MB)  — Frequent GC under load degrades p99 latency significantly
+Rank 1 → app-service (DB conn pool) — 10 HikariCP connections ÷ 150ms write latency = ~67 RPS
+Rank 2 → Auth-Server (RSA JWT)      — ~500–1,000 RPS on shared CPU; not the write-path limit
+Rank 3 → Shared CPU                 — 17 containers on 8 vCPU; JVM GC spikes steal cycles from all
+Rank 4 → Gemini API                 — External call with 500ms–2s latency throttles assessment flow
+Rank 5 → JVM heap (512MB)           — Frequent GC under load degrades p99 latency significantly
 ```
 
-**The Auth-Server is the system bottleneck** because it sits in the critical path of 100% of requests and performs expensive RSA cryptographic operations on a limited CPU budget.
+**The app-service connection pool is the write-path bottleneck.** With only 10 HikariCP connections and 150ms write latency (PostgreSQL + Kafka + WAL), it caps at ~67 RPS — far lower than Auth-Server's ~500 RPS.
+
+Auth-Server is the bottleneck only for **read-only workloads**. Since this is a loan origination system (write-dominant), the connection pool wins.
 
 ---
 
@@ -225,16 +244,18 @@ Mixed workload penalty     =   × 0.50
                            ≈     408 RPS
 ```
 
+Both methods estimate ~384–408 RPS. However, these assume requests are CPU-bound. In a write-heavy loan origination system, the **database connection pool** is the actual constraint.
+
 ### Reconciled System RPS
 
-Both methods converge around the same range:
+Ceiling per workload type, derived from Little's Law on the binding component:
 
-| Workload Type | RPS | Notes |
+| Workload Type | RPS | Derivation |
 |---|---|---|
-| Light reads only | 300–600 RPS | Best case |
-| Loan application submissions | 100–250 RPS | DB writes + Kafka |
-| Assessment flow (AI-driven) | 20–80 RPS | Gemini API limits this |
-| **Realistic mixed workload** | **~200 RPS** | Working number (70% safety margin) |
+| Light reads only | ~100–200 RPS | home-service: 10 conn ÷ 75ms avg read |
+| Loan application submissions | ~50–100 RPS | app-service: 10 conn ÷ 150ms avg write |
+| Assessment flow (AI-driven) | ~5–20 RPS | assessment-service: 10 conn ÷ 500ms–2s Gemini latency |
+| **Realistic mixed workload** | **~100 RPS** | Write path is binding; at 70% safe utilization |
 
 ---
 
@@ -260,13 +281,13 @@ Session duration                  10 minutes
 ### RPS → Concurrent Users
 
 ```
-System RPS (safe):    200 RPS
+System RPS (safe):    100 RPS
 RPS per user:         0.017 RPS
 
-Max concurrent users = 200 / 0.017 ≈ 11,760
+Max concurrent users = 100 / 0.017 ≈ 5,880
 
 Apply 70% safety margin:
-  11,760 × 0.70 ≈ 8,200 concurrent users
+  5,880 × 0.70 ≈ 4,100 concurrent users
 ```
 
 ### Concurrent Users → Daily Active Users (DAU)
@@ -275,9 +296,9 @@ Apply 70% safety margin:
 Rule of thumb: peak concurrent users ≈ 10% of DAU
 (not all users are online at the same moment)
 
-DAU = 8,200 / 0.10 = 82,000
+DAU = 4,100 / 0.10 = 41,000
 
-Safe round estimate: ~100,000 DAU
+Safe round estimate: ~40,000 DAU
 ```
 
 ---
@@ -288,14 +309,14 @@ Safe round estimate: ~100,000 DAU
 |---|---|---|
 | Server spec | 8 vCPU / 32 GB / 100 GB SSD | Sum of docker-compose mem_limits + overhead |
 | Usable CPU for app | ~3.5 vCPU | After DBs, Kafka, monitoring subtracted |
-| System bottleneck | Auth-Server (RSA JWT) | Sits in 100% of requests; most CPU-intensive |
-| System RPS (safe) | ~200 RPS | Little's Law + CPU top-down, 70% safety margin |
+| System bottleneck | app-service (DB connection pool) | 10 HikariCP connections ÷ 150ms write latency = ~67 RPS |
+| System RPS (safe) | ~100 RPS | app-service ceiling at 70% utilization |
 | RPS per user | 0.017 RPS | 11 requests per 10-min session |
-| Concurrent users | ~8,200 | 200 ÷ 0.017 × 0.70 |
-| **Daily Active Users** | **~100,000 DAU** | 8,200 ÷ 10% peak ratio |
+| Concurrent users | ~4,100 | 100 ÷ 0.017 × 0.70 |
+| **Daily Active Users** | **~40,000 DAU** | 4,100 ÷ 10% peak ratio |
 
-> **This single-server setup can comfortably serve ~100,000 DAU.**
-> Suitable for early-stage production. Not suitable for high-traffic scale (500k+ DAU).
+> **This single-server setup can comfortably serve ~40,000 DAU.**
+> Suitable for early-stage production. Not suitable for high-traffic scale (200k+ DAU).
 
 ---
 
@@ -317,8 +338,8 @@ export const options = {
   stages: [
     { duration: '1m', target: 50  },  // ramp up
     { duration: '3m', target: 50  },  // hold
-    { duration: '1m', target: 200 },  // push harder
-    { duration: '3m', target: 200 },  // watch for degradation
+    { duration: '1m', target: 100 },  // push harder
+    { duration: '3m', target: 100 },  // watch for degradation
     { duration: '1m', target: 0   },  // ramp down
   ],
   thresholds: {
@@ -337,10 +358,12 @@ Latency |              /
 
 ---
 
-## Step 9 — How to Scale Beyond 100,000 DAU
+## Step 9 — How to Scale Beyond 40,000 DAU
 
 | Bottleneck | Fix | Expected Gain |
 |---|---|---|
+| app-service connection pool | Increase HikariCP pool size (e.g. 10 → 50) | 5× write RPS |
+| app-service connection pool | Move app-pg to a dedicated server | Removes shared-disk I/O contention |
 | Auth-Server (RSA) | Add Redis cache for token validation | 3–5× RPS |
 | Auth-Server (single instance) | Run 2–3 replicas behind gateway | 2–3× RPS |
 | Shared CPU | Move DBs to a separate server | Frees ~3 vCPU for services |
@@ -356,7 +379,7 @@ Latency |              /
 ```
 Initial disk usage:   ~30 GB  (Docker images + empty DBs + Kafka setup)
 Free space at start:  ~70 GB
-Daily data growth:    ~1 GB/day  (at 100,000 DAU, 1,000 applications/day)
+Daily data growth:    ~1 GB/day  (at 40,000 DAU, 1,000 applications/day)
 
 Daily breakdown:
   app-pg (application + WAL):       ~150 MB
