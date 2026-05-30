@@ -50,12 +50,12 @@ RECOMMENDED SERVER SPEC
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  BOTTLENECK: app-service (write path)                           │
-│  10 DB connections ÷ 150ms write latency = ~67 RPS ceiling      │
+│  10 DB connections ÷ 120ms write latency = ~83 RPS ceiling      │
 └───────────────────────────┬─────────────────────────────────────┘
                             │ convert
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  SYSTEM RPS: ~67 RPS (write-heavy mixed workload)               │
+│  SYSTEM RPS: ~83 RPS (write-heavy mixed workload)               │
 └───────────────────────────┬─────────────────────────────────────┘
                             │ how many requests does 1 user generate?
                             ▼
@@ -73,15 +73,15 @@ RECOMMENDED SERVER SPEC
 │                                                                 │
 │  → 1 active user ≈ 11 req / 10 min ≈ 1.1 req/min ≈ 0.017 RPS    │
 └───────────────────────────┬─────────────────────────────────────┘
-                            │ 67 RPS ÷ 0.017 RPS/user
+                            │ 83 RPS ÷ 0.017 RPS/user
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  CONCURRENT USERS: ~4,000                                       │
+│  CONCURRENT USERS: ~5,000                                       │
 └───────────────────────────┬─────────────────────────────────────┘
                             │ peak = 10% of DAU online at once
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  DAILY ACTIVE USERS (DAU): ~40,000                              │
+│  DAILY ACTIVE USERS (DAU): ~50,000                              │
 └─────────────────────────────────────────────────────────────────┘
                             │
                             ▼
@@ -89,7 +89,6 @@ RECOMMENDED SERVER SPEC
 │  DISK GROWTH                                                    │
 │  Initial usage:  ~30 GB  (Docker images + empty DBs + Kafka)    │
 │  Free at start:  ~70 GB                                         │
-│  Daily growth:   ~500 MB/day  (at 40,000 DAU, 400 apps/day)     │
-│  Disk full in:   ~140 days  (70 GB ÷ 0.5 GB/day ≈ 4–5 months)   │
+│  Daily growth:   ~140 days  (70 GB ÷ 0.5 GB/day ≈ 4–5 months)   │
 └─────────────────────────────────────────────────────────────────┘
 
