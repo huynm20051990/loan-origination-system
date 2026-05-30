@@ -1,14 +1,9 @@
 # Back-of-the-envelop Estimation
 
-
----
-
-## The Full Picture (One-Page Summary)
-
 ```
 SERVICE MEMORY BUDGET (Suggested Minimums by Technology)
 ─────────────────────────────────────────────────────────────────
-  app-ui                  Nginx            512 MB
+  app-ui                  Angular          512 MB
   auth-server             Spring Boot      512 MB
   gateway                 Spring Boot      512 MB
   home-service            Spring Boot      512 MB
